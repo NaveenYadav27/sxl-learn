@@ -15,7 +15,7 @@ import { EntraSimulator } from "@/components/simulators/EntraSimulator";
 import { PortalSimulator } from "@/components/simulators/PortalSimulator";
 import { QuizPanel } from "@/components/QuizPanel";
 import {
-  CheckCircle2, Circle, ChevronRight, Clock, Target, Sparkles, Trophy, ArrowLeft, Lightbulb,
+  CheckCircle2, Circle, ChevronRight, Clock, Target, Sparkles, Trophy, ArrowLeft, Lightbulb, ExternalLink, BookOpen,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -159,6 +159,22 @@ export default function Lab() {
             <p className="text-xs text-foreground/80 leading-relaxed">{lab.scenario}</p>
             <div className="mt-3 text-[10px] font-semibold uppercase tracking-wider text-primary mb-1">Objective</div>
             <p className="text-xs text-muted-foreground">{lab.objective}</p>
+            {lab.ms_learn_url && (
+              <a
+                href={lab.ms_learn_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 flex items-center gap-2 rounded-md border border-border bg-muted/40 hover:bg-muted px-2.5 py-2 text-xs transition-colors group"
+                aria-label={`Open the matching free Microsoft Learn module for ${lab.title} in a new tab`}
+              >
+                <BookOpen className="h-3.5 w-3.5 text-primary shrink-0" />
+                <span className="flex-1 min-w-0">
+                  <span className="block font-medium text-foreground">Microsoft Learn module</span>
+                  <span className="block text-[10px] text-muted-foreground">Official free reference</span>
+                </span>
+                <ExternalLink className="h-3 w-3 text-muted-foreground group-hover:text-primary shrink-0" />
+              </a>
+            )}
           </div>
           <div className="px-4 py-3 border-b border-border">
             <div className="flex justify-between text-xs mb-1">
