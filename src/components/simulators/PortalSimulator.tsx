@@ -157,6 +157,38 @@ const NAV_CONFIGS: Record<SimKind, NavConfig> = {
       ]},
     ],
   },
+  entra: {
+    brand: "Microsoft Entra admin center",
+    brandColor: "bg-[hsl(220,26%,14%)]",
+    sideColor: "bg-[hsl(220,22%,20%)]",
+    accentBadge: "Identity simulator",
+    initials: "PR",
+    defaultNav: "entra-home",
+    sections: [
+      { items: [
+        { id: "entra-home", label: "Home", icon: Shield, aliases: ["home"] },
+      ]},
+      { label: "Identity", items: [
+        { id: "users", label: "Users", icon: Users },
+        { id: "groups", label: "Groups", icon: Layers },
+        { id: "auth-methods", label: "Authentication methods", icon: Lock },
+        { id: "per-user-mfa", label: "Per-user MFA", icon: Lock },
+      ]},
+      { label: "Protection", items: [
+        { id: "conditional-access", label: "Conditional Access", icon: Shield },
+        { id: "identity-protection", label: "Identity Protection", icon: Eye },
+        { id: "user-risk-policy", label: "User-risk policy", icon: AlertTriangle },
+        { id: "risky-signins", label: "Risky sign-ins", icon: Activity },
+      ]},
+      { label: "Hybrid & Azure", items: [
+        { id: "hybrid-management", label: "Hybrid management", icon: Network },
+        { id: "entra-connect", label: "Entra Connect", icon: Network },
+        { id: "sync-comparison", label: "Sync options", icon: Layers },
+        { id: "resource-groups", label: "Resource groups", icon: Server },
+        { id: "iam", label: "Access control (IAM)", icon: Users },
+      ]},
+    ],
+  },
 };
 
 // Resolve an authored target like "defender-home" / "home" to the canonical
@@ -565,7 +597,7 @@ function DefaultBlade({ simulator, navState }: { simulator: SimKind; navState: s
   );
 }
 
-const SIM_ICON: Record<SimKind, any> = { defender: Shield, purview: Lock, sentinel: Server, generic: Brain };
+const SIM_ICON: Record<SimKind, any> = { defender: Shield, purview: Lock, sentinel: Server, entra: Users, generic: Brain };
 
 interface VisualProps { onAction: (t: string) => void; done: (t: string) => boolean }
 
