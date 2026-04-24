@@ -32,6 +32,9 @@ export default function Lab() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [completionOpen, setCompletionOpen] = useState(false);
+  const [newBadges, setNewBadges] = useState<string[]>([]);
+  const [nextLab, setNextLab] = useState<{ slug: string; title: string } | null>(null);
 
   useEffect(() => {
     if (!slug || !user) return;
