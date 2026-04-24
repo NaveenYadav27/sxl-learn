@@ -38,7 +38,7 @@ import {
 // -----------------------------------------------------------------------------
 // Types
 // -----------------------------------------------------------------------------
-type SimKind = "defender" | "purview" | "sentinel" | "generic";
+type SimKind = "defender" | "purview" | "sentinel" | "entra" | "generic";
 
 interface Action {
   type?: string;
