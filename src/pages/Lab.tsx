@@ -110,21 +110,31 @@ export default function Lab() {
   }
 
   async function completeLab() {
-    if (!attempt) return;
+    if (!attempt || !user) return;
     await supabase.from("lab_attempts").update({
       status: "completed",
       completed_at: new Date().toISOString(),
     }).eq("id", attempt.id);
-    setAttempt((a: any) => ({ ...a, status: "completed" }));
-    toast.success("Lab complete! 🎉");
+    setAttempt((a: any) => ({ ...a, status: "completed", completed_at: new Date().toISOString() }));
 
-    // first-lab badge
-    if (user) {
-      const { data: badge } = await supabase.from("badges").select("id").eq("slug", "first-lab").maybeSingle();
-      if (badge) {
-        await supabase.from("user_badges").insert({ user_id: user.id, badge_id: badge.id }).select();
-      }
+    // Award badges (idempotent — handles first-lab, module mastery, sc900-ready, etc.)
+    const awarded = await awardBadgesForUser(user.id);
+    setNewBadges(awarded);
+
+    // Find next lab in same module by sort_order
+    if (lab) {
+      const { data: siblings } = await supabase
+        .from("labs")
+        .select("slug, title, sort_order")
+        .eq("module_id", lab.module_id)
+        .eq("is_published", true)
+        .order("sort_order");
+      const idx = (siblings ?? []).findIndex((s) => s.slug === lab.slug);
+      const next = idx >= 0 ? siblings?.[idx + 1] : null;
+      if (next) setNextLab({ slug: next.slug, title: next.title });
     }
+
+    setCompletionOpen(true);
   }
 
   if (loading || !lab) {
