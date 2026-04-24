@@ -14,6 +14,8 @@ import { TutorPanel } from "@/components/TutorPanel";
 import { EntraSimulator } from "@/components/simulators/EntraSimulator";
 import { PortalSimulator } from "@/components/simulators/PortalSimulator";
 import { QuizPanel } from "@/components/QuizPanel";
+import { LabCompletionModal } from "@/components/LabCompletionModal";
+import { awardBadgesForUser } from "@/lib/badges";
 import {
   CheckCircle2, Circle, ChevronRight, Clock, Target, Sparkles, Trophy, ArrowLeft, Lightbulb, ExternalLink, BookOpen,
 } from "lucide-react";
@@ -30,6 +32,9 @@ export default function Lab() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [showHint, setShowHint] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [completionOpen, setCompletionOpen] = useState(false);
+  const [newBadges, setNewBadges] = useState<string[]>([]);
+  const [nextLab, setNextLab] = useState<{ slug: string; title: string } | null>(null);
 
   useEffect(() => {
     if (!slug || !user) return;
@@ -105,21 +110,31 @@ export default function Lab() {
   }
 
   async function completeLab() {
-    if (!attempt) return;
+    if (!attempt || !user) return;
     await supabase.from("lab_attempts").update({
       status: "completed",
       completed_at: new Date().toISOString(),
     }).eq("id", attempt.id);
-    setAttempt((a: any) => ({ ...a, status: "completed" }));
-    toast.success("Lab complete! 🎉");
+    setAttempt((a: any) => ({ ...a, status: "completed", completed_at: new Date().toISOString() }));
 
-    // first-lab badge
-    if (user) {
-      const { data: badge } = await supabase.from("badges").select("id").eq("slug", "first-lab").maybeSingle();
-      if (badge) {
-        await supabase.from("user_badges").insert({ user_id: user.id, badge_id: badge.id }).select();
-      }
+    // Award badges (idempotent — handles first-lab, module mastery, sc900-ready, etc.)
+    const awarded = await awardBadgesForUser(user.id);
+    setNewBadges(awarded);
+
+    // Find next lab in same module by sort_order
+    if (lab) {
+      const { data: siblings } = await supabase
+        .from("labs")
+        .select("slug, title, sort_order")
+        .eq("module_id", lab.module_id)
+        .eq("is_published", true)
+        .order("sort_order");
+      const idx = (siblings ?? []).findIndex((s) => s.slug === lab.slug);
+      const next = idx >= 0 ? siblings?.[idx + 1] : null;
+      if (next) setNextLab({ slug: next.slug, title: next.title });
     }
+
+    setCompletionOpen(true);
   }
 
   if (loading || !lab) {
@@ -319,6 +334,22 @@ export default function Lab() {
           initialPrompt={`👋 I'm your Twin Tutor. I'll help you complete **${lab.title}** without spoiling the answers. What's tripping you up?`}
         />
       </div>
+
+      <LabCompletionModal
+        open={completionOpen}
+        onClose={() => setCompletionOpen(false)}
+        labTitle={lab.title}
+        score={attempt?.score ?? 0}
+        totalSteps={steps.length}
+        durationSec={
+          attempt?.completed_at && attempt?.started_at
+            ? Math.round((new Date(attempt.completed_at).getTime() - new Date(attempt.started_at).getTime()) / 1000)
+            : (lab.duration_min ?? 15) * 60
+        }
+        newBadges={newBadges}
+        nextLabSlug={nextLab?.slug}
+        nextLabTitle={nextLab?.title}
+      />
     </AppLayout>
   );
 }
