@@ -90,9 +90,12 @@ export default function Dashboard() {
                 You're {overallPct}% of the way to SC-900 ready. Keep your streak going.
               </p>
             </div>
-            <Link to="/catalog">
-              <Button size="lg" variant="secondary" className="gap-2">
-                Continue learning <ArrowRight className="h-4 w-4" />
+            <Link to={resumeLab ? `/lab/${resumeLab.slug}` : "/catalog"} className="max-w-xs">
+              <Button size="lg" variant="secondary" className="gap-2 w-full">
+                <span className="truncate">
+                  {resumeLab ? `Resume: ${resumeLab.title}` : "Continue learning"}
+                </span>
+                <ArrowRight className="h-4 w-4 shrink-0" />
               </Button>
             </Link>
           </CardContent>
