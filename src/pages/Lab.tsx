@@ -14,6 +14,8 @@ import { TutorPanel } from "@/components/TutorPanel";
 import { EntraSimulator } from "@/components/simulators/EntraSimulator";
 import { PortalSimulator } from "@/components/simulators/PortalSimulator";
 import { QuizPanel } from "@/components/QuizPanel";
+import { LabCompletionModal } from "@/components/LabCompletionModal";
+import { awardBadgesForUser } from "@/lib/badges";
 import {
   CheckCircle2, Circle, ChevronRight, Clock, Target, Sparkles, Trophy, ArrowLeft, Lightbulb, ExternalLink, BookOpen,
 } from "lucide-react";
