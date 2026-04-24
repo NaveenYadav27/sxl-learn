@@ -79,6 +79,47 @@ export type Database = {
           },
         ]
       }
+      lab_questions: {
+        Row: {
+          correct_index: number
+          explanation: string | null
+          id: string
+          lab_id: string
+          options: Json
+          points: number
+          question: string
+          question_number: number
+        }
+        Insert: {
+          correct_index: number
+          explanation?: string | null
+          id?: string
+          lab_id: string
+          options: Json
+          points?: number
+          question: string
+          question_number: number
+        }
+        Update: {
+          correct_index?: number
+          explanation?: string | null
+          id?: string
+          lab_id?: string
+          options?: Json
+          points?: number
+          question?: string
+          question_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lab_questions_lab_id_fkey"
+            columns: ["lab_id"]
+            isOneToOne: false
+            referencedRelation: "labs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lab_steps: {
         Row: {
           expected_action: Json | null
@@ -232,6 +273,48 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      question_responses: {
+        Row: {
+          answered_at: string
+          attempt_id: string
+          id: string
+          is_correct: boolean
+          question_id: string
+          selected_index: number
+        }
+        Insert: {
+          answered_at?: string
+          attempt_id: string
+          id?: string
+          is_correct: boolean
+          question_id: string
+          selected_index: number
+        }
+        Update: {
+          answered_at?: string
+          attempt_id?: string
+          id?: string
+          is_correct?: boolean
+          question_id?: string
+          selected_index?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "question_responses_attempt_id_fkey"
+            columns: ["attempt_id"]
+            isOneToOne: false
+            referencedRelation: "lab_attempts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "question_responses_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "lab_questions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       step_progress: {
         Row: {
