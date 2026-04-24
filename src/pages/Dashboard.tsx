@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [stats, setStats] = useState({ totalLabs: 0, completed: 0, inProgress: 0, score: 0 });
   const [modules, setModules] = useState<any[]>([]);
   const [recent, setRecent] = useState<any[]>([]);
+  const [resumeLab, setResumeLab] = useState<{ slug: string; title: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,7 +51,26 @@ export default function Dashboard() {
         done: completedByModule.get(m.id)?.size ?? 0,
       })));
 
-      setRecent((attempts ?? []).slice(0, 5));
+      const sortedAttempts = (attempts ?? []);
+      setRecent(sortedAttempts.slice(0, 5));
+
+      // Resume target: most recent in-progress; else most recent completed; else first lab in catalog
+      const inProgressAtt = sortedAttempts.find((a: any) => a.status === "in_progress");
+      const fallbackAtt = sortedAttempts[0];
+      const target = inProgressAtt ?? fallbackAtt;
+      if (target?.lab) {
+        setResumeLab({ slug: target.lab.slug, title: target.lab.title });
+      } else {
+        const { data: firstLab } = await supabase
+          .from("labs")
+          .select("slug, title")
+          .eq("is_published", true)
+          .order("sort_order")
+          .limit(1)
+          .maybeSingle();
+        if (firstLab) setResumeLab({ slug: firstLab.slug, title: firstLab.title });
+      }
+
       setLoading(false);
     })();
   }, [user]);
