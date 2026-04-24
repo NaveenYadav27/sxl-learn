@@ -124,9 +124,6 @@ export function TutorPanel({ labContext, attemptId, initialPrompt }: Props) {
       </div>
 
       <ScrollArea className="flex-1 px-4 py-3">
-        <div ref={scrollRef}>
-        {/* anchor used for scroll target via parent ref pattern */}
-        </div>
         {messages.length === 0 ? (
           <div className="text-center text-sm text-muted-foreground py-8 space-y-2">
             <Bot className="h-8 w-8 mx-auto text-primary/60" />
@@ -153,6 +150,7 @@ export function TutorPanel({ labContext, attemptId, initialPrompt }: Props) {
                 )}
               </div>
             ))}
+            <div ref={bottomRef} />
           </div>
         )}
       </ScrollArea>
