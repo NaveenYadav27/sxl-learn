@@ -295,7 +295,8 @@ export default function Lab() {
                 );
               }
               if (!currentStep) return null;
-              if (lab.simulator === "entra") {
+              // Original bespoke Entra blade simulator (legacy CA-flow lab)
+              if (lab.simulator === "entra" && lab.slug === "mfa-conditional-access") {
                 return (
                   <EntraSimulator
                     expectedAction={currentStep.expected_action}
@@ -303,7 +304,7 @@ export default function Lab() {
                   />
                 );
               }
-              if (["defender", "purview", "sentinel", "generic"].includes(lab.simulator)) {
+              if (["defender", "purview", "sentinel", "entra", "generic"].includes(lab.simulator)) {
                 return (
                   <PortalSimulator
                     simulator={lab.simulator}
