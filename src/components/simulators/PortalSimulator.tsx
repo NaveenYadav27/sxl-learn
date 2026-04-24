@@ -878,6 +878,136 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
       </Card>
     ),
   },
+
+  entra: {
+    "entra-home": () => (
+      <Card className="p-3">
+        <h3 className="text-sm font-semibold mb-2">Microsoft Entra ID · Contoso Bank India</h3>
+        <div className="grid grid-cols-4 gap-2 text-xs">
+          <Stat label="Tenant" value="contosobank" />
+          <Stat label="License" value="M365 E5" tone="text-primary" />
+          <Stat label="Users" value="847" />
+          <Stat label="Groups" value="312" />
+        </div>
+      </Card>
+    ),
+    users: () => (
+      <Card className="p-3">
+        <h3 className="text-sm font-semibold mb-2">Users · 847</h3>
+        <div className="text-xs text-muted-foreground">Filter, bulk operations, license assignment, MFA registration status.</div>
+      </Card>
+    ),
+    groups: () => (
+      <Card className="p-3">
+        <h3 className="text-sm font-semibold mb-2">Groups · 312 security + M365 groups</h3>
+        <div className="text-xs text-muted-foreground">Use "+ New group" below to create a security group.</div>
+      </Card>
+    ),
+    "auth-methods": () => (
+      <Card className="p-3">
+        <h3 className="text-sm font-semibold mb-2">Authentication methods policy</h3>
+        <ul className="text-xs space-y-1">
+          <li>• Microsoft Authenticator — push + passwordless</li>
+          <li>• FIDO2 security keys</li>
+          <li>• SMS / Voice (legacy — discouraged)</li>
+        </ul>
+      </Card>
+    ),
+    "per-user-mfa": () => (
+      <Card className="p-3">
+        <h3 className="text-sm font-semibold mb-2">Per-user MFA (legacy)</h3>
+        <div className="text-xs text-muted-foreground">Use Conditional Access for tenant-wide MFA. This view is for legacy individual exceptions only.</div>
+      </Card>
+    ),
+    "conditional-access": () => (
+      <Card className="p-3">
+        <h3 className="text-sm font-semibold mb-2">Conditional Access · Policies</h3>
+        <div className="text-xs text-muted-foreground mb-2">14 active policies · 2 report-only · last modified 2d ago</div>
+        <div className="text-xs">Use the action panel below to create a new policy.</div>
+      </Card>
+    ),
+    "identity-protection": () => (
+      <Card className="p-3">
+        <h3 className="text-sm font-semibold mb-2">Identity Protection</h3>
+        <div className="grid grid-cols-3 gap-2 text-xs">
+          <Stat label="Risky users" value="9" tone="text-warning" />
+          <Stat label="Risky sign-ins (24h)" value="42" />
+          <Stat label="Risk detections" value="187" />
+        </div>
+      </Card>
+    ),
+    "user-risk-policy": () => (
+      <Card className="p-3">
+        <h3 className="text-sm font-semibold mb-2">User-risk policy</h3>
+        <div className="text-xs text-muted-foreground">Configure thresholds and remediation actions (block / require password change).</div>
+      </Card>
+    ),
+    "risky-signins": () => (
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_100px_120px_100px]">
+          <span>User</span><span>Risk</span><span>Detection</span><span>Action</span>
+        </div>
+        {[
+          { u: "priya@contosobank.in", r: "High", d: "Anonymous IP (Tor)" },
+          { u: "alex@contosobank.in", r: "Medium", d: "Atypical travel" },
+          { u: "raj@contosobank.in", r: "Low", d: "Unfamiliar properties" },
+        ].map((s) => (
+          <div key={s.u} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_120px_100px] border-t border-border">
+            <span>{s.u}</span>
+            <span><Badge variant={s.r === "High" ? "destructive" : "secondary"}>{s.r}</Badge></span>
+            <span className="text-muted-foreground">{s.d}</span>
+            <span><Button size="sm" variant="ghost">View</Button></span>
+          </div>
+        ))}
+      </Card>
+    ),
+    "hybrid-management": () => (
+      <Card className="p-3">
+        <h3 className="text-sm font-semibold mb-2">Hybrid identity management</h3>
+        <div className="text-xs text-muted-foreground">Connect on-prem AD to Entra ID via Entra Connect, Cloud Sync, or PHS / PTA / Federation.</div>
+      </Card>
+    ),
+    "entra-connect": () => (
+      <Card className="p-3">
+        <h3 className="text-sm font-semibold mb-2">Entra Connect deployment plan</h3>
+        <ul className="text-xs space-y-1">
+          <li>• Topology: single forest → single tenant</li>
+          <li>• Sign-in: PHS with seamless SSO</li>
+          <li>• Filtering: OU-scoped sync</li>
+        </ul>
+      </Card>
+    ),
+    "sync-comparison": () => (
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[120px_1fr_1fr]">
+          <span>Model</span><span>Pros</span><span>Cons</span>
+        </div>
+        {[
+          { m: "PHS", p: "Simple · cloud-only auth", c: "Hash sync trust required" },
+          { m: "PTA", p: "On-prem auth · no hash", c: "Agent dependency" },
+          { m: "Federation", p: "Full control · MFA chaining", c: "ADFS overhead" },
+        ].map((r) => (
+          <div key={r.m} className="px-3 py-2 text-xs grid grid-cols-[120px_1fr_1fr] border-t border-border">
+            <span className="font-medium">{r.m}</span><span>{r.p}</span><span className="text-muted-foreground">{r.c}</span>
+          </div>
+        ))}
+      </Card>
+    ),
+    "resource-groups": () => (
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium">Resource groups</div>
+        {["rg-finance-prod", "rg-marketing-dev", "rg-shared-network"].map((r) => (
+          <div key={r} className="px-3 py-2 text-xs border-t border-border">{r}</div>
+        ))}
+      </Card>
+    ),
+    iam: () => (
+      <Card className="p-3">
+        <h3 className="text-sm font-semibold mb-2">Access control (IAM)</h3>
+        <div className="text-xs text-muted-foreground">Add or remove role assignments at this scope.</div>
+      </Card>
+    ),
+  },
 };
 
 const INCIDENTS = [
