@@ -39,8 +39,25 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const { pathname } = useLocation();
   const { isInstructor, isAdmin, signOut, user } = useAuth();
+  const [progress, setProgress] = useState({ done: 0, total: 0 });
+
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    (async () => {
+      const [{ count: total }, { data: atts }] = await Promise.all([
+        supabase.from("labs").select("*", { count: "exact", head: true }).eq("is_published", true),
+        supabase.from("lab_attempts").select("lab_id, status").eq("user_id", user.id).eq("status", "completed"),
+      ]);
+      if (cancelled) return;
+      const doneIds = new Set((atts ?? []).map((a) => a.lab_id));
+      setProgress({ done: doneIds.size, total: total ?? 0 });
+    })();
+    return () => { cancelled = true; };
+  }, [user, pathname]); // refresh when navigating (e.g. after lab completion)
 
   const isActive = (url: string) => pathname === url || pathname.startsWith(url + "/");
+  const pct = progress.total ? Math.round((progress.done / progress.total) * 100) : 0;
 
   return (
     <Sidebar collapsible="icon" className="border-sidebar-border">
