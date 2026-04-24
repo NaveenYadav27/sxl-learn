@@ -84,6 +84,7 @@ export default {
         'gradient-security': 'var(--gradient-domain-security)',
         'gradient-compliance': 'var(--gradient-domain-compliance)',
         'gradient-concepts': 'var(--gradient-domain-concepts)',
+        'gradient-iam': 'var(--gradient-domain-iam)',
       },
       boxShadow: {
         card: 'var(--shadow-card)',
