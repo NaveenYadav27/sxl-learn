@@ -70,7 +70,8 @@
     --gradient-domain-entra: linear-gradient(135deg, hsl(207 100% 36%), hsl(207 100% 50%));
     --gradient-domain-security: linear-gradient(135deg, hsl(0 72% 47%), hsl(15 80% 55%));
     --gradient-domain-compliance: linear-gradient(135deg, hsl(142 71% 36%), hsl(160 65% 45%));
-    --gradient-domain-concepts: linear-gradient(135deg, hsl(262 60% 50%), hsl(280 60% 60%));
+   --gradient-domain-concepts: linear-gradient(135deg, hsl(262 60% 50%), hsl(280 60% 60%));
+   --gradient-domain-iam: linear-gradient(135deg, hsl(187 85% 32%), hsl(195 85% 44%));
 
     --shadow-card: 0 1px 2px 0 hsl(220 13% 18% / 0.04), 0 1px 3px 0 hsl(220 13% 18% / 0.06);
     --shadow-elevated: 0 4px 12px -2px hsl(220 13% 18% / 0.08), 0 2px 4px -2px hsl(220 13% 18% / 0.04);

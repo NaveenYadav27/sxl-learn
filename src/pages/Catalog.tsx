@@ -16,7 +16,7 @@ const simulatorLabel: Record<string, string> = {
   entra: "Microsoft Entra", defender: "Defender XDR", purview: "Microsoft Purview", sentinel: "Sentinel", generic: "Concepts",
 };
 const domainGrad: Record<string, string> = {
-  concepts: "bg-gradient-concepts", entra: "bg-gradient-entra",
+  concepts: "bg-gradient-concepts", iam: "bg-gradient-iam", entra: "bg-gradient-entra",
   security: "bg-gradient-security", compliance: "bg-gradient-compliance",
 };
 const difficultyTone: Record<string, string> = {
