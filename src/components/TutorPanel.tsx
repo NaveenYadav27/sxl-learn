@@ -22,10 +22,10 @@ export function TutorPanel({ labContext, attemptId, initialPrompt }: Props) {
   );
   const [input, setInput] = useState("");
   const [streaming, setStreaming] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+    bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages]);
 
   async function send(prompt?: string) {
