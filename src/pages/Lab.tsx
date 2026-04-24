@@ -95,13 +95,11 @@ export default function Lab() {
 
     toast.success(`+${currentStep.points} points`, { icon: <Sparkles className="h-4 w-4 text-primary" /> });
 
-    // auto-advance after a moment
+    // auto-advance after a moment (do NOT auto-complete; quiz is the gate)
     setTimeout(() => {
       if (currentIdx < steps.length - 1) {
         setCurrentIdx((i) => i + 1);
         setShowHint(false);
-      } else {
-        completeLab();
       }
     }, 800);
   }
@@ -253,25 +251,48 @@ export default function Lab() {
               </Card>
             )}
 
-            {/* The simulator itself */}
-            {!isComplete && currentStep && lab.simulator === "entra" && (
-              <EntraSimulator
-                expectedAction={currentStep.expected_action}
-                onValidate={(ok) => { if (ok) markStepDone(); }}
-              />
-            )}
-
-            {!isComplete && currentStep && lab.simulator !== "entra" && (
-              <Card className="shadow-card border-dashed">
-                <CardContent className="pt-6 text-center text-sm text-muted-foreground">
-                  <Sparkles className="h-8 w-8 mx-auto text-primary/40 mb-2" />
-                  The {lab.simulator} simulator is coming in the next phase. For now, click below to mark this step done and continue exploring.
-                  <div className="mt-4">
-                    <Button onClick={markStepDone}>Mark step done <ChevronRight className="h-3 w-3 ml-1" /></Button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+            {/* Simulator OR Quiz (after all steps complete) */}
+            {!isComplete && (() => {
+              const allStepsDone = steps.length > 0 && steps.every((st) => stepProgress[st.id]);
+              if (allStepsDone) {
+                return (
+                  <QuizPanel
+                    labId={lab.id}
+                    attemptId={attempt!.id}
+                    onComplete={() => completeLab()}
+                  />
+                );
+              }
+              if (!currentStep) return null;
+              if (lab.simulator === "entra") {
+                return (
+                  <EntraSimulator
+                    expectedAction={currentStep.expected_action}
+                    onValidate={(ok) => { if (ok) markStepDone(); }}
+                  />
+                );
+              }
+              if (["defender", "purview", "sentinel", "generic"].includes(lab.simulator)) {
+                return (
+                  <PortalSimulator
+                    simulator={lab.simulator}
+                    expectedAction={currentStep.expected_action}
+                    onValidate={(ok) => { if (ok) markStepDone(); }}
+                  />
+                );
+              }
+              return (
+                <Card className="shadow-card border-dashed">
+                  <CardContent className="pt-6 text-center text-sm text-muted-foreground">
+                    <Sparkles className="h-8 w-8 mx-auto text-primary/40 mb-2" />
+                    Click below to mark this step done.
+                    <div className="mt-4">
+                      <Button onClick={markStepDone}>Mark step done <ChevronRight className="h-3 w-3 ml-1" /></Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })()}
           </div>
         </main>
 
