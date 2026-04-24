@@ -45,7 +45,7 @@ export function TutorPanel({ labContext, attemptId, initialPrompt }: Props) {
     }
 
     try {
-      const SUPABASE_URL = "https://qjtlosnpmrucohibymhs.supabase.co";
+      const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
       const resp = await fetch(`${SUPABASE_URL}/functions/v1/tutor-chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -123,7 +123,10 @@ export function TutorPanel({ labContext, attemptId, initialPrompt }: Props) {
         </div>
       </div>
 
-      <ScrollArea className="flex-1 px-4 py-3" viewportRef={scrollRef as any}>
+      <ScrollArea className="flex-1 px-4 py-3">
+        <div ref={scrollRef}>
+        {/* anchor used for scroll target via parent ref pattern */}
+        </div>
         {messages.length === 0 ? (
           <div className="text-center text-sm text-muted-foreground py-8 space-y-2">
             <Bot className="h-8 w-8 mx-auto text-primary/60" />
