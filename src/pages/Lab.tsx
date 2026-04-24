@@ -12,6 +12,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { TutorPanel } from "@/components/TutorPanel";
 import { EntraSimulator } from "@/components/simulators/EntraSimulator";
+import { PortalSimulator } from "@/components/simulators/PortalSimulator";
+import { QuizPanel } from "@/components/QuizPanel";
 import {
   CheckCircle2, Circle, ChevronRight, Clock, Target, Sparkles, Trophy, ArrowLeft, Lightbulb,
 } from "lucide-react";
