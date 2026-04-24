@@ -216,6 +216,15 @@ export default function Lab() {
                   </div>
                 </CardContent>
               </Card>
+            ) : !currentStep ? (
+              <Card className="shadow-card border-dashed">
+                <CardContent className="pt-6 text-center text-sm text-muted-foreground">
+                  <Sparkles className="h-8 w-8 mx-auto text-primary/40 mb-2" />
+                  Step content for this lab is being authored. Check back soon — or try the
+                  {" "}<Link to="/lab/mfa-conditional-access" className="text-primary underline">MFA + Conditional Access lab</Link>{" "}
+                  which is fully interactive.
+                </CardContent>
+              </Card>
             ) : (
               <Card className="shadow-card">
                 <CardContent className="pt-6">
@@ -243,14 +252,14 @@ export default function Lab() {
             )}
 
             {/* The simulator itself */}
-            {!isComplete && lab.simulator === "entra" && (
+            {!isComplete && currentStep && lab.simulator === "entra" && (
               <EntraSimulator
                 expectedAction={currentStep.expected_action}
                 onValidate={(ok) => { if (ok) markStepDone(); }}
               />
             )}
 
-            {!isComplete && lab.simulator !== "entra" && (
+            {!isComplete && currentStep && lab.simulator !== "entra" && (
               <Card className="shadow-card border-dashed">
                 <CardContent className="pt-6 text-center text-sm text-muted-foreground">
                   <Sparkles className="h-8 w-8 mx-auto text-primary/40 mb-2" />
