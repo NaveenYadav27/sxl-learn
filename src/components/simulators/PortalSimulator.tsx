@@ -26,11 +26,13 @@ import {
   Trophy, Brain,
 } from "lucide-react";
 
-type Action =
-  | { type: "navigate"; target?: string }
-  | { type: "input"; field?: string; value?: string }
-  | { type: "toggle"; field?: string; value?: boolean }
-  | Record<string, any>;
+interface Action {
+  type?: string;
+  target?: string;
+  field?: string;
+  value?: any;
+  [key: string]: any;
+}
 
 interface Props {
   simulator: "defender" | "purview" | "sentinel" | "generic";
