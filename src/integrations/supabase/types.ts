@@ -169,6 +169,7 @@ export type Database = {
           id: string
           is_published: boolean
           module_id: string
+          ms_learn_url: string | null
           objective: string | null
           scenario: string | null
           simulator: string
@@ -183,6 +184,7 @@ export type Database = {
           id?: string
           is_published?: boolean
           module_id: string
+          ms_learn_url?: string | null
           objective?: string | null
           scenario?: string | null
           simulator: string
@@ -197,6 +199,7 @@ export type Database = {
           id?: string
           is_published?: boolean
           module_id?: string
+          ms_learn_url?: string | null
           objective?: string | null
           scenario?: string | null
           simulator?: string

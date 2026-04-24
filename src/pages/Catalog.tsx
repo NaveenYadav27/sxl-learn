@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Clock, ArrowRight, Sparkles, Shield, Users, Gavel, BookOpen, Lock } from "lucide-react";
+import { Clock, ArrowRight, Sparkles, Shield, Users, Gavel, BookOpen, Lock, ExternalLink } from "lucide-react";
 
 const simulatorIcon: Record<string, any> = {
   entra: Users, defender: Shield, purview: Gavel, sentinel: Lock, generic: BookOpen,
@@ -98,13 +98,27 @@ export default function Catalog() {
                         </div>
                       )}
                       <p className="text-sm text-muted-foreground line-clamp-2">{lab.objective}</p>
-                      <div className="mt-3">
+                      <div className="mt-3 flex items-center gap-2">
                         <Link to={`/lab/${lab.slug}`}>
                           <Button size="sm" className="gap-1">
                             {status === "completed" ? "Review lab" : status === "in_progress" ? "Resume" : "Start lab"}
                             <ArrowRight className="h-3 w-3" />
                           </Button>
                         </Link>
+                        {lab.ms_learn_url && (
+                          <a
+                            href={lab.ms_learn_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            aria-label={`Open the matching free Microsoft Learn module for ${lab.title} in a new tab`}
+                          >
+                            <Button size="sm" variant="outline" className="gap-1">
+                              Microsoft Learn
+                              <ExternalLink className="h-3 w-3" />
+                            </Button>
+                          </a>
+                        )}
                       </div>
                     </CardContent>
                   </Card>

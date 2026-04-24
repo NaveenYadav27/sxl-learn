@@ -1,0 +1,1 @@
+ALTER TABLE public.labs ADD COLUMN IF NOT EXISTS ms_learn_url text;
