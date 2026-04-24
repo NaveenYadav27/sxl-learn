@@ -334,6 +334,22 @@ export default function Lab() {
           initialPrompt={`👋 I'm your Twin Tutor. I'll help you complete **${lab.title}** without spoiling the answers. What's tripping you up?`}
         />
       </div>
+
+      <LabCompletionModal
+        open={completionOpen}
+        onClose={() => setCompletionOpen(false)}
+        labTitle={lab.title}
+        score={attempt?.score ?? 0}
+        totalSteps={steps.length}
+        durationSec={
+          attempt?.completed_at && attempt?.started_at
+            ? Math.round((new Date(attempt.completed_at).getTime() - new Date(attempt.started_at).getTime()) / 1000)
+            : (lab.duration_min ?? 15) * 60
+        }
+        newBadges={newBadges}
+        nextLabSlug={nextLab?.slug}
+        nextLabTitle={nextLab?.title}
+      />
     </AppLayout>
   );
 }
