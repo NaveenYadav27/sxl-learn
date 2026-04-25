@@ -153,6 +153,9 @@ export function useResetTenant() {
       qc.invalidateQueries({ queryKey: ["tenant_sign_in_logs"] });
       qc.invalidateQueries({ queryKey: ["tenant_incidents"] });
       qc.invalidateQueries({ queryKey: ["tenant_alerts"] });
+      qc.invalidateQueries({ queryKey: ["tenant_sensitivity_labels"] });
+      qc.invalidateQueries({ queryKey: ["tenant_dlp_policies"] });
+      qc.invalidateQueries({ queryKey: ["tenant_classified_files"] });
       toast({ title: "Tenant reset", description: "Your virtual tenant has been re-seeded." });
     },
     onError: (e: any) => toast({ title: "Reset failed", description: e.message, variant: "destructive" }),
