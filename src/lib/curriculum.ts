@@ -30,6 +30,7 @@ export const moduleNotes: ModuleNote[] = [
     title: "Module 1 — Security Concepts",
     code: "SC900-M1",
     theoryMinutes: 45,
+    labBudgetMinutes: 45,
     topics: [
       "Zero Trust principles (verify explicitly, least privilege, assume breach)",
       "Defense in Depth strategy",
@@ -45,6 +46,7 @@ export const moduleNotes: ModuleNote[] = [
     title: "Module 2 — Identity & Access Management",
     code: "SC900-M2",
     theoryMinutes: 45,
+    labBudgetMinutes: 75,
     topics: [
       "Authentication vs Authorization",
       "Multi-Factor Authentication (MFA)",
@@ -60,6 +62,7 @@ export const moduleNotes: ModuleNote[] = [
     title: "Module 3 — Microsoft Entra Capabilities",
     code: "SC900-M3",
     theoryMinutes: 30,
+    labBudgetMinutes: 90,
     topics: [
       "Microsoft Entra ID architecture",
       "Hybrid identity concepts",
@@ -75,6 +78,7 @@ export const moduleNotes: ModuleNote[] = [
     title: "Module 4 — Security Solutions in Microsoft",
     code: "SC900-M4",
     theoryMinutes: 30,
+    labBudgetMinutes: 75,
     topics: [
       "Microsoft Defender overview (XDR, MDE, MDO, MDCA)",
       "Microsoft Sentinel basics — SIEM + SOAR",
@@ -89,6 +93,7 @@ export const moduleNotes: ModuleNote[] = [
     title: "Module 5 — Compliance & Governance",
     code: "SC900-M5",
     theoryMinutes: 30,
+    labBudgetMinutes: 75,
     topics: [
       "Compliance management overview",
       "Microsoft Purview basics",
@@ -103,6 +108,7 @@ export const moduleNotes: ModuleNote[] = [
     domain: "exam",
     title: "Exam prep & practice discussion",
     theoryMinutes: 15,
+    labBudgetMinutes: 15,
     topics: [
       "How SC-900 questions are framed (definitions, scenarios, capabilities)",
       "High-yield Microsoft terminology to memorise",
