@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
+import { CourseProvider } from "@/hooks/useCourse";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Auth from "./pages/Auth.tsx";
@@ -30,6 +31,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
+          <CourseProvider>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
@@ -49,6 +51,7 @@ const App = () => (
             <Route path="/admin/content" element={<Placeholder title="Content Management" breadcrumb={[{ label: "Admin" }, { label: "Content" }]} />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </CourseProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
