@@ -15,7 +15,7 @@ import {
   Clock, ArrowRight, Shield, Users, Gavel, BookOpen, Lock, ExternalLink, Search, X,
   Sparkles, Building2, ClipboardCheck, FlaskConical, Calendar, GraduationCap,
 } from "lucide-react";
-import { moduleNotes, oneDayPlan, twoDayPlan, fourDayPlan, type DomainKey, type ModuleNote, type DayPlan } from "@/lib/curriculum";
+import { moduleNotes, oneDayPlan, twoDayPlan, fiveDayPlan, type DomainKey, type ModuleNote, type DayPlan } from "@/lib/curriculum";
 
 const simulatorIcon: Record<string, any> = {
   entra: Users, defender: Shield, purview: Gavel, sentinel: Lock, generic: BookOpen, tenant: Building2,
@@ -45,6 +45,13 @@ type Lab = {
   module_id: string;
 };
 
+function fmtMin(min: number): string {
+  if (min < 60) return `${min}m`;
+  const h = Math.floor(min / 60);
+  const m = min % 60;
+  return m === 0 ? `${h}h` : `${h}h ${m}m`;
+}
+
 export default function Catalog() {
   const { user } = useAuth();
   const [labsBySlug, setLabsBySlug] = useState<Record<string, Lab>>({});
@@ -52,7 +59,7 @@ export default function Catalog() {
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState<string>("all");
   const [status, setStatus] = useState<string>("all");
-  const [mode, setMode] = useState<"4day" | "2day" | "1day">("4day");
+  const [mode, setMode] = useState<"5day" | "2day" | "1day">("5day");
 
   useEffect(() => {
     (async () => {
@@ -96,7 +103,7 @@ export default function Catalog() {
   );
   const filtersActive = search.trim() !== "" || difficulty !== "all" || status !== "all";
 
-  const plan = mode === "4day" ? fourDayPlan : mode === "2day" ? twoDayPlan : oneDayPlan;
+  const plan = mode === "5day" ? fiveDayPlan : mode === "2day" ? twoDayPlan : oneDayPlan;
   // Default expand: first day open
   const defaultDay = plan[0]?.id;
 
@@ -134,7 +141,7 @@ export default function Catalog() {
           <CardContent className="pt-4 pb-4 space-y-3">
             <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
               <TabsList>
-                <TabsTrigger value="4day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />4 days × 2h</TabsTrigger>
+                <TabsTrigger value="5day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />5 days × 2h</TabsTrigger>
                 <TabsTrigger value="2day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />2 days × 4h</TabsTrigger>
                 <TabsTrigger value="1day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />1-day intensive</TabsTrigger>
               </TabsList>
@@ -231,9 +238,8 @@ function DayCard({
     }).length, 0,
   );
   const dayTheoryMin = day.modules.reduce((s, m) => s + m.theoryMinutes, 0);
-  const dayLabMin = day.modules.reduce(
-    (s, m) => s + m.labSlugs.reduce((a, slug) => a + (labsBySlug[slug]?.duration_min ?? 0), 0), 0,
-  );
+  const dayLabMin = day.modules.reduce((s, m) => s + m.labBudgetMinutes, 0);
+  const dayTotalMin = dayTheoryMin + dayLabMin;
 
   if (dayShownCount === 0 && dayLabsCount > 0) {
     // Hidden by filter — still show empty hint
@@ -255,8 +261,9 @@ function DayCard({
               </div>
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <Badge variant="outline" className="gap-1"><BookOpen className="h-3 w-3" />{dayTheoryMin}m theory</Badge>
-              <Badge variant="outline" className="gap-1"><FlaskConical className="h-3 w-3" />{Math.round(dayLabMin)}m labs</Badge>
+              <Badge variant="outline" className="gap-1"><BookOpen className="h-3 w-3" />{fmtMin(dayTheoryMin)} theory</Badge>
+              <Badge variant="outline" className="gap-1"><FlaskConical className="h-3 w-3" />{fmtMin(dayLabMin)} labs</Badge>
+              <Badge className="bg-primary/10 text-primary border-0">{fmtMin(dayTotalMin)} total</Badge>
               <Badge variant="secondary">{dayCompleted}/{dayLabsCount}</Badge>
             </div>
           </div>
@@ -306,9 +313,10 @@ function ModuleSection({
                 {note.title}
                 {note.code && <Badge variant="outline" className="text-[10px]">{note.code}</Badge>}
               </div>
-              <div className="text-xs text-muted-foreground mt-0.5 inline-flex items-center gap-3">
-                <span className="inline-flex items-center gap-1"><BookOpen className="h-3 w-3" />{note.theoryMinutes}m theory</span>
-                <span className="inline-flex items-center gap-1"><FlaskConical className="h-3 w-3" />{note.labSlugs.length} labs</span>
+              <div className="text-xs text-muted-foreground mt-0.5 inline-flex items-center gap-3 flex-wrap">
+                <span className="inline-flex items-center gap-1"><BookOpen className="h-3 w-3" />{fmtMin(note.theoryMinutes)} theory</span>
+                <span className="inline-flex items-center gap-1"><FlaskConical className="h-3 w-3" />{fmtMin(note.labBudgetMinutes)} labs ({note.labSlugs.length})</span>
+                <span className="inline-flex items-center gap-1 font-medium text-foreground/70"><Clock className="h-3 w-3" />{fmtMin(note.theoryMinutes + note.labBudgetMinutes)} total</span>
               </div>
             </div>
           </div>

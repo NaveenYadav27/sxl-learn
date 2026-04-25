@@ -9,6 +9,7 @@ export type ModuleNote = {
   title: string;
   code?: string;            // e.g. SC900-M1
   theoryMinutes: number;
+  labBudgetMinutes: number;  // scheduled lab time for the module (per official TOC)
   topics: string[];          // theory bullets from the TOC
   labSlugs: string[];        // ordered slugs that map to the labs table
 };
@@ -29,6 +30,7 @@ export const moduleNotes: ModuleNote[] = [
     title: "Module 1 — Security Concepts",
     code: "SC900-M1",
     theoryMinutes: 45,
+    labBudgetMinutes: 45,
     topics: [
       "Zero Trust principles (verify explicitly, least privilege, assume breach)",
       "Defense in Depth strategy",
@@ -44,6 +46,7 @@ export const moduleNotes: ModuleNote[] = [
     title: "Module 2 — Identity & Access Management",
     code: "SC900-M2",
     theoryMinutes: 45,
+    labBudgetMinutes: 75,
     topics: [
       "Authentication vs Authorization",
       "Multi-Factor Authentication (MFA)",
@@ -59,6 +62,7 @@ export const moduleNotes: ModuleNote[] = [
     title: "Module 3 — Microsoft Entra Capabilities",
     code: "SC900-M3",
     theoryMinutes: 30,
+    labBudgetMinutes: 90,
     topics: [
       "Microsoft Entra ID architecture",
       "Hybrid identity concepts",
@@ -74,6 +78,7 @@ export const moduleNotes: ModuleNote[] = [
     title: "Module 4 — Security Solutions in Microsoft",
     code: "SC900-M4",
     theoryMinutes: 30,
+    labBudgetMinutes: 75,
     topics: [
       "Microsoft Defender overview (XDR, MDE, MDO, MDCA)",
       "Microsoft Sentinel basics — SIEM + SOAR",
@@ -88,6 +93,7 @@ export const moduleNotes: ModuleNote[] = [
     title: "Module 5 — Compliance & Governance",
     code: "SC900-M5",
     theoryMinutes: 30,
+    labBudgetMinutes: 75,
     topics: [
       "Compliance management overview",
       "Microsoft Purview basics",
@@ -102,6 +108,7 @@ export const moduleNotes: ModuleNote[] = [
     domain: "exam",
     title: "Exam prep & practice discussion",
     theoryMinutes: 15,
+    labBudgetMinutes: 15,
     topics: [
       "How SC-900 questions are framed (definitions, scenarios, capabilities)",
       "High-yield Microsoft terminology to memorise",
@@ -116,37 +123,48 @@ export const moduleNotes: ModuleNote[] = [
 const m = (slug: ModuleNote["moduleSlug"] | "exam") =>
   moduleNotes.find((x) => (slug === "exam" ? x.domain === "exam" : x.moduleSlug === slug))!;
 
-// Default plan: 4 days × 2 hours each (one module per day, exam folded into Day 4).
-export const fourDayPlan: DayPlan[] = [
+// Default plan: 5 days × ~2 hours (one module per day, exam folded into Day 5).
+// Matches the official SC-900 TOC time table (Theory + Lab per module).
+export const fiveDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "Security Concepts (2h)",
+    subtitle: "Security Concepts (1h 30m)",
     description: "Zero Trust, Defense in Depth, CIA triad, threats, and the shared responsibility model.",
     modules: [m("concepts")],
   },
   {
     id: "day2",
     label: "Day 2",
-    subtitle: "Identity & Access + Entra (2h)",
-    description: "Authentication vs authorization, MFA, RBAC, Conditional Access, and Microsoft Entra capabilities.",
-    modules: [m("iam"), m("entra")],
+    subtitle: "Identity & Access Management (2h)",
+    description: "Authentication vs authorization, MFA, RBAC, Conditional Access, and PIM.",
+    modules: [m("iam")],
   },
   {
     id: "day3",
     label: "Day 3",
-    subtitle: "Security Solutions (2h)",
-    description: "Microsoft Defender XDR, Sentinel SIEM/SOAR, CSPM, and endpoint protection.",
-    modules: [m("security")],
+    subtitle: "Microsoft Entra Capabilities (2h)",
+    description: "Entra ID architecture, hybrid identity, identity protection, passwordless, B2B/B2C.",
+    modules: [m("entra")],
   },
   {
     id: "day4",
     label: "Day 4",
-    subtitle: "Compliance & Exam Prep (2h)",
-    description: "Microsoft Purview, DLP, sensitivity labels, eDiscovery — then SC-900 exam strategy.",
+    subtitle: "Security Solutions in Microsoft (1h 45m)",
+    description: "Microsoft Defender XDR, Sentinel SIEM/SOAR, CSPM, endpoint protection.",
+    modules: [m("security")],
+  },
+  {
+    id: "day5",
+    label: "Day 5",
+    subtitle: "Compliance & Governance + Exam (2h 15m)",
+    description: "Purview, DLP, sensitivity labels, eDiscovery — then SC-900 exam strategy.",
     modules: [m("compliance"), m("exam")],
   },
 ];
+
+// Backwards-compatible alias (Catalog still imports `fourDayPlan`).
+export const fourDayPlan = fiveDayPlan;
 
 // 1-day intensive: everything sequential.
 export const oneDayPlan: DayPlan[] = [
