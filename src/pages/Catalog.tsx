@@ -13,17 +13,19 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import {
   Clock, ArrowRight, Shield, Users, Gavel, BookOpen, Lock, ExternalLink, Search, X,
-  Sparkles, Building2, ClipboardCheck, FlaskConical, Calendar, GraduationCap,
+  Sparkles, Building2, ClipboardCheck, FlaskConical, Calendar, GraduationCap, Workflow,
 } from "lucide-react";
 import { type DomainKey, type ModuleNote, type DayPlan } from "@/lib/curriculum";
 import { useCourse } from "@/hooks/useCourse";
 
 const simulatorIcon: Record<string, any> = {
-  entra: Users, defender: Shield, purview: Gavel, sentinel: Lock, generic: BookOpen, tenant: Building2,
+  entra: Users, defender: Shield, purview: Gavel, sentinel: Lock,
+  generic: BookOpen, tenant: Building2, servicenow: Workflow,
 };
 const simulatorLabel: Record<string, string> = {
   entra: "Microsoft Entra", defender: "Defender XDR", purview: "Microsoft Purview",
   sentinel: "Sentinel", generic: "Concepts", tenant: "Live Tenant",
+  servicenow: "ServiceNow",
 };
 const difficultyTone: Record<string, string> = {
   beginner: "bg-success/10 text-success",
@@ -431,10 +433,10 @@ function LabRow({ lab, index, status }: { lab: Lab; index: number; status?: stri
           {lab.ms_learn_url && (
             <a
               href={lab.ms_learn_url} target="_blank" rel="noopener noreferrer"
-              aria-label={`Open the matching free Microsoft Learn module for ${lab.title} in a new tab`}
+              aria-label={`Open the official reference for ${lab.title} in a new tab`}
             >
               <Button size="sm" variant="outline" className="gap-1 h-7 w-full text-[11px]">
-                MS Learn <ExternalLink className="h-3 w-3" />
+                {lab.simulator === "servicenow" ? "SN Docs" : "MS Learn"} <ExternalLink className="h-3 w-3" />
               </Button>
             </a>
           )}

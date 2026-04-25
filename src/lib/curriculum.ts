@@ -4,7 +4,7 @@
 export type DomainKey = "concepts" | "iam" | "entra" | "security" | "compliance" | "exam";
 
 export type ModuleNote = {
-  moduleSlug: "concepts" | "iam" | "entra" | "security" | "compliance" | null;
+  moduleSlug: string | null;
   domain: DomainKey;
   title: string;
   code?: string;            // e.g. SC900-M1

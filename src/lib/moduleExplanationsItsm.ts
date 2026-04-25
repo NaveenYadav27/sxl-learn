@@ -10,7 +10,7 @@ import type { ModuleExplanation } from "./moduleExplanations";
 /* M1 — ITSM FOUNDATIONS & SERVICENOW PLATFORM                     */
 /* ============================================================== */
 const m1: ModuleExplanation = {
-  moduleSlug: "concepts",
+  moduleSlug: "itsm-foundations",
   tagline: "How ITIL 4 thinking maps onto the ServiceNow Now Platform.",
   overview:
     "Module 1 grounds you in the ITIL 4 vocabulary the CIS-ITSM exam assumes you already know — Service Value System, guiding principles, value streams — and then anchors each idea on a concrete piece of the ServiceNow Now Platform (instance, scopes, applications, tables, ACLs, roles). Master this and the rest of the course is just configuration choices on top of a model you already understand.",
@@ -220,7 +220,7 @@ const m1: ModuleExplanation = {
 /* M2 — INCIDENT MANAGEMENT                                        */
 /* ============================================================== */
 const m2: ModuleExplanation = {
-  moduleSlug: "iam",
+  moduleSlug: "itsm-incident",
   tagline: "Restore service as quickly as possible — measured in MTTR.",
   overview:
     "Incident Management's only goal is to restore normal service operation as fast as possible. In ServiceNow that translates to a tightly defined lifecycle, an Impact × Urgency priority matrix, group-based assignment, SLAs that pause/resume, and a Major Incident Management (MIM) process for the worst cases.",
@@ -404,7 +404,7 @@ const m2: ModuleExplanation = {
 /* M3 — PROBLEM & KNOWLEDGE MANAGEMENT                             */
 /* ============================================================== */
 const m3: ModuleExplanation = {
-  moduleSlug: "entra",
+  moduleSlug: "itsm-problem",
   tagline: "Find the root cause once; never solve the same incident twice.",
   overview:
     "Problem Management investigates the root cause of one or many incidents and produces a Known Error (with a Workaround) and ultimately a permanent fix. Knowledge Management captures what's been learned so the next person doesn't reinvent the answer. Together they shrink MTTR and ticket volume.",
@@ -566,7 +566,7 @@ const m3: ModuleExplanation = {
 /* M4 — CHANGE & RELEASE MANAGEMENT                                */
 /* ============================================================== */
 const m4: ModuleExplanation = {
-  moduleSlug: "security",
+  moduleSlug: "itsm-change",
   tagline: "Modify the environment safely — every change is a controlled risk.",
   overview:
     "Change Management governs how modifications to services and CIs are proposed, assessed, approved and implemented. ServiceNow models this with three change types (Standard, Normal, Emergency), a CAB workbench, risk and impact assessments, conflict detection and a blackout schedule.",
@@ -737,7 +737,7 @@ const m4: ModuleExplanation = {
 /* M5 — REQUEST FULFILMENT, CMDB & SERVICE CATALOG                  */
 /* ============================================================== */
 const m5: ModuleExplanation = {
-  moduleSlug: "compliance",
+  moduleSlug: "itsm-catalog-cmdb",
   tagline: "Self-service for users, single source of truth for the platform.",
   overview:
     "Service Catalog turns IT into a self-service shop. Each Catalog Item generates a Request (REQ), one or more Requested Items (RITM), and Catalog Tasks (SCTASK) for fulfillers. CMDB underpins everything by recording Configuration Items (CIs) and their relationships, framed by the Common Service Data Model (CSDM).",
