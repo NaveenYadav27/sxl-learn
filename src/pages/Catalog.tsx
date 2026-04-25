@@ -320,6 +320,13 @@ function ModuleSection({
               </div>
             </div>
           </div>
+          {note.moduleSlug && (
+            <Link to={`/module/${note.moduleSlug}`}>
+              <Button size="sm" variant="outline" className="gap-1 h-8">
+                Read explanation <ArrowRight className="h-3 w-3" />
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
 
