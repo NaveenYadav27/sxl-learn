@@ -9,6 +9,7 @@ export type ModuleNote = {
   title: string;
   code?: string;            // e.g. SC900-M1
   theoryMinutes: number;
+  labBudgetMinutes: number;  // scheduled lab time for the module (per official TOC)
   topics: string[];          // theory bullets from the TOC
   labSlugs: string[];        // ordered slugs that map to the labs table
 };
