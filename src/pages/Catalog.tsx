@@ -96,7 +96,7 @@ export default function Catalog() {
   );
   const filtersActive = search.trim() !== "" || difficulty !== "all" || status !== "all";
 
-  const plan = mode === "1day" ? oneDayPlan : twoDayPlan;
+  const plan = mode === "4day" ? fourDayPlan : mode === "2day" ? twoDayPlan : oneDayPlan;
   // Default expand: first day open
   const defaultDay = plan[0]?.id;
 
