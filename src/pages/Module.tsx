@@ -16,8 +16,9 @@ import {
   Wrench, GraduationCap, ListChecks, ScrollText, Award, AlertTriangle, MessageCircleQuestion,
   CheckCircle2, XCircle, BookMarked, ExternalLink, Layers,
 } from "lucide-react";
-import { moduleNotes, type DomainKey } from "@/lib/curriculum";
+import { type DomainKey } from "@/lib/curriculum";
 import { getModuleExplanation } from "@/lib/moduleExplanations";
+import { useCourse } from "@/hooks/useCourse";
 
 const domainMeta: Record<DomainKey, { icon: any; bar: string; soft: string; chip: string; label: string }> = {
   concepts:   { icon: Sparkles,   bar: "bg-gradient-concepts",   soft: "bg-domain-concepts/5",   chip: "bg-domain-concepts/15 text-domain-concepts border-domain-concepts/30",     label: "Concepts" },
@@ -39,15 +40,16 @@ const fmtMin = (min: number) => {
   return m === 0 ? `${h}h` : `${h}h ${m}m`;
 };
 
-const moduleOrder = moduleNotes.filter((m) => m.moduleSlug !== null).map((m) => m.moduleSlug!) as string[];
-
 export default function Module() {
   const { slug } = useParams<{ slug: string }>();
   const { user } = useAuth();
+  const { course } = useCourse();
+  const moduleNotes = course.modules;
+  const moduleOrder = moduleNotes.filter((m) => m.moduleSlug !== null).map((m) => m.moduleSlug!) as string[];
   const [labs, setLabs] = useState<Lab[]>([]);
   const [progress, setProgress] = useState<Record<string, string>>({});
 
-  const note = useMemo(() => moduleNotes.find((m) => m.moduleSlug === slug), [slug]);
+  const note = useMemo(() => moduleNotes.find((m) => m.moduleSlug === slug), [slug, moduleNotes]);
   const explanation = useMemo(() => (slug ? getModuleExplanation(slug) : undefined), [slug]);
 
   useEffect(() => {

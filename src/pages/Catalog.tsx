@@ -15,7 +15,8 @@ import {
   Clock, ArrowRight, Shield, Users, Gavel, BookOpen, Lock, ExternalLink, Search, X,
   Sparkles, Building2, ClipboardCheck, FlaskConical, Calendar, GraduationCap,
 } from "lucide-react";
-import { moduleNotes, oneDayPlan, twoDayPlan, fiveDayPlan, type DomainKey, type ModuleNote, type DayPlan } from "@/lib/curriculum";
+import { type DomainKey, type ModuleNote, type DayPlan } from "@/lib/curriculum";
+import { useCourse } from "@/hooks/useCourse";
 
 const simulatorIcon: Record<string, any> = {
   entra: Users, defender: Shield, purview: Gavel, sentinel: Lock, generic: BookOpen, tenant: Building2,
@@ -54,6 +55,8 @@ function fmtMin(min: number): string {
 
 export default function Catalog() {
   const { user } = useAuth();
+  const { course } = useCourse();
+  const moduleNotes = course.modules;
   const [labsBySlug, setLabsBySlug] = useState<Record<string, Lab>>({});
   const [progress, setProgress] = useState<Record<string, string>>({}); // labId → status
   const [search, setSearch] = useState("");
@@ -103,14 +106,14 @@ export default function Catalog() {
   );
   const filtersActive = search.trim() !== "" || difficulty !== "all" || status !== "all";
 
-  const plan = mode === "5day" ? fiveDayPlan : mode === "2day" ? twoDayPlan : oneDayPlan;
+  const plan = mode === "5day" ? course.plans.fiveDay : mode === "2day" ? course.plans.twoDay : course.plans.oneDay;
   // Default expand: first day open
   const defaultDay = plan[0]?.id;
 
   return (
     <AppLayout
       breadcrumb={<Breadcrumb items={[{ label: "Course Catalog" }]} />}
-      title="SC-900 Course Catalog"
+      title={`${course.shortName} Course Catalog`}
     >
       <div className="container py-6 space-y-6 max-w-6xl">
         {/* Hero / overview */}
@@ -119,16 +122,16 @@ export default function Catalog() {
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div>
                 <Badge variant="secondary" className="mb-2 gap-1">
-                  <GraduationCap className="h-3 w-3" /> SC-900 day-wise index
+                  <GraduationCap className="h-3 w-3" /> {course.shortName} day-wise index
                 </Badge>
-                <h1 className="text-2xl font-bold">Course Catalog</h1>
+                <h1 className="text-2xl font-bold">Course Catalog — {course.shortName}</h1>
                 <p className="text-sm text-muted-foreground max-w-2xl mt-1">
-                  Day-by-day breakdown aligned with the official table of contents. Each module shows the theory notes
-                  to teach plus the hands-on labs that follow them.
+                  {course.longName}. Day-by-day breakdown aligned with the official table of contents. Each
+                  module shows the theory notes to teach plus the hands-on labs that follow them.
                 </p>
               </div>
               <div className="grid grid-cols-3 gap-3">
-                <HeroStat label="Modules" value={5} icon={BookOpen} />
+                <HeroStat label="Modules" value={moduleNotes.filter((m) => m.moduleSlug !== null).length} icon={BookOpen} />
                 <HeroStat label="Labs" value={totalLabsAll} icon={FlaskConical} />
                 <HeroStat label="You've done" value={`${completed}/${totalLabsAll}`} icon={ClipboardCheck} />
               </div>

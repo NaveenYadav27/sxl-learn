@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { AppLayout } from "@/components/AppLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useCourse } from "@/hooks/useCourse";
 import { getXpStats, type XpStats } from "@/lib/xp";
 import { Trophy, Clock, BookOpen, ArrowRight, Sparkles, Shield, Users, Lock, Gavel, Flame, Zap, ClipboardCheck } from "lucide-react";
 
@@ -18,6 +19,12 @@ const domainGrad: Record<string, string> = {
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { course } = useCourse();
+  const allowedSlugs = useMemo(() => new Set(course.modules.flatMap((m) => m.labSlugs)), [course.code]);
+  const allowedModuleSlugs = useMemo(
+    () => new Set(course.modules.filter((m) => m.moduleSlug !== null).map((m) => m.moduleSlug!)),
+    [course.code],
+  );
   const [stats, setStats] = useState({ totalLabs: 0, completed: 0, inProgress: 0, score: 0 });
   const [modules, setModules] = useState<any[]>([]);
   const [recent, setRecent] = useState<any[]>([]);
@@ -28,56 +35,68 @@ export default function Dashboard() {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const [{ data: mods }, { data: labs }, { data: attempts }, xpStats] = await Promise.all([
+      const [{ data: mods }, { data: labsRaw }, { data: attempts }, xpStats] = await Promise.all([
         supabase.from("modules").select("*").order("sort_order"),
-        supabase.from("labs").select("id, module_id"),
+        supabase.from("labs").select("id, module_id, slug"),
         supabase.from("lab_attempts").select("*, lab:labs(slug, title, simulator)").eq("user_id", user.id).order("started_at", { ascending: false }),
         getXpStats(user.id),
       ]);
       setXp(xpStats);
-      const completed = (attempts ?? []).filter((a) => a.status === "completed").length;
-      const inProgress = (attempts ?? []).filter((a) => a.status === "in_progress").length;
-      const score = (attempts ?? []).reduce((s, a) => s + (a.score ?? 0), 0);
-      setStats({ totalLabs: labs?.length ?? 0, completed, inProgress, score });
+
+      // Scope labs and modules to the active course
+      const labs = (labsRaw ?? []).filter((l: any) => allowedSlugs.has(l.slug));
+      const labIds = new Set(labs.map((l: any) => l.id));
+      const courseAttempts = (attempts ?? []).filter((a: any) => labIds.has(a.lab_id));
+
+      const completed = courseAttempts.filter((a) => a.status === "completed").length;
+      const inProgress = courseAttempts.filter((a) => a.status === "in_progress").length;
+      const score = courseAttempts.reduce((s, a) => s + (a.score ?? 0), 0);
+      setStats({ totalLabs: labs.length, completed, inProgress, score });
 
       const labsByModule = new Map<string, number>();
       const completedByModule = new Map<string, Set<string>>();
-      (labs ?? []).forEach((l) => labsByModule.set(l.module_id, (labsByModule.get(l.module_id) ?? 0) + 1));
-      (attempts ?? []).filter((a) => a.status === "completed").forEach((a: any) => {
-        const lab = (labs ?? []).find((l) => l.id === a.lab_id);
+      labs.forEach((l: any) => labsByModule.set(l.module_id, (labsByModule.get(l.module_id) ?? 0) + 1));
+      courseAttempts.filter((a) => a.status === "completed").forEach((a: any) => {
+        const lab = labs.find((l: any) => l.id === a.lab_id);
         if (!lab) return;
         if (!completedByModule.has(lab.module_id)) completedByModule.set(lab.module_id, new Set());
         completedByModule.get(lab.module_id)!.add(lab.id);
       });
-      setModules((mods ?? []).map((m) => ({
+      const courseMods = (mods ?? []).filter((m: any) => allowedModuleSlugs.has(m.slug));
+      setModules(courseMods.map((m: any) => ({
         ...m,
         total: labsByModule.get(m.id) ?? 0,
         done: completedByModule.get(m.id)?.size ?? 0,
       })));
 
-      const sortedAttempts = (attempts ?? []);
-      setRecent(sortedAttempts.slice(0, 5));
+      // Recent activity scoped to this course
+      setRecent(courseAttempts.slice(0, 5));
 
-      // Resume target: most recent in-progress; else most recent completed; else first lab in catalog
-      const inProgressAtt = sortedAttempts.find((a: any) => a.status === "in_progress");
-      const fallbackAtt = sortedAttempts[0];
+      // Resume target: most recent in-progress in this course; else most recent; else first lab
+      const inProgressAtt = courseAttempts.find((a: any) => a.status === "in_progress");
+      const fallbackAtt = courseAttempts[0];
       const target = inProgressAtt ?? fallbackAtt;
       if (target?.lab) {
         setResumeLab({ slug: target.lab.slug, title: target.lab.title });
       } else {
-        const { data: firstLab } = await supabase
-          .from("labs")
-          .select("slug, title")
-          .eq("is_published", true)
-          .order("sort_order")
-          .limit(1)
-          .maybeSingle();
-        if (firstLab) setResumeLab({ slug: firstLab.slug, title: firstLab.title });
+        // First lab in this course's curriculum, if it exists in DB
+        const firstSlug = course.modules.flatMap((m) => m.labSlugs)[0];
+        if (firstSlug) {
+          const { data: firstLab } = await supabase
+            .from("labs")
+            .select("slug, title")
+            .eq("slug", firstSlug)
+            .maybeSingle();
+          if (firstLab) setResumeLab({ slug: firstLab.slug, title: firstLab.title });
+          else setResumeLab(null);
+        } else {
+          setResumeLab(null);
+        }
       }
 
       setLoading(false);
     })();
-  }, [user]);
+  }, [user, course.code, allowedSlugs, allowedModuleSlugs]);
 
   const overallPct = stats.totalLabs ? Math.round((stats.completed / stats.totalLabs) * 100) : 0;
 
@@ -91,7 +110,7 @@ export default function Dashboard() {
               <div className="text-sm text-muted-foreground">Welcome back,</div>
               <div className="text-2xl font-bold text-foreground">{user?.user_metadata?.display_name ?? user?.email?.split("@")[0]}</div>
               <p className="mt-2 text-foreground/80 max-w-xl">
-                You're {overallPct}% of the way to SC-900 ready. Keep your streak going.
+                You're {overallPct}% of the way to {course.shortName} ready. Keep your streak going.
               </p>
             </div>
             <Link to={resumeLab ? `/lab/${resumeLab.slug}` : "/catalog"} className="max-w-xs">
@@ -156,7 +175,7 @@ export default function Dashboard() {
 
         {/* Modules grid */}
         <section>
-          <h2 className="text-lg font-semibold mb-3">Your SC-900 path</h2>
+          <h2 className="text-lg font-semibold mb-3">Your {course.shortName} path</h2>
           <div className="grid md:grid-cols-2 gap-4">
             {modules.map((m) => {
               const Icon = domainIcon[m.slug] ?? BookOpen;
