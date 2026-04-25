@@ -1,111 +1,129 @@
-@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* ================================================================
-   SC-900 Enterprise Twin — Microsoft-portal inspired design system
+   ShadowX Lab — Empower · Illuminate · Uphold
+   Brand: deep obsidian black, electric azure (left of X),
+   ember crimson (right of X), molten gold spark (center).
    All colors HSL. Tokens only — never hardcode in components.
    ================================================================ */
 
 @layer base {
   :root {
-    /* Surfaces */
-    --background: 210 17% 98%;            /* Fluent #F5F5F5-ish */
-    --foreground: 220 13% 18%;            /* near-black slate */
-    --card: 0 0% 100%;
-    --card-foreground: 220 13% 18%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 13% 18%;
+    /* Surfaces — obsidian by default (brand is dark-first) */
+    --background: 222 30% 6%;             /* obsidian black */
+    --foreground: 40 25% 92%;             /* warm bone */
+    --card: 222 26% 9%;
+    --card-foreground: 40 25% 92%;
+    --popover: 222 26% 10%;
+    --popover-foreground: 40 25% 92%;
 
-    /* Microsoft brand-inspired primary */
-    --primary: 207 100% 36%;              /* Azure blue #0078D4 */
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 207 100% 50%;
-    --primary-soft: 207 100% 95%;
+    /* Primary — Electric ShadowX Azure (left wing of X) */
+    --primary: 202 95% 52%;
+    --primary-foreground: 222 30% 6%;
+    --primary-glow: 198 100% 62%;
+    --primary-soft: 202 60% 14%;
 
-    --secondary: 210 17% 95%;
-    --secondary-foreground: 220 13% 18%;
+    /* Secondary surfaces */
+    --secondary: 222 22% 13%;
+    --secondary-foreground: 40 25% 92%;
 
-    --muted: 210 17% 95%;
-    --muted-foreground: 215 14% 45%;
+    --muted: 222 20% 14%;
+    --muted-foreground: 220 12% 62%;
 
-    --accent: 207 100% 95%;
-    --accent-foreground: 207 100% 30%;
+    --accent: 202 80% 18%;
+    --accent-foreground: 198 100% 80%;
 
     /* Semantic status */
-    --success: 142 71% 36%;
-    --success-foreground: 0 0% 100%;
-    --warning: 35 100% 47%;
-    --warning-foreground: 0 0% 100%;
-    --destructive: 0 72% 47%;             /* MS red #D13438 */
-    --destructive-foreground: 0 0% 100%;
-    --info: 207 100% 36%;
-    --info-foreground: 0 0% 100%;
+    --success: 152 70% 42%;
+    --success-foreground: 222 30% 6%;
+    --warning: 42 95% 55%;                /* molten gold spark */
+    --warning-foreground: 222 30% 6%;
+    --destructive: 8 88% 54%;             /* ember crimson (right wing) */
+    --destructive-foreground: 40 25% 96%;
+    --info: 202 95% 52%;
+    --info-foreground: 222 30% 6%;
 
-    /* Domain colors */
-    --domain-concepts: 262 60% 50%;
-    --domain-entra: 207 100% 36%;
-    --domain-security: 0 72% 47%;
-    --domain-compliance: 142 71% 36%;
+    /* ShadowX brand tokens — used directly for logo glow & duo-tone */
+    --shadow-azure: 202 95% 52%;
+    --shadow-ember: 8 88% 54%;
+    --shadow-gold: 42 95% 55%;
+    --shadow-obsidian: 222 30% 6%;
+
+    /* Domain colors — re-tuned to brand palette */
+    --domain-concepts: 268 70% 62%;
+    --domain-entra: 202 95% 52%;          /* azure wing */
+    --domain-security: 8 88% 54%;         /* ember wing */
+    --domain-compliance: 152 70% 42%;
 
     /* Borders & rings */
-    --border: 214 15% 88%;
-    --input: 214 15% 88%;
-    --ring: 207 100% 36%;
-    --radius: 0.375rem;
+    --border: 222 18% 18%;
+    --input: 222 18% 18%;
+    --ring: 202 95% 52%;
+    --radius: 0.5rem;
 
-    /* Sidebar — dark navy like Azure portal */
-    --sidebar-background: 220 26% 14%;
-    --sidebar-foreground: 210 20% 88%;
-    --sidebar-primary: 207 100% 50%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 22% 20%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 220 22% 22%;
-    --sidebar-ring: 207 100% 50%;
+    /* Sidebar — even deeper obsidian, brand spine of the app */
+    --sidebar-background: 222 35% 4%;
+    --sidebar-foreground: 40 20% 86%;
+    --sidebar-primary: 202 95% 52%;
+    --sidebar-primary-foreground: 222 35% 4%;
+    --sidebar-accent: 222 28% 11%;
+    --sidebar-accent-foreground: 40 25% 96%;
+    --sidebar-border: 222 24% 14%;
+    --sidebar-ring: 202 95% 52%;
 
-    /* Gradients & shadows */
-    --gradient-hero: linear-gradient(135deg, hsl(207 100% 36%) 0%, hsl(220 90% 25%) 100%);
-    --gradient-domain-entra: linear-gradient(135deg, hsl(207 100% 36%), hsl(207 100% 50%));
-    --gradient-domain-security: linear-gradient(135deg, hsl(0 72% 47%), hsl(15 80% 55%));
-    --gradient-domain-compliance: linear-gradient(135deg, hsl(142 71% 36%), hsl(160 65% 45%));
-   --gradient-domain-concepts: linear-gradient(135deg, hsl(262 60% 50%), hsl(280 60% 60%));
-   --gradient-domain-iam: linear-gradient(135deg, hsl(187 85% 32%), hsl(195 85% 44%));
+    /* Brand gradients & shadows */
+    --gradient-hero: radial-gradient(ellipse at 50% 40%, hsl(42 95% 55% / 0.18) 0%, transparent 55%),
+                     linear-gradient(135deg, hsl(202 95% 14%) 0%, hsl(222 30% 6%) 50%, hsl(8 70% 16%) 100%);
+    --gradient-shadowx: linear-gradient(90deg, hsl(202 95% 52%) 0%, hsl(42 95% 55%) 50%, hsl(8 88% 54%) 100%);
+    --gradient-azure: linear-gradient(135deg, hsl(202 95% 52%), hsl(198 100% 62%));
+    --gradient-ember: linear-gradient(135deg, hsl(8 88% 54%), hsl(18 92% 60%));
 
-    --shadow-card: 0 1px 2px 0 hsl(220 13% 18% / 0.04), 0 1px 3px 0 hsl(220 13% 18% / 0.06);
-    --shadow-elevated: 0 4px 12px -2px hsl(220 13% 18% / 0.08), 0 2px 4px -2px hsl(220 13% 18% / 0.04);
-    --shadow-portal: 0 8px 24px -4px hsl(207 100% 36% / 0.18);
+    --gradient-domain-entra: linear-gradient(135deg, hsl(202 95% 52%), hsl(198 100% 62%));
+    --gradient-domain-security: linear-gradient(135deg, hsl(8 88% 54%), hsl(18 92% 60%));
+    --gradient-domain-compliance: linear-gradient(135deg, hsl(152 70% 42%), hsl(165 70% 50%));
+    --gradient-domain-concepts: linear-gradient(135deg, hsl(268 70% 62%), hsl(285 70% 68%));
+    --gradient-domain-iam: linear-gradient(135deg, hsl(187 85% 42%), hsl(202 95% 52%));
+
+    --shadow-card: 0 1px 2px 0 hsl(0 0% 0% / 0.45), 0 1px 3px 0 hsl(0 0% 0% / 0.3);
+    --shadow-elevated: 0 8px 24px -8px hsl(0 0% 0% / 0.6), 0 2px 8px -2px hsl(0 0% 0% / 0.4);
+    --shadow-portal: 0 8px 28px -6px hsl(202 95% 52% / 0.35);
+    --shadow-glow-azure: 0 0 24px hsl(202 95% 52% / 0.45);
+    --shadow-glow-ember: 0 0 24px hsl(8 88% 54% / 0.45);
+    --shadow-glow-gold: 0 0 18px hsl(42 95% 55% / 0.55);
   }
 
-  .dark {
-    --background: 220 26% 10%;
-    --foreground: 210 20% 92%;
-    --card: 220 24% 13%;
-    --card-foreground: 210 20% 92%;
-    --popover: 220 24% 13%;
-    --popover-foreground: 210 20% 92%;
-    --primary: 207 100% 55%;
-    --primary-foreground: 220 26% 10%;
-    --primary-glow: 207 100% 65%;
-    --primary-soft: 207 100% 18%;
-    --secondary: 220 22% 18%;
-    --secondary-foreground: 210 20% 92%;
-    --muted: 220 22% 18%;
-    --muted-foreground: 215 14% 65%;
-    --accent: 207 100% 22%;
-    --accent-foreground: 207 100% 80%;
-    --success: 142 60% 45%;
-    --warning: 35 95% 55%;
-    --destructive: 0 65% 55%;
-    --border: 220 22% 22%;
-    --input: 220 22% 22%;
-    --ring: 207 100% 55%;
-    --sidebar-background: 220 30% 8%;
-    --sidebar-foreground: 210 20% 88%;
-    --sidebar-accent: 220 26% 14%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 220 26% 16%;
+  /* Light mode — high-contrast variant of the brand for daytime reading */
+  .light {
+    --background: 40 30% 97%;
+    --foreground: 222 30% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 30% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 30% 10%;
+    --primary: 202 95% 38%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 202 95% 52%;
+    --primary-soft: 202 80% 94%;
+    --secondary: 220 20% 94%;
+    --secondary-foreground: 222 30% 10%;
+    --muted: 220 18% 94%;
+    --muted-foreground: 222 12% 38%;
+    --accent: 202 80% 92%;
+    --accent-foreground: 202 95% 28%;
+    --success: 152 70% 32%;
+    --warning: 38 92% 45%;
+    --destructive: 8 80% 46%;
+    --border: 220 14% 86%;
+    --input: 220 14% 86%;
+    --ring: 202 95% 38%;
+    --sidebar-background: 222 35% 6%;
+    --sidebar-foreground: 40 20% 88%;
+    --sidebar-accent: 222 26% 12%;
+    --sidebar-accent-foreground: 40 25% 96%;
+    --sidebar-border: 222 24% 14%;
   }
 }
 
@@ -114,19 +132,36 @@
   html, body, #root { @apply min-h-screen; }
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, hsl(var(--shadow-azure) / 0.08), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 100% 100%, hsl(var(--shadow-ember) / 0.06), transparent 60%);
+    background-attachment: fixed;
+  }
+  h1, h2, h3, .font-display {
+    font-family: 'Rajdhani', 'Inter', sans-serif;
+    letter-spacing: 0.01em;
   }
   code, pre, .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
 }
 
 @layer components {
   .portal-blade {
-    @apply bg-card border border-border rounded-md shadow-[var(--shadow-card)];
+    @apply bg-card border border-border rounded-md shadow-card;
   }
   .portal-toolbar {
     @apply flex items-center gap-2 px-4 py-2 border-b border-border bg-card;
   }
   .breadcrumb-trail {
     @apply text-xs text-muted-foreground flex items-center gap-1.5;
+  }
+  .text-shadowx-gradient {
+    background: var(--gradient-shadowx);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .ring-shadowx {
+    box-shadow: 0 0 0 1px hsl(var(--shadow-azure) / 0.4), 0 0 24px hsl(var(--shadow-gold) / 0.25);
   }
 }
