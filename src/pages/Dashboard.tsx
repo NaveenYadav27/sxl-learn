@@ -85,17 +85,17 @@ export default function Dashboard() {
     <AppLayout title="Dashboard">
       <div className="container py-6 space-y-6">
         {/* Welcome */}
-        <Card className="bg-gradient-hero text-primary-foreground border-0 shadow-portal overflow-hidden">
+        <Card className="hero-surface border-0">
           <CardContent className="pt-6 flex items-center justify-between gap-6 flex-wrap">
             <div>
-              <div className="text-sm opacity-80">Welcome back,</div>
-              <div className="text-2xl font-bold">{user?.user_metadata?.display_name ?? user?.email?.split("@")[0]}</div>
-              <p className="mt-2 text-primary-foreground/85 max-w-xl">
+              <div className="text-sm text-muted-foreground">Welcome back,</div>
+              <div className="text-2xl font-bold text-foreground">{user?.user_metadata?.display_name ?? user?.email?.split("@")[0]}</div>
+              <p className="mt-2 text-foreground/80 max-w-xl">
                 You're {overallPct}% of the way to SC-900 ready. Keep your streak going.
               </p>
             </div>
             <Link to={resumeLab ? `/lab/${resumeLab.slug}` : "/catalog"} className="max-w-xs">
-              <Button size="lg" variant="secondary" className="gap-2 w-full">
+              <Button size="lg" className="gap-2 w-full">
                 <span className="truncate">
                   {resumeLab ? `Resume: ${resumeLab.title}` : "Continue learning"}
                 </span>
@@ -132,16 +132,16 @@ export default function Dashboard() {
               <Progress value={xp ? (xp.xpInLevel / 200) * 100 : 0} className="h-1.5" />
             </CardContent>
           </Card>
-          <Card className="shadow-card bg-gradient-hero text-primary-foreground border-0">
+          <Card className="shadow-card border-primary/30 bg-primary-soft/40">
             <CardContent className="pt-5 flex items-center gap-3">
-              <div className="h-10 w-10 rounded grid place-items-center bg-primary-foreground/15">
+              <div className="h-10 w-10 rounded grid place-items-center bg-primary text-primary-foreground">
                 <ClipboardCheck className="h-5 w-5" />
               </div>
               <div className="flex-1">
-                <div className="text-sm font-semibold">Practice exam</div>
-                <div className="text-xs opacity-85">50 questions · 60 min · pass mark 70%</div>
+                <div className="text-sm font-semibold text-foreground">Practice exam</div>
+                <div className="text-xs text-muted-foreground">50 questions · 60 min · pass mark 70%</div>
               </div>
-              <Link to="/exam"><Button size="sm" variant="secondary">Take exam</Button></Link>
+              <Link to="/exam"><Button size="sm">Take exam</Button></Link>
             </CardContent>
           </Card>
         </div>

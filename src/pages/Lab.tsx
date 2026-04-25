@@ -237,14 +237,16 @@ export default function Lab() {
         <main className="overflow-auto bg-background">
           <div className="p-6 space-y-4 max-w-5xl">
             {isComplete ? (
-              <Card className="bg-gradient-hero text-primary-foreground border-0 shadow-portal">
+              <Card className="hero-surface border-0">
                 <CardContent className="pt-6 text-center">
-                  <Trophy className="h-12 w-12 mx-auto mb-3" />
-                  <h2 className="text-2xl font-bold">Lab complete!</h2>
-                  <p className="opacity-85 mt-1">You earned {attempt?.score} points across {steps.length} steps.</p>
+                  <div className="mx-auto h-14 w-14 rounded-full grid place-items-center bg-warning/15 text-warning shadow-glow-gold mb-3">
+                    <Trophy className="h-7 w-7" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-foreground">Lab complete!</h2>
+                  <p className="text-muted-foreground mt-1">You earned {attempt?.score} points across {steps.length} steps.</p>
                   <div className="flex justify-center gap-2 mt-5">
-                    <Link to="/catalog"><Button variant="secondary">Next lab</Button></Link>
-                    <Link to="/dashboard"><Button variant="outline" className="bg-primary-foreground/10 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/20">Dashboard</Button></Link>
+                    <Link to="/catalog"><Button>Next lab</Button></Link>
+                    <Link to="/dashboard"><Button variant="outline">Dashboard</Button></Link>
                   </div>
                 </CardContent>
               </Card>

@@ -114,7 +114,7 @@ export default function Catalog() {
     >
       <div className="container py-6 space-y-6 max-w-6xl">
         {/* Hero / overview */}
-        <Card className="border-0 shadow-portal overflow-hidden bg-gradient-hero text-primary-foreground">
+        <Card className="hero-surface border-0">
           <CardContent className="pt-6">
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div>
@@ -122,7 +122,7 @@ export default function Catalog() {
                   <GraduationCap className="h-3 w-3" /> SC-900 day-wise index
                 </Badge>
                 <h1 className="text-2xl font-bold">Course Catalog</h1>
-                <p className="text-sm opacity-85 max-w-2xl mt-1">
+                <p className="text-sm text-muted-foreground max-w-2xl mt-1">
                   Day-by-day breakdown aligned with the official table of contents. Each module shows the theory notes
                   to teach plus the hands-on labs that follow them.
                 </p>

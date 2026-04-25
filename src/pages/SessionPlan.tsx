@@ -232,7 +232,7 @@ export default function SessionPlan() {
     <AppLayout title="Session Plan">
       <div className="container py-6 space-y-6 max-w-6xl">
         {/* Header */}
-        <Card className="border-0 shadow-portal overflow-hidden bg-gradient-hero text-primary-foreground">
+        <Card className="hero-surface border-0">
           <CardContent className="pt-6 space-y-4">
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div>
@@ -240,18 +240,18 @@ export default function SessionPlan() {
                   <GraduationCap className="h-3 w-3" /> SC-900 instructor playbook
                 </Badge>
                 <h1 className="text-2xl font-bold">Day-wise session plan</h1>
-                <p className="text-sm opacity-85 max-w-2xl mt-1">
+                <p className="text-sm text-muted-foreground max-w-2xl mt-1">
                   Full 8-hour curriculum aligned with the official table of contents — every theory block and lab maps
                   to a hands-on exercise inside this platform. Switch between a 1-day intensive or a 2-day split.
                 </p>
               </div>
-              <div className="flex items-center gap-2 rounded-md bg-primary-foreground/10 px-3 py-2 text-sm">
-                <Clock className="h-4 w-4" />
-                <label htmlFor="start" className="opacity-80">Start</label>
+              <div className="flex items-center gap-2 rounded-md bg-muted/60 border border-border px-3 py-2 text-sm">
+                <Clock className="h-4 w-4 text-muted-foreground" />
+                <label htmlFor="start" className="text-muted-foreground">Start</label>
                 <input
                   id="start" type="time" value={startTime}
                   onChange={(e) => setStartTime(e.target.value || "09:00")}
-                  className="bg-transparent border border-primary-foreground/30 rounded px-2 py-1 text-primary-foreground [color-scheme:dark]"
+                  className="bg-background border border-border rounded px-2 py-1 text-foreground [color-scheme:dark]"
                 />
               </div>
             </div>
