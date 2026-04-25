@@ -245,13 +245,13 @@ export default function SessionPlan() {
                   to a hands-on exercise inside this platform. Switch between a 1-day intensive or a 2-day split.
                 </p>
               </div>
-              <div className="flex items-center gap-2 rounded-md bg-primary-foreground/10 px-3 py-2 text-sm">
-                <Clock className="h-4 w-4" />
-                <label htmlFor="start" className="opacity-80">Start</label>
+              <div className="flex items-center gap-2 rounded-md bg-muted/60 border border-border px-3 py-2 text-sm">
+                <Clock className="h-4 w-4 text-muted-foreground" />
+                <label htmlFor="start" className="text-muted-foreground">Start</label>
                 <input
                   id="start" type="time" value={startTime}
                   onChange={(e) => setStartTime(e.target.value || "09:00")}
-                  className="bg-transparent border border-primary-foreground/30 rounded px-2 py-1 text-primary-foreground [color-scheme:dark]"
+                  className="bg-background border border-border rounded px-2 py-1 text-foreground [color-scheme:dark]"
                 />
               </div>
             </div>
