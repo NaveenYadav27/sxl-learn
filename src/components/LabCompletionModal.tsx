@@ -33,13 +33,13 @@ export function LabCompletionModal({
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="sm:max-w-lg p-0 overflow-hidden">
-        <div className="bg-gradient-hero text-primary-foreground px-6 pt-8 pb-6 text-center">
-          <div className="mx-auto h-14 w-14 rounded-full bg-primary-foreground/20 grid place-items-center mb-3 backdrop-blur-sm">
+        <div className="hero-surface px-6 pt-8 pb-6 text-center rounded-none">
+          <div className="mx-auto h-14 w-14 rounded-full bg-warning/15 text-warning grid place-items-center mb-3 shadow-glow-gold">
             <Trophy className="h-8 w-8" />
           </div>
           <DialogHeader className="space-y-1">
-            <DialogTitle className="text-2xl text-primary-foreground">Lab complete!</DialogTitle>
-            <p className="text-sm text-primary-foreground/85">{labTitle}</p>
+            <DialogTitle className="text-2xl text-foreground">Lab complete!</DialogTitle>
+            <p className="text-sm text-muted-foreground">{labTitle}</p>
           </DialogHeader>
         </div>
 

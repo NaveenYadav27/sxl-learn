@@ -152,10 +152,10 @@ export function QuizPanel({ labId, attemptId, onComplete }: Props) {
           Submit quiz & complete lab
         </Button>
       ) : (
-        <Card className="bg-gradient-hero text-primary-foreground border-0 shadow-portal">
+        <Card className="bg-card border border-warning/30 shadow-glow-gold">
           <CardContent className="pt-5 text-center">
-            <Trophy className="h-8 w-8 mx-auto mb-2" />
-            <div className="font-semibold">Quiz score: {score} / {totalPoints}</div>
+            <Trophy className="h-8 w-8 mx-auto mb-2 text-warning" />
+            <div className="font-semibold text-foreground">Quiz score: {score} / {totalPoints}</div>
           </CardContent>
         </Card>
       )}
