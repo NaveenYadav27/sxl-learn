@@ -58,7 +58,7 @@ export type SelfCheck = {
 };
 
 export type ModuleExplanation = {
-  moduleSlug: "concepts" | "iam" | "entra" | "security" | "compliance";
+  moduleSlug: string;
   tagline: string;
   overview: string;
   whyItMatters: string;
