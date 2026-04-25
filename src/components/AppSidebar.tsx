@@ -17,17 +17,17 @@ import { Progress } from "@/components/ui/progress";
 import { Logo } from "@/components/Logo";
 import { CourseSwitcher } from "@/components/CourseSwitcher";
 
-const learnerNav = [
+const baseLearnerNav = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Course Catalog", url: "/catalog", icon: BookOpen },
   { title: "Session Plan", url: "/session-plan", icon: CalendarDays },
-  { title: "My Live Tenant", url: "/tenant", icon: Building2 },
+  { title: "My Live Tenant", url: "/tenant", icon: Building2, courseOnly: "sc-900" as const },
   { title: "Practice Exam", url: "/exam", icon: ClipboardCheck },
   { title: "My Progress", url: "/progress", icon: Trophy },
   { title: "License Guide", url: "/licensing", icon: Wallet },
 ];
 
-const portalNav = [
+const sc900PortalNav = [
   { title: "Microsoft Entra", url: "/portal/entra", icon: Users, color: "text-domain-entra" },
   { title: "Defender XDR", url: "/defender", icon: Shield, color: "text-domain-security" },
   { title: "Microsoft Purview", url: "/purview", icon: Gavel, color: "text-domain-compliance" },
@@ -48,6 +48,9 @@ export function AppSidebar() {
   const { pathname } = useLocation();
   const { isInstructor, isAdmin, signOut, user } = useAuth();
   const { course } = useCourse();
+  const learnerNav = baseLearnerNav.filter((i) => !i.courseOnly || i.courseOnly === course.code);
+  const portalNav = course.code === "sc-900" ? sc900PortalNav : [];
+  const courseLabSlugs = useMemo(() => new Set(course.modules.flatMap((m) => m.labSlugs)), [course.code]);
   const [progress, setProgress] = useState({ done: 0, total: 0 });
   const [xp, setXp] = useState<XpStats | null>(null);
 
@@ -55,18 +58,19 @@ export function AppSidebar() {
     if (!user) return;
     let cancelled = false;
     (async () => {
-      const [{ count: total }, { data: atts }, xpStats] = await Promise.all([
-        supabase.from("labs").select("*", { count: "exact", head: true }).eq("is_published", true),
+      const [{ data: allLabs }, { data: atts }, xpStats] = await Promise.all([
+        supabase.from("labs").select("id, slug").eq("is_published", true),
         supabase.from("lab_attempts").select("lab_id, status").eq("user_id", user.id).eq("status", "completed"),
         getXpStats(user.id),
       ]);
       if (cancelled) return;
-      const doneIds = new Set((atts ?? []).map((a) => a.lab_id));
-      setProgress({ done: doneIds.size, total: total ?? 0 });
+      const courseLabIds = new Set((allLabs ?? []).filter((l: any) => courseLabSlugs.has(l.slug)).map((l: any) => l.id));
+      const doneIds = new Set((atts ?? []).map((a) => a.lab_id).filter((id) => courseLabIds.has(id)));
+      setProgress({ done: doneIds.size, total: courseLabIds.size });
       setXp(xpStats);
     })();
     return () => { cancelled = true; };
-  }, [user, pathname]); // refresh when navigating (e.g. after lab completion)
+  }, [user, pathname, course.code, courseLabSlugs]); // refresh when navigating or switching course
 
   const isActive = (url: string) => pathname === url || pathname.startsWith(url + "/");
   const pct = progress.total ? Math.round((progress.done / progress.total) * 100) : 0;
@@ -130,23 +134,25 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Simulators</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {portalNav.map((item) => (
-                <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
-                    <Link to={item.url}>
-                      <item.icon className={item.color} />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {portalNav.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Simulators</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {portalNav.map((item) => (
+                  <SidebarMenuItem key={item.url}>
+                    <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                      <Link to={item.url}>
+                        <item.icon className={item.color} />
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
         {isInstructor && (
           <SidebarGroup>
