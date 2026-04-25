@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useCourse } from "@/hooks/useCourse";
 import { getXpStats, type XpStats } from "@/lib/xp";
 import { Trophy, Clock, BookOpen, ArrowRight, Sparkles, Shield, Users, Lock, Gavel, Flame, Zap, ClipboardCheck } from "lucide-react";
 
@@ -18,6 +19,8 @@ const domainGrad: Record<string, string> = {
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { course } = useCourse();
+  const allowedSlugs = useMemoSet(course.modules.flatMap((m) => m.labSlugs));
   const [stats, setStats] = useState({ totalLabs: 0, completed: 0, inProgress: 0, score: 0 });
   const [modules, setModules] = useState<any[]>([]);
   const [recent, setRecent] = useState<any[]>([]);
