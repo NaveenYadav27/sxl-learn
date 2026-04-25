@@ -59,12 +59,16 @@ export default function Module() {
   const { user } = useAuth();
   const { course } = useCourse();
   const moduleNotes = course.modules;
+  const domainMeta = course.code === "cis-itsm" ? itsmDomainMeta : sc900DomainMeta;
   const moduleOrder = moduleNotes.filter((m) => m.moduleSlug !== null).map((m) => m.moduleSlug!) as string[];
   const [labs, setLabs] = useState<Lab[]>([]);
   const [progress, setProgress] = useState<Record<string, string>>({});
 
   const note = useMemo(() => moduleNotes.find((m) => m.moduleSlug === slug), [slug, moduleNotes]);
-  const explanation = useMemo(() => (slug ? getModuleExplanation(slug) : undefined), [slug]);
+  const explanation = useMemo(
+    () => (slug ? (course.code === "cis-itsm" ? getItsmModuleExplanation(slug) : getModuleExplanation(slug)) : undefined),
+    [slug, course.code],
+  );
 
   useEffect(() => {
     if (!note) return;
