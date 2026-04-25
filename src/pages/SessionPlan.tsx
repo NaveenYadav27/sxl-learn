@@ -217,11 +217,6 @@ export default function SessionPlan() {
   const [mode, setMode] = useState<"1day" | "2day">("1day");
   const [startTime, setStartTime] = useState("09:00");
 
-  // Non-SC-900 courses render a compact day-plan view sourced from the course registry.
-  if (course.code !== "sc-900") {
-    return <CourseDayPlanView course={course} startTime={startTime} setStartTime={setStartTime} />;
-  }
-
   const totalMin = useMemo(() => sessions.reduce((s, x) => s + totalMinutes(x.blocks), 0), []);
   const labMin = useMemo(
     () => sessions.reduce((s, x) => s + x.blocks.filter((b) => b.kind === "lab").reduce((a, b) => a + b.minutes, 0), 0),
