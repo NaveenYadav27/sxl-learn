@@ -254,8 +254,9 @@ function DayCard({
               </div>
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <Badge variant="outline" className="gap-1"><BookOpen className="h-3 w-3" />{dayTheoryMin}m theory</Badge>
-              <Badge variant="outline" className="gap-1"><FlaskConical className="h-3 w-3" />{Math.round(dayLabMin)}m labs</Badge>
+              <Badge variant="outline" className="gap-1"><BookOpen className="h-3 w-3" />{fmtMin(dayTheoryMin)} theory</Badge>
+              <Badge variant="outline" className="gap-1"><FlaskConical className="h-3 w-3" />{fmtMin(dayLabMin)} labs</Badge>
+              <Badge className="bg-primary/10 text-primary border-0">{fmtMin(dayTotalMin)} total</Badge>
               <Badge variant="secondary">{dayCompleted}/{dayLabsCount}</Badge>
             </div>
           </div>
