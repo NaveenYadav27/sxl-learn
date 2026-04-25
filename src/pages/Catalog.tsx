@@ -431,6 +431,7 @@ function LabRow({ lab, index, status }: { lab: Lab; index: number; status?: stri
 }
 
 function ExamCard() {
+  const { course } = useCourse();
   return (
     <div className="rounded-md border border-primary/30 bg-primary/5 p-3 flex items-start gap-3">
       <div className="h-8 w-8 rounded bg-gradient-hero text-primary-foreground grid place-items-center shrink-0">
@@ -439,7 +440,7 @@ function ExamCard() {
       <div className="flex-1 min-w-0">
         <div className="text-sm font-medium">Take the in-app practice exam</div>
         <p className="text-xs text-muted-foreground mt-1">
-          50 questions · 60-minute clock · pass mark 70%. Mirrors the real SC-900 format.
+          50 questions · 60-minute clock · pass mark 70%. Mirrors the real {course.shortName} format.
         </p>
       </div>
       <Link to="/exam" className="shrink-0">

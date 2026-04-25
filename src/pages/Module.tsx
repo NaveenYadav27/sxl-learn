@@ -368,7 +368,7 @@ export default function Module() {
             <CardContent className="pt-5">
               <div className="flex items-center gap-2 mb-3">
                 <Award className="h-4 w-4 text-warning" />
-                <h3 className="text-base font-semibold">SC-900 exam tips</h3>
+                <h3 className="text-base font-semibold">{course.shortName} exam tips</h3>
               </div>
               <ul className="space-y-2 text-sm">
                 {explanation.examTips.map((tip, i) => (
