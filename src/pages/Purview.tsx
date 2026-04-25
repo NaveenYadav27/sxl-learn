@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -38,7 +39,7 @@ export default function Purview() {
   return (
     <AppLayout
       title="Microsoft Purview"
-      breadcrumb={[{ label: "Simulators" }, { label: "Microsoft Purview" }]}
+      breadcrumb={<Breadcrumb items={[{ label: "Simulators" }, { label: "Microsoft Purview" }]} />}
     >
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
