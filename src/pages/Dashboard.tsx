@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { AppLayout } from "@/components/AppLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -20,7 +20,11 @@ const domainGrad: Record<string, string> = {
 export default function Dashboard() {
   const { user } = useAuth();
   const { course } = useCourse();
-  const allowedSlugs = useMemoSet(course.modules.flatMap((m) => m.labSlugs));
+  const allowedSlugs = useMemo(() => new Set(course.modules.flatMap((m) => m.labSlugs)), [course.code]);
+  const allowedModuleSlugs = useMemo(
+    () => new Set(course.modules.filter((m) => m.moduleSlug !== null).map((m) => m.moduleSlug!)),
+    [course.code],
+  );
   const [stats, setStats] = useState({ totalLabs: 0, completed: 0, inProgress: 0, score: 0 });
   const [modules, setModules] = useState<any[]>([]);
   const [recent, setRecent] = useState<any[]>([]);
