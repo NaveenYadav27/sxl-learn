@@ -5,6 +5,7 @@ import {
   Shield, Users, Lock, Gavel, Sparkles, GraduationCap, Trophy, Zap,
   CheckCircle2, ArrowRight, Network, Brain,
 } from "lucide-react";
+import { Logo } from "@/components/Logo";
 
 const domains = [
   { icon: Shield, name: "Concepts", desc: "Zero Trust, Defense in Depth, Encryption", weight: "10–15%", grad: "bg-gradient-concepts" },
@@ -25,44 +26,43 @@ const features = [
 const Index = () => (
   <div className="min-h-screen bg-background">
     {/* Top bar */}
-    <header className="border-b border-border bg-card">
-      <div className="container flex h-14 items-center justify-between">
+    <header className="border-b border-border bg-card/60 backdrop-blur sticky top-0 z-30">
+      <div className="container flex h-16 items-center justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <div className="grid h-8 w-8 place-items-center rounded bg-primary text-primary-foreground">
-            <Sparkles className="h-4 w-4" />
-          </div>
-          <span className="font-semibold">Enterprise Twin</span>
-          <span className="text-xs px-1.5 py-0.5 rounded bg-primary-soft text-primary font-medium">SC-900</span>
+          <Logo size="sm" showWordmark showTagline />
+          <span className="text-[10px] ml-2 px-1.5 py-0.5 rounded bg-primary-soft text-primary-glow font-mono font-medium border border-primary/30">SC-900</span>
         </Link>
         <nav className="flex items-center gap-2">
           <Link to="/auth"><Button variant="ghost" size="sm">Sign in</Button></Link>
-          <Link to="/auth?mode=signup"><Button size="sm">Get started</Button></Link>
+          <Link to="/auth?mode=signup"><Button size="sm" className="bg-gradient-shadowx text-shadowx-obsidian font-semibold hover:opacity-90">Get started</Button></Link>
         </nav>
       </div>
     </header>
 
     {/* Hero */}
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-hero opacity-95" />
-      <div className="relative container py-20 md:py-28 text-primary-foreground">
+      <div className="absolute inset-0 bg-gradient-hero" />
+      <div className="absolute inset-0 pointer-events-none"
+           style={{ backgroundImage: "radial-gradient(circle at 20% 30%, hsl(var(--shadow-azure) / 0.25), transparent 45%), radial-gradient(circle at 80% 70%, hsl(var(--shadow-ember) / 0.22), transparent 45%), radial-gradient(circle at 50% 50%, hsl(var(--shadow-gold) / 0.12), transparent 35%)" }} />
+      <div className="relative container py-24 md:py-32 text-foreground">
         <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full bg-primary-foreground/10 backdrop-blur px-3 py-1 text-xs font-medium mb-6 border border-primary-foreground/20">
-            <Sparkles className="h-3 w-3" /> Practise Microsoft Security on a high-fidelity twin
+          <div className="inline-flex items-center gap-2 rounded-full bg-shadowx-obsidian/60 backdrop-blur px-3 py-1 text-xs font-medium mb-6 border border-shadowx-gold/30 text-shadowx-gold">
+            <Sparkles className="h-3 w-3" /> Empower · Illuminate · Uphold
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-[1.05]">
-            The hands-on way to <span className="text-primary-glow">pass SC-900</span> and actually understand it.
+          <h1 className="font-display text-5xl md:text-7xl font-bold tracking-tight leading-[1.02]">
+            The hands-on way to <span className="text-shadowx-gradient">pass SC-900</span> and actually understand it.
           </h1>
-          <p className="mt-6 text-lg md:text-xl text-primary-foreground/85 max-w-2xl">
+          <p className="mt-6 text-lg md:text-xl text-foreground/75 max-w-2xl">
             22 interactive labs inside simulated Microsoft Entra, Defender XDR, Purview and Sentinel — guided by an AI tutor, scored in real time, no Azure tenant required.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link to="/auth?mode=signup">
-              <Button size="lg" variant="secondary" className="gap-2">
+              <Button size="lg" className="gap-2 bg-gradient-shadowx text-shadowx-obsidian font-semibold hover:opacity-90">
                 Start free <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
             <Link to="/catalog">
-              <Button size="lg" variant="outline" className="bg-primary-foreground/10 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/20">
+              <Button size="lg" variant="outline" className="border-shadowx-azure/40 text-foreground hover:bg-shadowx-azure/10">
                 Browse the 22 labs
               </Button>
             </Link>
@@ -131,8 +131,13 @@ const Index = () => (
       </Link>
     </section>
 
-    <footer className="border-t border-border py-8 text-center text-xs text-muted-foreground">
-      Enterprise Twin · An independent SC-900 training simulator. Not affiliated with Microsoft.
+    <footer className="border-t border-border py-10">
+      <div className="container flex flex-col md:flex-row items-center justify-between gap-4">
+        <Logo size="xs" showWordmark showTagline />
+        <div className="text-xs text-muted-foreground text-center md:text-right">
+          ShadowX Lab · An independent SC-900 training simulator. Not affiliated with Microsoft.
+        </div>
+      </div>
     </footer>
   </div>
 );
@@ -140,8 +145,8 @@ const Index = () => (
 function Stat({ n, l }: { n: string; l: string }) {
   return (
     <div>
-      <div className="text-3xl font-bold text-primary-glow">{n}</div>
-      <div className="text-xs uppercase tracking-wider text-primary-foreground/70">{l}</div>
+      <div className="font-display text-4xl font-bold text-shadowx-gradient">{n}</div>
+      <div className="text-[10px] uppercase tracking-[0.2em] text-shadowx-gold/80 mt-1">{l}</div>
     </div>
   );
 }
