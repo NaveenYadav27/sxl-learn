@@ -15,7 +15,7 @@ import {
   Clock, ArrowRight, Shield, Users, Gavel, BookOpen, Lock, ExternalLink, Search, X,
   Sparkles, Building2, ClipboardCheck, FlaskConical, Calendar, GraduationCap,
 } from "lucide-react";
-import { moduleNotes, oneDayPlan, twoDayPlan, type DomainKey, type ModuleNote, type DayPlan } from "@/lib/curriculum";
+import { moduleNotes, oneDayPlan, twoDayPlan, fourDayPlan, type DomainKey, type ModuleNote, type DayPlan } from "@/lib/curriculum";
 
 const simulatorIcon: Record<string, any> = {
   entra: Users, defender: Shield, purview: Gavel, sentinel: Lock, generic: BookOpen, tenant: Building2,
