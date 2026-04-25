@@ -98,16 +98,16 @@ export default function ProgressPage() {
         ) : (
           <>
             {/* Hero summary */}
-            <Card className="bg-gradient-hero text-primary-foreground border-0 shadow-portal overflow-hidden">
+            <Card className="hero-surface border-0">
               <CardContent className="pt-6 grid md:grid-cols-[1fr_auto] items-center gap-6">
                 <div>
-                  <div className="text-sm opacity-80">SC-900 readiness</div>
-                  <div className="text-4xl font-bold mt-1">{overallPct}%</div>
-                  <p className="text-sm text-primary-foreground/85 mt-2 max-w-md">
+                  <div className="text-sm text-muted-foreground">SC-900 readiness</div>
+                  <div className="text-4xl font-bold mt-1 text-shadowx-gradient">{overallPct}%</div>
+                  <p className="text-sm text-muted-foreground mt-2 max-w-md">
                     {totals.completed} of {totals.labs} labs completed · {earnedBadges.length} badge{earnedBadges.length === 1 ? "" : "s"} earned
                   </p>
-                  <div className="mt-3 h-2 bg-primary-foreground/20 rounded-full overflow-hidden max-w-md">
-                    <div className="h-full bg-primary-foreground rounded-full transition-all" style={{ width: `${overallPct}%` }} />
+                  <div className="mt-3 h-2 bg-muted rounded-full overflow-hidden max-w-md">
+                    <div className="h-full bg-gradient-shadowx rounded-full transition-all" style={{ width: `${overallPct}%` }} />
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-3 md:gap-5 text-center">

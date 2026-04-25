@@ -232,7 +232,7 @@ export default function SessionPlan() {
     <AppLayout title="Session Plan">
       <div className="container py-6 space-y-6 max-w-6xl">
         {/* Header */}
-        <Card className="border-0 shadow-portal overflow-hidden bg-gradient-hero text-primary-foreground">
+        <Card className="hero-surface border-0">
           <CardContent className="pt-6 space-y-4">
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div>
@@ -240,7 +240,7 @@ export default function SessionPlan() {
                   <GraduationCap className="h-3 w-3" /> SC-900 instructor playbook
                 </Badge>
                 <h1 className="text-2xl font-bold">Day-wise session plan</h1>
-                <p className="text-sm opacity-85 max-w-2xl mt-1">
+                <p className="text-sm text-muted-foreground max-w-2xl mt-1">
                   Full 8-hour curriculum aligned with the official table of contents — every theory block and lab maps
                   to a hands-on exercise inside this platform. Switch between a 1-day intensive or a 2-day split.
                 </p>
