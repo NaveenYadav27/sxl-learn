@@ -423,3 +423,14 @@ function Stat({ icon: Icon, label, value }: { icon: any; label: string; value: s
     </div>
   );
 }
+
+function DDRow({ label, value, tone }: { label: string; value: string; tone?: "warning" | "primary" }) {
+  const toneClass =
+    tone === "warning" ? "text-warning" : tone === "primary" ? "text-primary" : "text-muted-foreground";
+  return (
+    <div>
+      <div className={`text-[10px] uppercase tracking-wide font-semibold mb-0.5 ${toneClass}`}>{label}</div>
+      <p className="text-sm leading-relaxed text-foreground/85">{value}</p>
+    </div>
+  );
+}
