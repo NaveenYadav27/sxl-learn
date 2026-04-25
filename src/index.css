@@ -11,132 +11,138 @@
    ================================================================ */
 
 @layer base {
+  /* DEFAULT — Light, warm-paper theme. Easy on the eyes, brand-forward.
+     Sidebar stays obsidian as the brand spine. Accents = azure/ember/gold. */
   :root {
-    /* Surfaces — obsidian by default (brand is dark-first) */
-    --background: 222 30% 6%;             /* obsidian black */
-    --foreground: 40 25% 92%;             /* warm bone */
-    --card: 222 26% 9%;
-    --card-foreground: 40 25% 92%;
-    --popover: 222 26% 10%;
-    --popover-foreground: 40 25% 92%;
+    /* Surfaces — soft warm paper, not stark white */
+    --background: 40 30% 97%;             /* warm bone paper */
+    --foreground: 222 35% 12%;            /* near-obsidian ink — AA 14:1 */
+    --card: 0 0% 100%;
+    --card-foreground: 222 35% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 35% 12%;
 
-    /* Primary — Electric ShadowX Azure (sampled from logo: 204° 95% 33% → lifted for AA on dark) */
-    --primary: 204 92% 54%;               /* AA on obsidian: 7.1:1 */
-    --primary-foreground: 222 30% 6%;
-    --primary-glow: 200 100% 66%;
-    --primary-soft: 204 55% 14%;
+    /* Primary — ShadowX Azure (deepened for AA on light surfaces) */
+    --primary: 204 92% 36%;               /* AA on white: 6.1:1 */
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 204 92% 48%;
+    --primary-soft: 204 80% 94%;
 
-    /* Secondary surfaces */
-    --secondary: 222 22% 13%;
-    --secondary-foreground: 40 22% 90%;
+    /* Secondary surfaces — cool stone tints */
+    --secondary: 220 18% 94%;
+    --secondary-foreground: 222 35% 14%;
 
-    --muted: 222 20% 14%;
-    --muted-foreground: 220 12% 65%;      /* AA on obsidian: 7.5:1 */
+    --muted: 40 18% 93%;                  /* warm stone, ties to paper bg */
+    --muted-foreground: 222 14% 38%;      /* AA: 7.0:1 */
 
-    --accent: 204 70% 16%;
-    --accent-foreground: 200 100% 82%;
+    --accent: 204 80% 93%;                /* azure wash */
+    --accent-foreground: 204 92% 24%;
 
-    /* Semantic status — calibrated for AA on dark */
-    --success: 152 65% 48%;               /* AA: 5.4:1 */
-    --success-foreground: 222 30% 6%;
-    --warning: 38 92% 58%;                /* molten gold — sampled 38° */
-    --warning-foreground: 222 30% 6%;
-    --destructive: 14 85% 56%;            /* ember crimson — sampled 14° (was 8°) */
-    --destructive-foreground: 40 25% 96%;
-    --info: 204 92% 54%;
-    --info-foreground: 222 30% 6%;
+    /* Semantic status — calibrated for AA on light */
+    --success: 152 70% 28%;               /* AA: 5.4:1 */
+    --success-foreground: 0 0% 100%;
+    --warning: 32 92% 38%;                /* deeper gold for white bg — AA 4.7:1 */
+    --warning-foreground: 0 0% 100%;
+    --destructive: 14 78% 44%;            /* ember on light — AA 5.1:1 */
+    --destructive-foreground: 0 0% 100%;
+    --info: 204 92% 36%;
+    --info-foreground: 0 0% 100%;
 
-    /* ShadowX brand tokens — exact logo-sampled hues */
-    --shadow-azure: 204 92% 54%;
-    --shadow-ember: 14 85% 56%;
-    --shadow-gold: 38 92% 58%;
-    --shadow-obsidian: 222 30% 6%;
+    /* ShadowX brand tokens — light-mode calibrated */
+    --shadow-azure: 204 92% 36%;
+    --shadow-ember: 14 78% 44%;
+    --shadow-gold: 32 92% 42%;
+    --shadow-obsidian: 222 35% 8%;
 
-    /* Domain colors — AA-compliant on dark surfaces */
-    --domain-concepts: 268 72% 68%;       /* violet, lifted for contrast */
-    --domain-entra: 204 92% 54%;          /* azure wing */
-    --domain-security: 14 85% 56%;        /* ember wing */
-    --domain-compliance: 152 65% 48%;     /* mint */
+    /* Domain colors — AA-compliant on light */
+    --domain-concepts: 268 60% 46%;       /* violet */
+    --domain-entra: 204 92% 36%;          /* azure */
+    --domain-security: 14 78% 44%;        /* ember */
+    --domain-compliance: 152 70% 28%;     /* mint */
 
-    /* Borders & rings */
-    --border: 222 16% 17%;
-    --input: 222 16% 17%;
-    --ring: 204 92% 54%;
+    /* Borders & rings — soft, low-contrast for calm UI */
+    --border: 220 14% 88%;
+    --input: 220 14% 86%;
+    --ring: 204 92% 36%;
     --radius: 0.5rem;
 
-    /* Sidebar — even deeper obsidian, brand spine of the app */
-    --sidebar-background: 222 35% 4%;
-    --sidebar-foreground: 40 20% 88%;
+    /* Sidebar — STAYS obsidian: the brand spine of the app */
+    --sidebar-background: 222 35% 6%;
+    --sidebar-foreground: 40 20% 90%;
     --sidebar-primary: 204 92% 54%;
-    --sidebar-primary-foreground: 222 35% 4%;
-    --sidebar-accent: 222 26% 11%;
+    --sidebar-primary-foreground: 222 35% 6%;
+    --sidebar-accent: 222 26% 12%;
     --sidebar-accent-foreground: 40 25% 96%;
     --sidebar-border: 222 22% 13%;
     --sidebar-ring: 204 92% 54%;
 
     /* Brand gradients & shadows
-       INDUSTRY-STANDARD GUIDANCE:
-       - gradient-hero: marketing-only (Index, Auth). Deep, dramatic.
-       - gradient-brand-subtle: in-app heroes. Calm card-tone with brand tint.
-       - gradient-shadowx: thin top-stripes only — never as full backgrounds. */
-    --gradient-hero: radial-gradient(ellipse at 50% 40%, hsl(38 92% 58% / 0.16) 0%, transparent 55%),
-                     linear-gradient(135deg, hsl(204 92% 14%) 0%, hsl(222 30% 6%) 50%, hsl(14 70% 14%) 100%);
-    --gradient-brand-subtle: linear-gradient(135deg, hsl(222 26% 10%) 0%, hsl(222 28% 8%) 60%, hsl(204 40% 9%) 100%);
-    --gradient-shadowx: linear-gradient(90deg, hsl(204 92% 54%) 0%, hsl(38 92% 58%) 50%, hsl(14 85% 56%) 100%);
-    --gradient-azure: linear-gradient(135deg, hsl(204 92% 54%), hsl(200 100% 66%));
-    --gradient-ember: linear-gradient(135deg, hsl(14 85% 56%), hsl(22 90% 62%));
+       - gradient-hero: marketing-only (Index, Auth). Dramatic, dark for impact.
+       - gradient-brand-subtle: in-app heroes. Soft paper with whisper-tint.
+       - gradient-shadowx: thin top-stripes only. */
+    --gradient-hero: radial-gradient(ellipse at 50% 40%, hsl(38 92% 58% / 0.18) 0%, transparent 55%),
+                     linear-gradient(135deg, hsl(204 92% 14%) 0%, hsl(222 35% 8%) 50%, hsl(14 70% 14%) 100%);
+    --gradient-brand-subtle: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(40 30% 97%) 55%, hsl(204 60% 95%) 100%);
+    --gradient-shadowx: linear-gradient(90deg, hsl(204 92% 36%) 0%, hsl(32 92% 42%) 50%, hsl(14 78% 44%) 100%);
+    --gradient-azure: linear-gradient(135deg, hsl(204 92% 36%), hsl(200 92% 50%));
+    --gradient-ember: linear-gradient(135deg, hsl(14 78% 44%), hsl(22 82% 52%));
 
-    --gradient-domain-entra: linear-gradient(135deg, hsl(204 92% 54%), hsl(200 100% 66%));
-    --gradient-domain-security: linear-gradient(135deg, hsl(14 85% 56%), hsl(22 90% 62%));
-    --gradient-domain-compliance: linear-gradient(135deg, hsl(152 65% 48%), hsl(165 70% 54%));
-    --gradient-domain-concepts: linear-gradient(135deg, hsl(268 72% 68%), hsl(285 72% 72%));
-    --gradient-domain-iam: linear-gradient(135deg, hsl(187 80% 48%), hsl(204 92% 54%));
+    --gradient-domain-entra: linear-gradient(135deg, hsl(204 92% 36%), hsl(200 92% 50%));
+    --gradient-domain-security: linear-gradient(135deg, hsl(14 78% 44%), hsl(22 82% 52%));
+    --gradient-domain-compliance: linear-gradient(135deg, hsl(152 70% 28%), hsl(165 70% 36%));
+    --gradient-domain-concepts: linear-gradient(135deg, hsl(268 60% 46%), hsl(285 60% 54%));
+    --gradient-domain-iam: linear-gradient(135deg, hsl(187 80% 36%), hsl(204 92% 36%));
 
-    --shadow-card: 0 1px 2px 0 hsl(0 0% 0% / 0.45), 0 1px 3px 0 hsl(0 0% 0% / 0.3);
-    --shadow-elevated: 0 8px 24px -8px hsl(0 0% 0% / 0.6), 0 2px 8px -2px hsl(0 0% 0% / 0.4);
-    --shadow-portal: 0 8px 28px -6px hsl(204 92% 54% / 0.28);
-    --shadow-glow-azure: 0 0 24px hsl(204 92% 54% / 0.40);
-    --shadow-glow-ember: 0 0 24px hsl(14 85% 56% / 0.40);
-    --shadow-glow-gold: 0 0 18px hsl(38 92% 58% / 0.50);
+    /* Shadows — soft, light-mode appropriate (no heavy black slabs) */
+    --shadow-card: 0 1px 2px 0 hsl(222 30% 12% / 0.06), 0 1px 3px 0 hsl(222 30% 12% / 0.08);
+    --shadow-elevated: 0 8px 24px -8px hsl(222 30% 12% / 0.14), 0 2px 8px -2px hsl(222 30% 12% / 0.08);
+    --shadow-portal: 0 8px 28px -6px hsl(204 92% 36% / 0.22);
+    --shadow-glow-azure: 0 0 20px hsl(204 92% 36% / 0.25);
+    --shadow-glow-ember: 0 0 20px hsl(14 78% 44% / 0.25);
+    --shadow-glow-gold: 0 0 18px hsl(32 92% 42% / 0.32);
   }
 
-  /* Light mode — high-contrast variant of the brand for daytime reading */
-  .light {
-    --background: 40 28% 97%;
-    --foreground: 222 30% 10%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 30% 10%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 30% 10%;
-    --primary: 204 92% 38%;               /* AA on white: 5.8:1 */
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 204 92% 50%;
-    --primary-soft: 204 80% 94%;
-    --secondary: 220 18% 94%;
-    --secondary-foreground: 222 30% 10%;
-    --muted: 220 16% 94%;
-    --muted-foreground: 222 12% 36%;      /* AA: 7.4:1 */
-    --accent: 204 80% 92%;
-    --accent-foreground: 204 92% 26%;
-    --success: 152 70% 30%;               /* AA: 5.0:1 */
-    --warning: 32 92% 38%;                /* deeper gold for white bg */
-    --warning-foreground: 0 0% 100%;
-    --destructive: 14 78% 44%;            /* AA: 5.1:1 */
-    --shadow-azure: 204 92% 38%;
-    --shadow-ember: 14 78% 44%;
-    --shadow-gold: 32 92% 42%;
-    --domain-entra: 204 92% 38%;
-    --domain-security: 14 78% 44%;
-    --domain-compliance: 152 70% 30%;
-    --domain-concepts: 268 60% 48%;
-    --border: 220 14% 86%;
-    --input: 220 14% 86%;
-    --ring: 204 92% 38%;
-    --sidebar-background: 222 35% 6%;
-    --sidebar-foreground: 40 20% 88%;
-    --sidebar-accent: 222 26% 12%;
-    --sidebar-accent-foreground: 40 25% 96%;
-    --sidebar-border: 222 22% 13%;
+  /* Dark mode — original obsidian brand-dark, available via .dark class */
+  .dark {
+    --background: 222 30% 6%;
+    --foreground: 40 25% 92%;
+    --card: 222 26% 9%;
+    --card-foreground: 40 25% 92%;
+    --popover: 222 26% 10%;
+    --popover-foreground: 40 25% 92%;
+    --primary: 204 92% 54%;
+    --primary-foreground: 222 30% 6%;
+    --primary-glow: 200 100% 66%;
+    --primary-soft: 204 55% 14%;
+    --secondary: 222 22% 13%;
+    --secondary-foreground: 40 22% 90%;
+    --muted: 222 20% 14%;
+    --muted-foreground: 220 12% 65%;
+    --accent: 204 70% 16%;
+    --accent-foreground: 200 100% 82%;
+    --success: 152 65% 48%;
+    --success-foreground: 222 30% 6%;
+    --warning: 38 92% 58%;
+    --warning-foreground: 222 30% 6%;
+    --destructive: 14 85% 56%;
+    --destructive-foreground: 40 25% 96%;
+    --info: 204 92% 54%;
+    --info-foreground: 222 30% 6%;
+    --shadow-azure: 204 92% 54%;
+    --shadow-ember: 14 85% 56%;
+    --shadow-gold: 38 92% 58%;
+    --shadow-obsidian: 222 30% 6%;
+    --domain-concepts: 268 72% 68%;
+    --domain-entra: 204 92% 54%;
+    --domain-security: 14 85% 56%;
+    --domain-compliance: 152 65% 48%;
+    --border: 222 16% 17%;
+    --input: 222 16% 17%;
+    --ring: 204 92% 54%;
+    --gradient-brand-subtle: linear-gradient(135deg, hsl(222 26% 10%) 0%, hsl(222 28% 8%) 60%, hsl(204 40% 9%) 100%);
+    --gradient-shadowx: linear-gradient(90deg, hsl(204 92% 54%) 0%, hsl(38 92% 58%) 50%, hsl(14 85% 56%) 100%);
+    --shadow-card: 0 1px 2px 0 hsl(0 0% 0% / 0.45), 0 1px 3px 0 hsl(0 0% 0% / 0.3);
+    --shadow-elevated: 0 8px 24px -8px hsl(0 0% 0% / 0.6), 0 2px 8px -2px hsl(0 0% 0% / 0.4);
   }
 }
 
@@ -147,8 +153,8 @@
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
     background-image:
-      radial-gradient(ellipse 70% 45% at 50% -10%, hsl(var(--shadow-azure) / 0.06), transparent 60%),
-      radial-gradient(ellipse 55% 35% at 100% 100%, hsl(var(--shadow-ember) / 0.05), transparent 60%);
+      radial-gradient(ellipse 70% 45% at 50% -10%, hsl(var(--shadow-azure) / 0.05), transparent 60%),
+      radial-gradient(ellipse 55% 35% at 100% 100%, hsl(var(--shadow-ember) / 0.04), transparent 60%);
     background-attachment: fixed;
   }
   h1, h2, h3, .font-display {
@@ -177,8 +183,7 @@
   .ring-shadowx {
     box-shadow: 0 0 0 1px hsl(var(--shadow-azure) / 0.4), 0 0 24px hsl(var(--shadow-gold) / 0.25);
   }
-  /* Industry-standard in-app hero: calm card with brand stripe + faint glow.
-     Use this in place of bg-gradient-hero on Dashboard/Catalog/Progress/etc. */
+  /* In-app hero: light paper card with brand stripe + whisper glow. */
   .hero-surface {
     @apply relative overflow-hidden bg-card border border-border rounded-lg shadow-elevated;
     background-image: var(--gradient-brand-subtle);
@@ -187,14 +192,14 @@
     content: "";
     position: absolute; inset: 0 0 auto 0; height: 2px;
     background: var(--gradient-shadowx);
-    opacity: 0.9;
+    opacity: 0.95;
   }
   .hero-surface::after {
     content: "";
     position: absolute; inset: 0; pointer-events: none;
     background:
-      radial-gradient(ellipse 60% 80% at 0% 0%, hsl(var(--shadow-azure) / 0.10), transparent 55%),
-      radial-gradient(ellipse 50% 70% at 100% 100%, hsl(var(--shadow-ember) / 0.08), transparent 55%);
+      radial-gradient(ellipse 60% 80% at 0% 0%, hsl(var(--shadow-azure) / 0.07), transparent 55%),
+      radial-gradient(ellipse 50% 70% at 100% 100%, hsl(var(--shadow-ember) / 0.06), transparent 55%);
   }
   .hero-surface > * { position: relative; z-index: 1; }
 }
