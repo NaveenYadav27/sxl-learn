@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { TutorPanel } from "@/components/TutorPanel";
 import { EntraSimulator } from "@/components/simulators/EntraSimulator";
 import { PortalSimulator } from "@/components/simulators/PortalSimulator";
+import { ServiceNowSimulator } from "@/components/simulators/ServiceNowSimulator";
 import { TenantCheckPanel } from "@/components/simulators/TenantCheckPanel";
 import { QuizPanel } from "@/components/QuizPanel";
 import { LabCompletionModal } from "@/components/LabCompletionModal";
@@ -181,11 +182,13 @@ export default function Lab() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-3 flex items-center gap-2 rounded-md border border-border bg-muted/40 hover:bg-muted px-2.5 py-2 text-xs transition-colors group"
-                aria-label={`Open the matching free Microsoft Learn module for ${lab.title} in a new tab`}
+                aria-label={`Open the official reference for ${lab.title} in a new tab`}
               >
                 <BookOpen className="h-3.5 w-3.5 text-primary shrink-0" />
                 <span className="flex-1 min-w-0">
-                  <span className="block font-medium text-foreground">Microsoft Learn module</span>
+                  <span className="block font-medium text-foreground">
+                    {lab.simulator === "servicenow" ? "ServiceNow Docs" : "Microsoft Learn module"}
+                  </span>
                   <span className="block text-[10px] text-muted-foreground">Official free reference</span>
                 </span>
                 <ExternalLink className="h-3 w-3 text-muted-foreground group-hover:text-primary shrink-0" />
@@ -313,6 +316,15 @@ export default function Lab() {
               if (lab.simulator === "entra" && lab.slug === "mfa-conditional-access") {
                 return (
                   <EntraSimulator
+                    expectedAction={currentStep.expected_action}
+                    onValidate={(ok) => { if (ok) markStepDone(); }}
+                  />
+                );
+              }
+              // ServiceNow / Now Platform — CIS-ITSM labs
+              if (lab.simulator === "servicenow") {
+                return (
+                  <ServiceNowSimulator
                     expectedAction={currentStep.expected_action}
                     onValidate={(ok) => { if (ok) markStepDone(); }}
                   />
