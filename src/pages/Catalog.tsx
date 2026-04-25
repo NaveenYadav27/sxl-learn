@@ -208,6 +208,7 @@ export default function Catalog() {
               labsBySlug={labsBySlug}
               progress={progress}
               matches={matches}
+              domainMeta={domainMeta}
             />
           ))}
         </Accordion>
