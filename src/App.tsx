@@ -12,6 +12,7 @@ import Catalog from "./pages/Catalog.tsx";
 import Lab from "./pages/Lab.tsx";
 import Placeholder from "./pages/Placeholder.tsx";
 import ProgressPage from "./pages/Progress.tsx";
+import Exam from "./pages/Exam.tsx";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/catalog" element={<Catalog />} />
             <Route path="/lab/:slug" element={<Lab />} />
             <Route path="/progress" element={<ProgressPage />} />
+            <Route path="/exam" element={<Exam />} />
             <Route path="/portal/entra" element={<Placeholder title="Microsoft Entra simulator" breadcrumb={[{ label: "Simulators" }, { label: "Entra" }]} />} />
             <Route path="/portal/defender" element={<Placeholder title="Defender XDR simulator" breadcrumb={[{ label: "Simulators" }, { label: "Defender" }]} />} />
             <Route path="/portal/purview" element={<Placeholder title="Microsoft Purview simulator" breadcrumb={[{ label: "Simulators" }, { label: "Purview" }]} />} />

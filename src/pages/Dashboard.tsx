@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Trophy, Clock, BookOpen, ArrowRight, Sparkles, Shield, Users, Lock, Gavel } from "lucide-react";
+import { getXpStats, type XpStats } from "@/lib/xp";
+import { Trophy, Clock, BookOpen, ArrowRight, Sparkles, Shield, Users, Lock, Gavel, Flame, Zap, ClipboardCheck } from "lucide-react";
 
 const domainIcon: Record<string, any> = { concepts: Sparkles, entra: Users, security: Shield, compliance: Gavel };
 const domainGrad: Record<string, string> = {
@@ -21,16 +22,19 @@ export default function Dashboard() {
   const [modules, setModules] = useState<any[]>([]);
   const [recent, setRecent] = useState<any[]>([]);
   const [resumeLab, setResumeLab] = useState<{ slug: string; title: string } | null>(null);
+  const [xp, setXp] = useState<XpStats | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const [{ data: mods }, { data: labs }, { data: attempts }] = await Promise.all([
+      const [{ data: mods }, { data: labs }, { data: attempts }, xpStats] = await Promise.all([
         supabase.from("modules").select("*").order("sort_order"),
         supabase.from("labs").select("id, module_id"),
         supabase.from("lab_attempts").select("*, lab:labs(slug, title, simulator)").eq("user_id", user.id).order("started_at", { ascending: false }),
+        getXpStats(user.id),
       ]);
+      setXp(xpStats);
       const completed = (attempts ?? []).filter((a) => a.status === "completed").length;
       const inProgress = (attempts ?? []).filter((a) => a.status === "in_progress").length;
       const score = (attempts ?? []).reduce((s, a) => s + (a.score ?? 0), 0);
@@ -100,6 +104,47 @@ export default function Dashboard() {
             </Link>
           </CardContent>
         </Card>
+
+        {/* Streak / XP / Exam strip */}
+        <div className="grid md:grid-cols-3 gap-4">
+          <Card className="shadow-card">
+            <CardContent className="pt-5 flex items-center gap-3">
+              <div className="h-10 w-10 rounded grid place-items-center bg-warning/10 text-warning">
+                <Flame className="h-5 w-5" />
+              </div>
+              <div className="flex-1">
+                <div className="text-2xl font-bold">{xp?.streak ?? 0}<span className="text-sm font-normal text-muted-foreground"> day streak</span></div>
+                <div className="text-xs text-muted-foreground">{(xp?.streak ?? 0) > 0 ? "Keep it going — come back tomorrow." : "Complete any step today to start a streak."}</div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="shadow-card">
+            <CardContent className="pt-5">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="h-10 w-10 rounded grid place-items-center bg-primary-soft text-primary">
+                  <Zap className="h-5 w-5" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-2xl font-bold">Lvl {xp?.level ?? 1} <span className="text-sm font-normal text-muted-foreground">· {xp?.xp ?? 0} XP</span></div>
+                  <div className="text-xs text-muted-foreground">{xp ? `${xp.xpToNext} XP to level ${xp.level + 1}` : "Earn XP by completing lab steps"}</div>
+                </div>
+              </div>
+              <Progress value={xp ? (xp.xpInLevel / 200) * 100 : 0} className="h-1.5" />
+            </CardContent>
+          </Card>
+          <Card className="shadow-card bg-gradient-hero text-primary-foreground border-0">
+            <CardContent className="pt-5 flex items-center gap-3">
+              <div className="h-10 w-10 rounded grid place-items-center bg-primary-foreground/15">
+                <ClipboardCheck className="h-5 w-5" />
+              </div>
+              <div className="flex-1">
+                <div className="text-sm font-semibold">Practice exam</div>
+                <div className="text-xs opacity-85">50 questions · 60 min · pass mark 70%</div>
+              </div>
+              <Link to="/exam"><Button size="sm" variant="secondary">Take exam</Button></Link>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* KPIs */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

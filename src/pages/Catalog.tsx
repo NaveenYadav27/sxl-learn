@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { AppLayout } from "@/components/AppLayout";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Clock, ArrowRight, Sparkles, Shield, Users, Gavel, BookOpen, Lock, ExternalLink } from "lucide-react";
+import { Clock, ArrowRight, Sparkles, Shield, Users, Gavel, BookOpen, Lock, ExternalLink, Search, X } from "lucide-react";
 
 const simulatorIcon: Record<string, any> = {
   entra: Users, defender: Shield, purview: Gavel, sentinel: Lock, generic: BookOpen,
@@ -27,6 +29,9 @@ export default function Catalog() {
   const { user } = useAuth();
   const [groups, setGroups] = useState<any[]>([]);
   const [progress, setProgress] = useState<Record<string, string>>({}); // labId → status
+  const [search, setSearch] = useState("");
+  const [difficulty, setDifficulty] = useState<string>("all");
+  const [status, setStatus] = useState<string>("all");
 
   useEffect(() => {
     (async () => {
@@ -49,13 +54,78 @@ export default function Catalog() {
     })();
   }, [user]);
 
+  const filteredGroups = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return groups
+      .map((m) => {
+        const labs = m.labs.filter((lab: any) => {
+          if (difficulty !== "all" && lab.difficulty !== difficulty) return false;
+          const labStatus = progress[lab.id] ?? "not_started";
+          if (status === "completed" && labStatus !== "completed") return false;
+          if (status === "in_progress" && labStatus !== "in_progress") return false;
+          if (status === "not_started" && labStatus !== "not_started") return false;
+          if (q) {
+            const hay = `${lab.title} ${lab.objective ?? ""} ${lab.scenario ?? ""}`.toLowerCase();
+            if (!hay.includes(q)) return false;
+          }
+          return true;
+        });
+        return { ...m, labs };
+      })
+      .filter((m) => m.labs.length > 0);
+  }, [groups, progress, search, difficulty, status]);
+
+  const totalShown = filteredGroups.reduce((s, m) => s + m.labs.length, 0);
+  const filtersActive = search.trim() !== "" || difficulty !== "all" || status !== "all";
+
   return (
     <AppLayout
       breadcrumb={<Breadcrumb items={[{ label: "Course Catalog" }]} />}
       title="SC-900 Course Catalog"
     >
-      <div className="container py-6 space-y-10">
-        {groups.map((m) => (
+      <div className="container py-6 space-y-6">
+        {/* Filter bar */}
+        <Card className="shadow-card">
+          <CardContent className="pt-4 pb-4 flex flex-wrap gap-3 items-center">
+            <div className="relative flex-1 min-w-[220px]">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+              <Input
+                placeholder="Search labs by title, objective, or scenario…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-8 h-9"
+              />
+            </div>
+            <Select value={difficulty} onValueChange={setDifficulty}>
+              <SelectTrigger className="w-[160px] h-9"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All difficulties</SelectItem>
+                <SelectItem value="beginner">Beginner</SelectItem>
+                <SelectItem value="intermediate">Intermediate</SelectItem>
+                <SelectItem value="advanced">Advanced</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={status} onValueChange={setStatus}>
+              <SelectTrigger className="w-[160px] h-9"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All statuses</SelectItem>
+                <SelectItem value="not_started">Not started</SelectItem>
+                <SelectItem value="in_progress">In progress</SelectItem>
+                <SelectItem value="completed">Completed</SelectItem>
+              </SelectContent>
+            </Select>
+            {filtersActive && (
+              <Button variant="ghost" size="sm" className="gap-1" onClick={() => { setSearch(""); setDifficulty("all"); setStatus("all"); }}>
+                <X className="h-3 w-3" /> Clear
+              </Button>
+            )}
+            <div className="text-xs text-muted-foreground ml-auto">{totalShown} lab{totalShown === 1 ? "" : "s"}</div>
+          </CardContent>
+        </Card>
+
+        {filteredGroups.length === 0 ? (
+          <Card><CardContent className="py-12 text-center text-sm text-muted-foreground">No labs match these filters.</CardContent></Card>
+        ) : filteredGroups.map((m) => (
           <section key={m.id} id={m.slug}>
             <div className={`rounded-lg p-5 mb-4 text-primary-foreground ${domainGrad[m.slug] ?? "bg-primary"}`}>
               <div className="text-xs opacity-80 font-medium">{m.domain_code} · EXAM WEIGHT {m.exam_weight}</div>
