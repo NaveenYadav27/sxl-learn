@@ -458,7 +458,7 @@ export default function Module() {
             <CardContent className="pt-5">
               <div className="flex items-center gap-2 mb-3">
                 <ExternalLink className="h-4 w-4 text-primary" />
-                <h3 className="text-base font-semibold">Further reading (Microsoft Learn)</h3>
+                <h3 className="text-base font-semibold">Further reading ({course.code === "cis-itsm" ? "ServiceNow Docs" : "Microsoft Learn"})</h3>
               </div>
               <ul className="grid sm:grid-cols-2 gap-2 text-sm">
                 {explanation.furtherReading.map((r, i) => (

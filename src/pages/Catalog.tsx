@@ -31,12 +31,21 @@ const difficultyTone: Record<string, string> = {
   advanced: "bg-destructive/10 text-destructive",
 };
 
-const domainMeta: Record<DomainKey, { icon: any; bar: string; chip: string; soft: string; label: string }> = {
+type DomainStyle = { icon: any; bar: string; chip: string; soft: string; label: string };
+const sc900DomainMeta: Record<DomainKey, DomainStyle> = {
   concepts:   { icon: Sparkles,       bar: "bg-gradient-concepts",   chip: "bg-domain-concepts/15 text-domain-concepts border-domain-concepts/30",     soft: "bg-domain-concepts/5",   label: "Concepts" },
   iam:        { icon: Users,          bar: "bg-gradient-entra",      chip: "bg-domain-entra/15 text-domain-entra border-domain-entra/30",              soft: "bg-domain-entra/5",      label: "Identity & Access" },
   entra:      { icon: Building2,      bar: "bg-gradient-entra",      chip: "bg-domain-entra/15 text-domain-entra border-domain-entra/30",              soft: "bg-domain-entra/5",      label: "Entra" },
   security:   { icon: Shield,         bar: "bg-gradient-security",   chip: "bg-domain-security/15 text-domain-security border-domain-security/30",     soft: "bg-domain-security/5",   label: "Security" },
   compliance: { icon: Gavel,          bar: "bg-gradient-compliance", chip: "bg-domain-compliance/15 text-domain-compliance border-domain-compliance/30", soft: "bg-domain-compliance/5", label: "Compliance" },
+  exam:       { icon: ClipboardCheck, bar: "bg-gradient-hero",       chip: "bg-primary/15 text-primary border-primary/30",                              soft: "bg-primary/5",           label: "Exam Prep" },
+};
+const itsmDomainMeta: Record<DomainKey, DomainStyle> = {
+  concepts:   { icon: Building2,      bar: "bg-gradient-concepts",   chip: "bg-domain-concepts/15 text-domain-concepts border-domain-concepts/30",     soft: "bg-domain-concepts/5",   label: "Foundations" },
+  iam:        { icon: FlaskConical,   bar: "bg-gradient-entra",      chip: "bg-domain-entra/15 text-domain-entra border-domain-entra/30",              soft: "bg-domain-entra/5",      label: "Incident" },
+  entra:      { icon: BookOpen,       bar: "bg-gradient-entra",      chip: "bg-domain-entra/15 text-domain-entra border-domain-entra/30",              soft: "bg-domain-entra/5",      label: "Problem & Knowledge" },
+  security:   { icon: Shield,         bar: "bg-gradient-security",   chip: "bg-domain-security/15 text-domain-security border-domain-security/30",     soft: "bg-domain-security/5",   label: "Change & Release" },
+  compliance: { icon: Gavel,          bar: "bg-gradient-compliance", chip: "bg-domain-compliance/15 text-domain-compliance border-domain-compliance/30", soft: "bg-domain-compliance/5", label: "Catalog & CMDB" },
   exam:       { icon: ClipboardCheck, bar: "bg-gradient-hero",       chip: "bg-primary/15 text-primary border-primary/30",                              soft: "bg-primary/5",           label: "Exam Prep" },
 };
 
