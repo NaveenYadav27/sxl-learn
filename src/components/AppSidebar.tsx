@@ -10,10 +10,12 @@ import {
 } from "lucide-react";
 import { getXpStats, type XpStats } from "@/lib/xp";
 import { useAuth } from "@/hooks/useAuth";
+import { useCourse } from "@/hooks/useCourse";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { Progress } from "@/components/ui/progress";
 import { Logo } from "@/components/Logo";
+import { CourseSwitcher } from "@/components/CourseSwitcher";
 
 const learnerNav = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -45,6 +47,7 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const { pathname } = useLocation();
   const { isInstructor, isAdmin, signOut, user } = useAuth();
+  const { course } = useCourse();
   const [progress, setProgress] = useState({ done: 0, total: 0 });
   const [xp, setXp] = useState<XpStats | null>(null);
 
@@ -84,6 +87,7 @@ export function AppSidebar() {
             </div>
           )}
         </Link>
+        <CourseSwitcher collapsed={collapsed} />
       </SidebarHeader>
 
       <SidebarContent>
@@ -107,7 +111,7 @@ export function AppSidebar() {
                 {progress.total > 0 && (
                   <div>
                     <div className="flex justify-between text-[10px] font-medium text-sidebar-foreground/80 mb-1">
-                      <span>SC-900 progress</span>
+                      <span>{course.shortName} progress</span>
                       <span>{progress.done}/{progress.total}</span>
                     </div>
                     <Progress value={pct} className="h-1" />
