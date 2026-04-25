@@ -8,10 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
   ArrowRight, ArrowLeft, BookOpen, Clock, FlaskConical, Sparkles, Users,
   Building2, Shield, Gavel, Lightbulb, Target, HelpCircle, MapPin, CalendarClock,
-  Wrench, GraduationCap, ListChecks, ScrollText, Award,
+  Wrench, GraduationCap, ListChecks, ScrollText, Award, AlertTriangle, MessageCircleQuestion,
+  CheckCircle2, XCircle, BookMarked, ExternalLink, Layers,
 } from "lucide-react";
 import { moduleNotes, type DomainKey } from "@/lib/curriculum";
 import { getModuleExplanation } from "@/lib/moduleExplanations";
@@ -203,6 +206,81 @@ export default function Module() {
           </CardContent>
         </Card>
 
+        {/* Concept deep dives — every term fully self-explained */}
+        <Card className="shadow-card">
+          <CardContent className="pt-5">
+            <div className="flex items-center gap-2 mb-3">
+              <Layers className="h-4 w-4 text-primary" />
+              <h3 className="text-base font-semibold">Concept deep dives</h3>
+              <Badge variant="outline" className="ml-auto">{explanation.conceptDeepDives.length} concepts</Badge>
+            </div>
+            <p className="text-xs text-muted-foreground mb-3">Click any concept for a full explanation — definition, plain English, analogy, how it works, Microsoft mapping, when (not) to use, common mistakes, and exam angle.</p>
+            <Accordion type="single" collapsible className="space-y-2">
+              {explanation.conceptDeepDives.map((c) => (
+                <AccordionItem key={c.id} value={c.id} className="border border-border rounded-md px-3">
+                  <AccordionTrigger className="hover:no-underline py-3">
+                    <div className="text-left">
+                      <div className="text-sm font-semibold">{c.name}</div>
+                      <div className="text-xs text-muted-foreground mt-0.5">{c.oneLine}</div>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-4 space-y-3 text-sm">
+                    <DDRow label="Formal definition" value={c.formal} />
+                    <DDRow label="Plain English" value={c.plainEnglish} />
+                    <DDRow label="Analogy" value={c.analogy} />
+                    <DDRow label="How it works" value={c.howItWorks} />
+                    <DDRow label="Microsoft mapping" value={c.microsoftMapping} />
+                    <DDRow label="When to use" value={c.whenToUse} />
+                    {c.whenNotToUse && <DDRow label="When NOT to use" value={c.whenNotToUse} />}
+                    <DDRow label="Common mistake" value={c.commonMistake} tone="warning" />
+                    <DDRow label="Exam angle" value={c.examAngle} tone="primary" />
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </CardContent>
+        </Card>
+
+        {/* Comparison tables */}
+        {explanation.comparisons.length > 0 && (
+          <Card className="shadow-card">
+            <CardContent className="pt-5">
+              <div className="flex items-center gap-2 mb-3">
+                <ListChecks className="h-4 w-4 text-primary" />
+                <h3 className="text-base font-semibold">Side-by-side comparisons</h3>
+              </div>
+              <div className="space-y-5">
+                {explanation.comparisons.map((cmp, i) => (
+                  <div key={i} className="rounded-md border border-border overflow-hidden">
+                    <div className={`px-3 py-2 ${meta.soft} border-b border-border text-sm font-semibold`}>{cmp.title}</div>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          {cmp.columns.map((c, j) => (
+                            <TableHead key={j} className={j === 0 ? "w-[28%]" : ""}>{c}</TableHead>
+                          ))}
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {cmp.rows.map((row, ri) => (
+                          <TableRow key={ri}>
+                            {row.map((cell, ci) => (
+                              <TableCell key={ci} className={ci === 0 ? "font-medium" : "text-foreground/85"}>{cell}</TableCell>
+                            ))}
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    <div className="px-3 py-2 bg-primary/5 border-t border-border text-xs">
+                      <span className="font-semibold text-primary">Bottom line: </span>{cmp.bottomLine}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Real examples */}
         <Card className="shadow-card">
           <CardContent className="pt-5">
@@ -263,19 +341,21 @@ export default function Module() {
           </CardContent>
         </Card>
 
-        {/* Key terms + Exam tips */}
+        {/* Glossary (key terms with examples) + Exam tips */}
         <div className="grid md:grid-cols-2 gap-4">
           <Card className="shadow-card">
             <CardContent className="pt-5">
               <div className="flex items-center gap-2 mb-3">
-                <BookOpen className="h-4 w-4 text-primary" />
-                <h3 className="text-base font-semibold">Key terms</h3>
+                <BookMarked className="h-4 w-4 text-primary" />
+                <h3 className="text-base font-semibold">Glossary</h3>
+                <Badge variant="outline" className="ml-auto text-[10px]">{explanation.keyTerms.length} terms</Badge>
               </div>
-              <dl className="space-y-2.5">
+              <dl className="space-y-3">
                 {explanation.keyTerms.map((t, i) => (
-                  <div key={i}>
+                  <div key={i} className="border-l-2 border-border pl-3">
                     <dt className="text-sm font-semibold">{t.term}</dt>
                     <dd className="text-xs text-muted-foreground leading-relaxed">{t.definition}</dd>
+                    {t.example && <dd className="text-[11px] text-foreground/70 mt-0.5"><span className="font-semibold">e.g. </span>{t.example}</dd>}
                   </div>
                 ))}
               </dl>
@@ -299,6 +379,81 @@ export default function Module() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Common pitfalls */}
+        <Card className="shadow-card border-l-4 border-l-destructive">
+          <CardContent className="pt-5">
+            <div className="flex items-center gap-2 mb-3">
+              <AlertTriangle className="h-4 w-4 text-destructive" />
+              <h3 className="text-base font-semibold">Common pitfalls (don't fall for these)</h3>
+            </div>
+            <ul className="space-y-2 text-sm">
+              {explanation.commonPitfalls.map((p, i) => (
+                <li key={i} className="flex gap-2">
+                  <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
+                  <span className="text-foreground/85 leading-relaxed">{p}</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+
+        {/* FAQ */}
+        <Card className="shadow-card">
+          <CardContent className="pt-5">
+            <div className="flex items-center gap-2 mb-3">
+              <MessageCircleQuestion className="h-4 w-4 text-primary" />
+              <h3 className="text-base font-semibold">Frequently asked questions</h3>
+              <Badge variant="outline" className="ml-auto text-[10px]">Answered for you</Badge>
+            </div>
+            <Accordion type="single" collapsible className="space-y-2">
+              {explanation.faqs.map((f, i) => (
+                <AccordionItem key={i} value={`faq-${i}`} className="border border-border rounded-md px-3">
+                  <AccordionTrigger className="hover:no-underline py-2.5 text-sm font-medium text-left">{f.q}</AccordionTrigger>
+                  <AccordionContent className="text-sm text-foreground/85 leading-relaxed pb-3">{f.a}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </CardContent>
+        </Card>
+
+        {/* Self check */}
+        <Card className="shadow-card border-l-4 border-l-success">
+          <CardContent className="pt-5">
+            <div className="flex items-center gap-2 mb-3">
+              <CheckCircle2 className="h-4 w-4 text-success" />
+              <h3 className="text-base font-semibold">Self-check (prove you understood)</h3>
+            </div>
+            <div className="space-y-4">
+              {explanation.selfCheck.map((q, i) => (
+                <SelfCheckQuestion key={i} index={i + 1} q={q} />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Further reading */}
+        {explanation.furtherReading.length > 0 && (
+          <Card className="shadow-card">
+            <CardContent className="pt-5">
+              <div className="flex items-center gap-2 mb-3">
+                <ExternalLink className="h-4 w-4 text-primary" />
+                <h3 className="text-base font-semibold">Further reading (Microsoft Learn)</h3>
+              </div>
+              <ul className="grid sm:grid-cols-2 gap-2 text-sm">
+                {explanation.furtherReading.map((r, i) => (
+                  <li key={i}>
+                    <a href={r.url} target="_blank" rel="noopener noreferrer"
+                       className="flex items-center gap-2 px-3 py-2 rounded-md border border-border hover:bg-muted transition-colors">
+                      <ExternalLink className="h-3 w-3 text-primary shrink-0" />
+                      <span className="truncate">{r.label}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Prev / next nav */}
         <div className="flex items-center justify-between gap-3 pt-2">
@@ -342,6 +497,55 @@ function Stat({ icon: Icon, label, value }: { icon: any; label: string; value: s
         <Icon className="h-3 w-3" />{label}
       </div>
       <div className="text-sm font-bold leading-tight mt-0.5">{value}</div>
+    </div>
+  );
+}
+
+function DDRow({ label, value, tone }: { label: string; value: string; tone?: "warning" | "primary" }) {
+  const toneClass =
+    tone === "warning" ? "text-warning" : tone === "primary" ? "text-primary" : "text-muted-foreground";
+  return (
+    <div>
+      <div className={`text-[10px] uppercase tracking-wide font-semibold mb-0.5 ${toneClass}`}>{label}</div>
+      <p className="text-sm leading-relaxed text-foreground/85">{value}</p>
+    </div>
+  );
+}
+
+function SelfCheckQuestion({ index, q }: { index: number; q: { question: string; options: string[]; correctIndex: number; explanation: string } }) {
+  const [picked, setPicked] = useState<number | null>(null);
+  const isCorrect = picked === q.correctIndex;
+  return (
+    <div className="rounded-md border border-border p-3">
+      <div className="text-sm font-medium mb-2"><span className="text-muted-foreground">Q{index}. </span>{q.question}</div>
+      <div className="space-y-1.5">
+        {q.options.map((opt, i) => {
+          const selected = picked === i;
+          const showCorrect = picked !== null && i === q.correctIndex;
+          const showWrong = selected && i !== q.correctIndex;
+          return (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setPicked(i)}
+              disabled={picked !== null}
+              className={`w-full text-left text-sm px-3 py-1.5 rounded border transition-colors ${
+                showCorrect ? "border-success bg-success/10 text-success" :
+                showWrong ? "border-destructive bg-destructive/10 text-destructive" :
+                selected ? "border-primary" : "border-border hover:bg-muted"
+              }`}
+            >
+              <span className="font-semibold mr-2">{String.fromCharCode(65 + i)}.</span>{opt}
+            </button>
+          );
+        })}
+      </div>
+      {picked !== null && (
+        <div className={`mt-2 text-xs leading-relaxed rounded-md p-2 ${isCorrect ? "bg-success/5 text-foreground/90" : "bg-warning/5 text-foreground/90"}`}>
+          <span className={`font-semibold ${isCorrect ? "text-success" : "text-warning"}`}>{isCorrect ? "Correct. " : "Not quite. "}</span>
+          {q.explanation}
+        </div>
+      )}
     </div>
   );
 }
