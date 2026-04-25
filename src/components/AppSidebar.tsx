@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboard, BookOpen, Users, Shield, Lock, Gavel, Trophy,
-  Settings, GraduationCap, Sparkles, Network, GraduationCap as ExamIcon, Flame,
+  Settings, GraduationCap, Sparkles, Network, ClipboardCheck, Flame, Zap,
 } from "lucide-react";
 import { getXpStats, type XpStats } from "@/lib/xp";
 import { useAuth } from "@/hooks/useAuth";
@@ -17,7 +17,7 @@ import { Progress } from "@/components/ui/progress";
 const learnerNav = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Course Catalog", url: "/catalog", icon: BookOpen },
-  { title: "Practice Exam", url: "/exam", icon: ExamIcon },
+  { title: "Practice Exam", url: "/exam", icon: ClipboardCheck },
   { title: "My Progress", url: "/progress", icon: Trophy },
 ];
 
@@ -96,13 +96,25 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
-            {!collapsed && progress.total > 0 && (
-              <div className="mx-2 mt-2 mb-1 rounded-md bg-sidebar-accent/40 px-2.5 py-2">
-                <div className="flex justify-between text-[10px] font-medium text-sidebar-foreground/80 mb-1">
-                  <span>SC-900 progress</span>
-                  <span>{progress.done}/{progress.total}</span>
-                </div>
-                <Progress value={pct} className="h-1" />
+            {!collapsed && (progress.total > 0 || (xp && xp.xp > 0)) && (
+              <div className="mx-2 mt-2 mb-1 rounded-md bg-sidebar-accent/40 px-2.5 py-2 space-y-2">
+                {progress.total > 0 && (
+                  <div>
+                    <div className="flex justify-between text-[10px] font-medium text-sidebar-foreground/80 mb-1">
+                      <span>SC-900 progress</span>
+                      <span>{progress.done}/{progress.total}</span>
+                    </div>
+                    <Progress value={pct} className="h-1" />
+                  </div>
+                )}
+                {xp && (
+                  <div className="flex items-center justify-between text-[10px] font-medium text-sidebar-foreground/80 pt-1 border-t border-sidebar-border/50">
+                    <span className="inline-flex items-center gap-1"><Zap className="h-3 w-3 text-primary-glow" />Lvl {xp.level} · {xp.xp} XP</span>
+                    <span className={`inline-flex items-center gap-1 ${xp.streak > 0 ? "text-warning" : "text-sidebar-foreground/50"}`}>
+                      <Flame className="h-3 w-3" />{xp.streak}d
+                    </span>
+                  </div>
+                )}
               </div>
             )}
           </SidebarGroupContent>
