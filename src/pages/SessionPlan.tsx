@@ -231,6 +231,11 @@ export default function SessionPlan() {
     [],
   );
 
+  // Non-SC-900 courses render a compact day-plan view sourced from the course registry.
+  if (course.code !== "sc-900") {
+    return <CourseDayPlanView course={course} startTime={startTime} setStartTime={setStartTime} />;
+  }
+
   return (
     <AppLayout title="Session Plan">
       <div className="container py-6 space-y-6 max-w-6xl">
