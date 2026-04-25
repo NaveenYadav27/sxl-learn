@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboard, BookOpen, Users, Shield, Lock, Gavel, Trophy,
-  Settings, GraduationCap, Sparkles, Network, ClipboardCheck, Flame, Zap, Wallet,
+  Settings, GraduationCap, Sparkles, Network, ClipboardCheck, Flame, Zap, Wallet, Building2,
 } from "lucide-react";
 import { getXpStats, type XpStats } from "@/lib/xp";
 import { useAuth } from "@/hooks/useAuth";
@@ -17,6 +17,7 @@ import { Progress } from "@/components/ui/progress";
 const learnerNav = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Course Catalog", url: "/catalog", icon: BookOpen },
+  { title: "My Live Tenant", url: "/tenant", icon: Building2 },
   { title: "Practice Exam", url: "/exam", icon: ClipboardCheck },
   { title: "My Progress", url: "/progress", icon: Trophy },
   { title: "License Guide", url: "/licensing", icon: Wallet },
