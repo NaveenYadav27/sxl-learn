@@ -8,7 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
-import { Sparkles, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { Logo } from "@/components/Logo";
 
 export default function Auth() {
   const { user, loading } = useAuth();
@@ -71,27 +72,33 @@ export default function Auth() {
   return (
     <div className="min-h-screen flex bg-background">
       {/* Left: branded panel */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-hero text-primary-foreground p-12 flex-col justify-between">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="grid h-9 w-9 place-items-center rounded bg-primary-foreground/15 backdrop-blur">
-            <Sparkles className="h-4 w-4" />
-          </div>
-          <span className="font-semibold">Enterprise Twin</span>
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-hero text-foreground p-12 flex-col justify-between relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none opacity-30"
+             style={{ backgroundImage: "radial-gradient(circle at 30% 30%, hsl(var(--shadow-azure) / 0.4), transparent 50%), radial-gradient(circle at 70% 70%, hsl(var(--shadow-ember) / 0.35), transparent 50%)" }} />
+        <Link to="/" className="relative z-10">
+          <Logo size="md" showWordmark showTagline />
         </Link>
-        <div>
-          <h2 className="text-3xl font-bold">Practise Microsoft security like a pro.</h2>
-          <p className="mt-3 text-primary-foreground/80 max-w-md">
-            22 hands-on labs across Entra, Defender XDR, Purview and Sentinel — with an AI tutor that nudges you to the right answer.
+        <div className="relative z-10">
+          <h2 className="font-display text-4xl font-bold leading-tight">
+            Practise Microsoft security <span className="text-shadowx-gradient">like a pro.</span>
+          </h2>
+          <p className="mt-4 text-foreground/75 max-w-md">
+            22 hands-on labs across Entra, Defender XDR, Purview and Sentinel — guided by an AI tutor that nudges you to the right answer.
           </p>
         </div>
-        <div className="text-xs text-primary-foreground/60">© Enterprise Twin · SC-900 simulator</div>
+        <div className="relative z-10 text-xs text-shadowx-gold/70 uppercase tracking-[0.2em]">
+          © ShadowX Lab · SC-900 simulator
+        </div>
       </div>
 
       {/* Right: form */}
       <div className="flex-1 flex items-center justify-center p-6">
-        <Card className="w-full max-w-md shadow-elevated">
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Welcome to Enterprise Twin</CardTitle>
+        <Card className="w-full max-w-md shadow-elevated border-border/60">
+          <CardHeader className="text-center space-y-3">
+            <div className="flex justify-center lg:hidden">
+              <Logo size="md" showWordmark={false} />
+            </div>
+            <CardTitle className="font-display text-2xl tracking-wide">Welcome to ShadowX Lab</CardTitle>
             <CardDescription>Sign in to continue your SC-900 journey</CardDescription>
           </CardHeader>
           <CardContent>

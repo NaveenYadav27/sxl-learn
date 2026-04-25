@@ -67,6 +67,12 @@ export default {
           security: "hsl(var(--domain-security))",
           compliance: "hsl(var(--domain-compliance))",
         },
+        shadowx: {
+          azure: "hsl(var(--shadow-azure))",
+          ember: "hsl(var(--shadow-ember))",
+          gold: "hsl(var(--shadow-gold))",
+          obsidian: "hsl(var(--shadow-obsidian))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
@@ -80,6 +86,9 @@ export default {
       },
       backgroundImage: {
         'gradient-hero': 'var(--gradient-hero)',
+        'gradient-shadowx': 'var(--gradient-shadowx)',
+        'gradient-azure': 'var(--gradient-azure)',
+        'gradient-ember': 'var(--gradient-ember)',
         'gradient-entra': 'var(--gradient-domain-entra)',
         'gradient-security': 'var(--gradient-domain-security)',
         'gradient-compliance': 'var(--gradient-domain-compliance)',
@@ -90,6 +99,14 @@ export default {
         card: 'var(--shadow-card)',
         elevated: 'var(--shadow-elevated)',
         portal: 'var(--shadow-portal)',
+        'glow-azure': 'var(--shadow-glow-azure)',
+        'glow-ember': 'var(--shadow-glow-ember)',
+        'glow-gold': 'var(--shadow-glow-gold)',
+      },
+      fontFamily: {
+        display: ['Rajdhani', 'Inter', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
       },
       borderRadius: {
         lg: "var(--radius)",

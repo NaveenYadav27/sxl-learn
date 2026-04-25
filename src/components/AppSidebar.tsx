@@ -6,13 +6,14 @@ import {
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboard, BookOpen, Users, Shield, Lock, Gavel, Trophy,
-  Settings, GraduationCap, Sparkles, Network, ClipboardCheck, Flame, Zap, Wallet, Building2, CalendarDays,
+  Settings, GraduationCap, Network, ClipboardCheck, Flame, Zap, Wallet, Building2, CalendarDays,
 } from "lucide-react";
 import { getXpStats, type XpStats } from "@/lib/xp";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { Progress } from "@/components/ui/progress";
+import { Logo } from "@/components/Logo";
 
 const learnerNav = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
@@ -70,14 +71,16 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border">
-        <Link to="/dashboard" className="flex items-center gap-2 px-2 py-2">
-          <div className="grid h-8 w-8 place-items-center rounded bg-sidebar-primary text-sidebar-primary-foreground">
-            <Sparkles className="h-4 w-4" />
-          </div>
+        <Link to="/dashboard" className="flex items-center gap-2.5 px-2 py-2.5 group">
+          <Logo size="sm" showWordmark={false} />
           {!collapsed && (
             <div className="leading-tight">
-              <div className="text-sm font-semibold text-sidebar-foreground">Enterprise Twin</div>
-              <div className="text-[10px] uppercase tracking-wider text-sidebar-foreground/60">SC-900 Lab</div>
+              <div className="font-display text-sm font-bold tracking-wider text-shadowx-gradient">
+                SHADOWX LAB
+              </div>
+              <div className="text-[9px] uppercase tracking-[0.18em] text-shadowx-gold/80">
+                Empower · Illuminate · Uphold
+              </div>
             </div>
           )}
         </Link>
