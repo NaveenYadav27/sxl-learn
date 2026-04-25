@@ -153,8 +153,8 @@
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
     background-image:
-      radial-gradient(ellipse 70% 45% at 50% -10%, hsl(var(--shadow-azure) / 0.06), transparent 60%),
-      radial-gradient(ellipse 55% 35% at 100% 100%, hsl(var(--shadow-ember) / 0.05), transparent 60%);
+      radial-gradient(ellipse 70% 45% at 50% -10%, hsl(var(--shadow-azure) / 0.05), transparent 60%),
+      radial-gradient(ellipse 55% 35% at 100% 100%, hsl(var(--shadow-ember) / 0.04), transparent 60%);
     background-attachment: fixed;
   }
   h1, h2, h3, .font-display {
@@ -183,8 +183,7 @@
   .ring-shadowx {
     box-shadow: 0 0 0 1px hsl(var(--shadow-azure) / 0.4), 0 0 24px hsl(var(--shadow-gold) / 0.25);
   }
-  /* Industry-standard in-app hero: calm card with brand stripe + faint glow.
-     Use this in place of bg-gradient-hero on Dashboard/Catalog/Progress/etc. */
+  /* In-app hero: light paper card with brand stripe + whisper glow. */
   .hero-surface {
     @apply relative overflow-hidden bg-card border border-border rounded-lg shadow-elevated;
     background-image: var(--gradient-brand-subtle);
@@ -193,14 +192,14 @@
     content: "";
     position: absolute; inset: 0 0 auto 0; height: 2px;
     background: var(--gradient-shadowx);
-    opacity: 0.9;
+    opacity: 0.95;
   }
   .hero-surface::after {
     content: "";
     position: absolute; inset: 0; pointer-events: none;
     background:
-      radial-gradient(ellipse 60% 80% at 0% 0%, hsl(var(--shadow-azure) / 0.10), transparent 55%),
-      radial-gradient(ellipse 50% 70% at 100% 100%, hsl(var(--shadow-ember) / 0.08), transparent 55%);
+      radial-gradient(ellipse 60% 80% at 0% 0%, hsl(var(--shadow-azure) / 0.07), transparent 55%),
+      radial-gradient(ellipse 50% 70% at 100% 100%, hsl(var(--shadow-ember) / 0.06), transparent 55%);
   }
   .hero-surface > * { position: relative; z-index: 1; }
 }
