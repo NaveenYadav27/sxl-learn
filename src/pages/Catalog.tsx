@@ -66,6 +66,7 @@ export default function Catalog() {
   const { user } = useAuth();
   const { course } = useCourse();
   const moduleNotes = course.modules;
+  const domainMeta = course.code === "cis-itsm" ? itsmDomainMeta : sc900DomainMeta;
   const [labsBySlug, setLabsBySlug] = useState<Record<string, Lab>>({});
   const [progress, setProgress] = useState<Record<string, string>>({}); // labId → status
   const [search, setSearch] = useState("");
