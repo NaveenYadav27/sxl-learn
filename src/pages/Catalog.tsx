@@ -52,7 +52,7 @@ export default function Catalog() {
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState<string>("all");
   const [status, setStatus] = useState<string>("all");
-  const [mode, setMode] = useState<"1day" | "2day">("1day");
+  const [mode, setMode] = useState<"4day" | "2day" | "1day">("4day");
 
   useEffect(() => {
     (async () => {
