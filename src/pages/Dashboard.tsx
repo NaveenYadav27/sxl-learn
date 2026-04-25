@@ -105,6 +105,47 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
+        {/* Streak / XP / Exam strip */}
+        <div className="grid md:grid-cols-3 gap-4">
+          <Card className="shadow-card">
+            <CardContent className="pt-5 flex items-center gap-3">
+              <div className="h-10 w-10 rounded grid place-items-center bg-warning/10 text-warning">
+                <Flame className="h-5 w-5" />
+              </div>
+              <div className="flex-1">
+                <div className="text-2xl font-bold">{xp?.streak ?? 0}<span className="text-sm font-normal text-muted-foreground"> day streak</span></div>
+                <div className="text-xs text-muted-foreground">{(xp?.streak ?? 0) > 0 ? "Keep it going — come back tomorrow." : "Complete any step today to start a streak."}</div>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="shadow-card">
+            <CardContent className="pt-5">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="h-10 w-10 rounded grid place-items-center bg-primary-soft text-primary">
+                  <Zap className="h-5 w-5" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-2xl font-bold">Lvl {xp?.level ?? 1} <span className="text-sm font-normal text-muted-foreground">· {xp?.xp ?? 0} XP</span></div>
+                  <div className="text-xs text-muted-foreground">{xp ? `${xp.xpToNext} XP to level ${xp.level + 1}` : "Earn XP by completing lab steps"}</div>
+                </div>
+              </div>
+              <Progress value={xp ? (xp.xpInLevel / 200) * 100 : 0} className="h-1.5" />
+            </CardContent>
+          </Card>
+          <Card className="shadow-card bg-gradient-hero text-primary-foreground border-0">
+            <CardContent className="pt-5 flex items-center gap-3">
+              <div className="h-10 w-10 rounded grid place-items-center bg-primary-foreground/15">
+                <ClipboardCheck className="h-5 w-5" />
+              </div>
+              <div className="flex-1">
+                <div className="text-sm font-semibold">Practice exam</div>
+                <div className="text-xs opacity-85">50 questions · 60 min · pass mark 70%</div>
+              </div>
+              <Link to="/exam"><Button size="sm" variant="secondary">Take exam</Button></Link>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* KPIs */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <Kpi icon={BookOpen} label="Labs available" value={stats.totalLabs} tone="text-primary" />
