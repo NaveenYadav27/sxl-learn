@@ -154,6 +154,62 @@ export async function runTenantCheck(
         : { ok: false, message: `Disable the account for ${params.display_name ?? "the target user"}.` };
     }
 
+    case "incident_resolved": {
+      const q = supabase
+        .from("tenant_incidents")
+        .select("id, display_name, status, classification")
+        .eq("user_id", userId)
+        .eq("status", "resolved");
+      if (params.contains) q.ilike("display_name", `%${params.contains}%`);
+      const { data } = await q.limit(1);
+      const inc = data?.[0];
+      if (!inc) return { ok: false, message: `Resolve the incident${params.contains ? ` "${params.contains}"` : ""}.` };
+      if (params.classification && inc.classification !== params.classification) {
+        return { ok: false, message: `Resolved, but classify it as "${params.classification}".` };
+      }
+      return { ok: true, message: `Incident "${inc.display_name}" resolved.` };
+    }
+
+    case "incident_assigned": {
+      const q = supabase
+        .from("tenant_incidents")
+        .select("id, display_name, assigned_to")
+        .eq("user_id", userId)
+        .not("assigned_to", "is", null);
+      if (params.contains) q.ilike("display_name", `%${params.contains}%`);
+      const { data } = await q.limit(1);
+      return data && data.length > 0
+        ? { ok: true, message: `Incident "${data[0].display_name}" is assigned.` }
+        : { ok: false, message: `Assign the incident${params.contains ? ` "${params.contains}"` : ""} to an analyst.` };
+    }
+
+    case "incident_in_progress": {
+      const q = supabase
+        .from("tenant_incidents")
+        .select("id, display_name, status")
+        .eq("user_id", userId)
+        .eq("status", "inProgress");
+      if (params.contains) q.ilike("display_name", `%${params.contains}%`);
+      const { data } = await q.limit(1);
+      return data && data.length > 0
+        ? { ok: true, message: `Incident "${data[0].display_name}" is in progress.` }
+        : { ok: false, message: `Move the incident to "In progress".` };
+    }
+
+    case "alert_status": {
+      // params: { contains?: string, status: 'new'|'inProgress'|'resolved' }
+      const q = supabase
+        .from("tenant_alerts")
+        .select("id, title, status")
+        .eq("user_id", userId)
+        .eq("status", params.status ?? "resolved");
+      if (params.contains) q.ilike("title", `%${params.contains}%`);
+      const { data } = await q.limit(1);
+      return data && data.length > 0
+        ? { ok: true, message: `Alert "${data[0].title}" is ${data[0].status}.` }
+        : { ok: false, message: `Set alert${params.contains ? ` "${params.contains}"` : ""} to ${params.status}.` };
+    }
+
     default:
       return { ok: false, message: `Unknown tenant check: ${check}` };
   }
