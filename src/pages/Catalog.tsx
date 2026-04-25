@@ -230,12 +230,13 @@ function HeroStat({ label, value, icon: Icon }: { label: string; value: number |
 }
 
 function DayCard({
-  day, labsBySlug, progress, matches,
+  day, labsBySlug, progress, matches, domainMeta,
 }: {
   day: DayPlan;
   labsBySlug: Record<string, Lab>;
   progress: Record<string, string>;
   matches: (lab: Lab | undefined) => boolean;
+  domainMeta: Record<DomainKey, DomainStyle>;
 }) {
   // Pre-compute filtered labs per module for this day
   const modulesFiltered = day.modules.map((m) => ({
@@ -290,6 +291,7 @@ function DayCard({
                 labs={labs}
                 progress={progress}
                 hiddenCount={note.labSlugs.length - labs.length}
+                domainMeta={domainMeta}
               />
             ))}
           </div>
