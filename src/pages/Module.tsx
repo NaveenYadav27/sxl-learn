@@ -206,6 +206,81 @@ export default function Module() {
           </CardContent>
         </Card>
 
+        {/* Concept deep dives — every term fully self-explained */}
+        <Card className="shadow-card">
+          <CardContent className="pt-5">
+            <div className="flex items-center gap-2 mb-3">
+              <Layers className="h-4 w-4 text-primary" />
+              <h3 className="text-base font-semibold">Concept deep dives</h3>
+              <Badge variant="outline" className="ml-auto">{explanation.conceptDeepDives.length} concepts</Badge>
+            </div>
+            <p className="text-xs text-muted-foreground mb-3">Click any concept for a full explanation — definition, plain English, analogy, how it works, Microsoft mapping, when (not) to use, common mistakes, and exam angle.</p>
+            <Accordion type="single" collapsible className="space-y-2">
+              {explanation.conceptDeepDives.map((c) => (
+                <AccordionItem key={c.id} value={c.id} className="border border-border rounded-md px-3">
+                  <AccordionTrigger className="hover:no-underline py-3">
+                    <div className="text-left">
+                      <div className="text-sm font-semibold">{c.name}</div>
+                      <div className="text-xs text-muted-foreground mt-0.5">{c.oneLine}</div>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-4 space-y-3 text-sm">
+                    <DDRow label="Formal definition" value={c.formal} />
+                    <DDRow label="Plain English" value={c.plainEnglish} />
+                    <DDRow label="Analogy" value={c.analogy} />
+                    <DDRow label="How it works" value={c.howItWorks} />
+                    <DDRow label="Microsoft mapping" value={c.microsoftMapping} />
+                    <DDRow label="When to use" value={c.whenToUse} />
+                    {c.whenNotToUse && <DDRow label="When NOT to use" value={c.whenNotToUse} />}
+                    <DDRow label="Common mistake" value={c.commonMistake} tone="warning" />
+                    <DDRow label="Exam angle" value={c.examAngle} tone="primary" />
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </CardContent>
+        </Card>
+
+        {/* Comparison tables */}
+        {explanation.comparisons.length > 0 && (
+          <Card className="shadow-card">
+            <CardContent className="pt-5">
+              <div className="flex items-center gap-2 mb-3">
+                <ListChecks className="h-4 w-4 text-primary" />
+                <h3 className="text-base font-semibold">Side-by-side comparisons</h3>
+              </div>
+              <div className="space-y-5">
+                {explanation.comparisons.map((cmp, i) => (
+                  <div key={i} className="rounded-md border border-border overflow-hidden">
+                    <div className={`px-3 py-2 ${meta.soft} border-b border-border text-sm font-semibold`}>{cmp.title}</div>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          {cmp.columns.map((c, j) => (
+                            <TableHead key={j} className={j === 0 ? "w-[28%]" : ""}>{c}</TableHead>
+                          ))}
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {cmp.rows.map((row, ri) => (
+                          <TableRow key={ri}>
+                            {row.map((cell, ci) => (
+                              <TableCell key={ci} className={ci === 0 ? "font-medium" : "text-foreground/85"}>{cell}</TableCell>
+                            ))}
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    <div className="px-3 py-2 bg-primary/5 border-t border-border text-xs">
+                      <span className="font-semibold text-primary">Bottom line: </span>{cmp.bottomLine}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Real examples */}
         <Card className="shadow-card">
           <CardContent className="pt-5">
