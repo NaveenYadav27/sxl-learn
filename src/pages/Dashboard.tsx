@@ -63,11 +63,22 @@ export default function Dashboard() {
         completedByModule.get(lab.module_id)!.add(lab.id);
       });
       const courseMods = (mods ?? []).filter((m: any) => allowedModuleSlugs.has(m.slug));
-      setModules(courseMods.map((m: any) => ({
-        ...m,
-        total: labsByModule.get(m.id) ?? 0,
-        done: completedByModule.get(m.id)?.size ?? 0,
-      })));
+      // Override DB module title/code/weight with this course's curriculum metadata
+      // so CIS-ITSM (which reuses SC-900 slug buckets for styling) shows ITSM titles.
+      const noteBySlug = new Map(
+        course.modules.filter((n) => n.moduleSlug).map((n) => [n.moduleSlug as string, n] as const),
+      );
+      setModules(courseMods.map((m: any) => {
+        const note = noteBySlug.get(m.slug);
+        return {
+          ...m,
+          title: note?.title ?? m.title,
+          domain_code: note?.code ?? m.domain_code,
+          exam_weight: note ? `${(note.theoryMinutes ?? 0) + (note.labBudgetMinutes ?? 0)} min` : m.exam_weight,
+          total: labsByModule.get(m.id) ?? 0,
+          done: completedByModule.get(m.id)?.size ?? 0,
+        };
+      }));
 
       // Recent activity scoped to this course
       setRecent(courseAttempts.slice(0, 5));
