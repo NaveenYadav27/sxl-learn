@@ -134,8 +134,9 @@ export default function Catalog() {
           <CardContent className="pt-4 pb-4 space-y-3">
             <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
               <TabsList>
-                <TabsTrigger value="1day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />1-Day intensive</TabsTrigger>
-                <TabsTrigger value="2day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />2-Day split</TabsTrigger>
+                <TabsTrigger value="4day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />4 days × 2h</TabsTrigger>
+                <TabsTrigger value="2day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />2 days × 4h</TabsTrigger>
+                <TabsTrigger value="1day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />1-day intensive</TabsTrigger>
               </TabsList>
             </Tabs>
 
