@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { PolicyReviewPanel } from "@/components/PolicyReviewPanel";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -68,8 +69,9 @@ export default function Purview() {
         <TabsContent value="labels" className="mt-4">
           <LabelsPanel labels={labels.data ?? []} loading={labels.isLoading} />
         </TabsContent>
-        <TabsContent value="dlp" className="mt-4">
+        <TabsContent value="dlp" className="mt-4 space-y-4">
           <DLPPanel policies={dlp.data ?? []} loading={dlp.isLoading} />
+          <PolicyReviewPanel kind="dlp" title="AI DLP reviewer" description="Spot gaps in coverage, missing sensitive types, and policies stuck in test mode." />
         </TabsContent>
         <TabsContent value="data" className="mt-4">
           <FilesPanel
