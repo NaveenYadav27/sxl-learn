@@ -90,10 +90,11 @@ export async function runTenantCheck(
         .select("id, display_name, state, conditions, grant_controls")
         .eq("user_id", userId);
       const match = (data ?? []).find((p) => {
-        const includeRoles: string[] = p.conditions?.users?.includeRoles ?? [];
+        const conds = (p.conditions ?? {}) as any;
+        const grants = ((p.grant_controls ?? {}) as any).builtInControls as string[] | undefined;
+        const includeRoles: string[] = conds?.users?.includeRoles ?? [];
         const targetsAdmin = includeRoles.some((r) => ADMIN_ROLES.has(r));
-        const grants: string[] = p.grant_controls?.builtInControls ?? [];
-        const requiresMfa = grants.includes("mfa");
+        const requiresMfa = (grants ?? []).includes("mfa");
         const enforced = p.state === "enabled" || p.state === "enabledForReportingButNotEnforced";
         return targetsAdmin && requiresMfa && enforced;
       });
@@ -108,8 +109,8 @@ export async function runTenantCheck(
         .select("id, display_name, state, grant_controls")
         .eq("user_id", userId);
       const match = (data ?? []).find((p) => {
-        const grants: string[] = p.grant_controls?.builtInControls ?? [];
-        return grants.includes("block") && p.state === "enabled";
+        const grants = ((p.grant_controls ?? {}) as any).builtInControls as string[] | undefined;
+        return (grants ?? []).includes("block") && p.state === "enabled";
       });
       return match
         ? { ok: true, message: `Block policy "${match.display_name}" is enabled.` }
