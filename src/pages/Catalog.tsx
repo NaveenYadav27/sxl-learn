@@ -31,12 +31,21 @@ const difficultyTone: Record<string, string> = {
   advanced: "bg-destructive/10 text-destructive",
 };
 
-const domainMeta: Record<DomainKey, { icon: any; bar: string; chip: string; soft: string; label: string }> = {
+type DomainStyle = { icon: any; bar: string; chip: string; soft: string; label: string };
+const sc900DomainMeta: Record<DomainKey, DomainStyle> = {
   concepts:   { icon: Sparkles,       bar: "bg-gradient-concepts",   chip: "bg-domain-concepts/15 text-domain-concepts border-domain-concepts/30",     soft: "bg-domain-concepts/5",   label: "Concepts" },
   iam:        { icon: Users,          bar: "bg-gradient-entra",      chip: "bg-domain-entra/15 text-domain-entra border-domain-entra/30",              soft: "bg-domain-entra/5",      label: "Identity & Access" },
   entra:      { icon: Building2,      bar: "bg-gradient-entra",      chip: "bg-domain-entra/15 text-domain-entra border-domain-entra/30",              soft: "bg-domain-entra/5",      label: "Entra" },
   security:   { icon: Shield,         bar: "bg-gradient-security",   chip: "bg-domain-security/15 text-domain-security border-domain-security/30",     soft: "bg-domain-security/5",   label: "Security" },
   compliance: { icon: Gavel,          bar: "bg-gradient-compliance", chip: "bg-domain-compliance/15 text-domain-compliance border-domain-compliance/30", soft: "bg-domain-compliance/5", label: "Compliance" },
+  exam:       { icon: ClipboardCheck, bar: "bg-gradient-hero",       chip: "bg-primary/15 text-primary border-primary/30",                              soft: "bg-primary/5",           label: "Exam Prep" },
+};
+const itsmDomainMeta: Record<DomainKey, DomainStyle> = {
+  concepts:   { icon: Building2,      bar: "bg-gradient-concepts",   chip: "bg-domain-concepts/15 text-domain-concepts border-domain-concepts/30",     soft: "bg-domain-concepts/5",   label: "Foundations" },
+  iam:        { icon: FlaskConical,   bar: "bg-gradient-entra",      chip: "bg-domain-entra/15 text-domain-entra border-domain-entra/30",              soft: "bg-domain-entra/5",      label: "Incident" },
+  entra:      { icon: BookOpen,       bar: "bg-gradient-entra",      chip: "bg-domain-entra/15 text-domain-entra border-domain-entra/30",              soft: "bg-domain-entra/5",      label: "Problem & Knowledge" },
+  security:   { icon: Shield,         bar: "bg-gradient-security",   chip: "bg-domain-security/15 text-domain-security border-domain-security/30",     soft: "bg-domain-security/5",   label: "Change & Release" },
+  compliance: { icon: Gavel,          bar: "bg-gradient-compliance", chip: "bg-domain-compliance/15 text-domain-compliance border-domain-compliance/30", soft: "bg-domain-compliance/5", label: "Catalog & CMDB" },
   exam:       { icon: ClipboardCheck, bar: "bg-gradient-hero",       chip: "bg-primary/15 text-primary border-primary/30",                              soft: "bg-primary/5",           label: "Exam Prep" },
 };
 
@@ -57,6 +66,7 @@ export default function Catalog() {
   const { user } = useAuth();
   const { course } = useCourse();
   const moduleNotes = course.modules;
+  const domainMeta = course.code === "cis-itsm" ? itsmDomainMeta : sc900DomainMeta;
   const [labsBySlug, setLabsBySlug] = useState<Record<string, Lab>>({});
   const [progress, setProgress] = useState<Record<string, string>>({}); // labId → status
   const [search, setSearch] = useState("");
@@ -199,6 +209,7 @@ export default function Catalog() {
               labsBySlug={labsBySlug}
               progress={progress}
               matches={matches}
+              domainMeta={domainMeta}
             />
           ))}
         </Accordion>
@@ -221,12 +232,13 @@ function HeroStat({ label, value, icon: Icon }: { label: string; value: number |
 }
 
 function DayCard({
-  day, labsBySlug, progress, matches,
+  day, labsBySlug, progress, matches, domainMeta,
 }: {
   day: DayPlan;
   labsBySlug: Record<string, Lab>;
   progress: Record<string, string>;
   matches: (lab: Lab | undefined) => boolean;
+  domainMeta: Record<DomainKey, DomainStyle>;
 }) {
   // Pre-compute filtered labs per module for this day
   const modulesFiltered = day.modules.map((m) => ({
@@ -281,6 +293,7 @@ function DayCard({
                 labs={labs}
                 progress={progress}
                 hiddenCount={note.labSlugs.length - labs.length}
+                domainMeta={domainMeta}
               />
             ))}
           </div>
@@ -291,12 +304,13 @@ function DayCard({
 }
 
 function ModuleSection({
-  note, labs, progress, hiddenCount,
+  note, labs, progress, hiddenCount, domainMeta,
 }: {
   note: ModuleNote;
   labs: Lab[];
   progress: Record<string, string>;
   hiddenCount: number;
+  domainMeta: Record<DomainKey, DomainStyle>;
 }) {
   const meta = domainMeta[note.domain];
   const Icon = meta.icon;
