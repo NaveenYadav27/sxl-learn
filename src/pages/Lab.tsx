@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { TutorPanel } from "@/components/TutorPanel";
 import { EntraSimulator } from "@/components/simulators/EntraSimulator";
 import { PortalSimulator } from "@/components/simulators/PortalSimulator";
+import { TenantCheckPanel } from "@/components/simulators/TenantCheckPanel";
 import { QuizPanel } from "@/components/QuizPanel";
 import { LabCompletionModal } from "@/components/LabCompletionModal";
 import { awardBadgesForUser } from "@/lib/badges";
@@ -295,6 +296,17 @@ export default function Lab() {
                 );
               }
               if (!currentStep) return null;
+              const ea = currentStep.expected_action ?? {};
+              // NEW: live-tenant DB validator
+              if (ea?.type === "tenant_check") {
+                return (
+                  <TenantCheckPanel
+                    check={ea.check}
+                    params={ea.params ?? {}}
+                    onValidate={(ok) => { if (ok) markStepDone(); }}
+                  />
+                );
+              }
               // Original bespoke Entra blade simulator (legacy CA-flow lab)
               if (lab.simulator === "entra" && lab.slug === "mfa-conditional-access") {
                 return (
