@@ -119,7 +119,7 @@ export function TutorPanel({ labContext, attemptId, initialPrompt }: Props) {
         </div>
         <div>
           <div className="text-sm font-semibold">Twin Tutor</div>
-          <div className="text-[10px] text-muted-foreground">SC-900 AI coach · always on</div>
+          <div className="text-[10px] text-muted-foreground">AI coach · always on</div>
         </div>
       </div>
 
