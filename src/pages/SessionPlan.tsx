@@ -10,6 +10,8 @@ import {
   BookOpen, FlaskConical, Coffee, ClipboardCheck, Sparkles, Users,
   Shield, Gavel, ArrowRight, Clock, GraduationCap, CheckCircle2, Building2,
 } from "lucide-react";
+import { useCourse } from "@/hooks/useCourse";
+import type { DayPlan as CourseDayPlan } from "@/lib/curriculum";
 
 /* ----------------------------- Types ----------------------------- */
 type Block =
