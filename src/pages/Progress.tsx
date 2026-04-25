@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useCourse } from "@/hooks/useCourse";
 import {
   Trophy, Sparkles, BookOpen, Clock, CheckCircle2, ArrowRight, Award,
   Users, Shield, Gavel, Network, Lock,
@@ -36,6 +37,7 @@ const badgeMeta: Record<string, { tone: string; icon: any }> = {
 
 export default function ProgressPage() {
   const { user } = useAuth();
+  const { course } = useCourse();
   const [loading, setLoading] = useState(true);
   const [modules, setModules] = useState<any[]>([]);
   const [attempts, setAttempts] = useState<any[]>([]);
@@ -101,7 +103,7 @@ export default function ProgressPage() {
             <Card className="hero-surface border-0">
               <CardContent className="pt-6 grid md:grid-cols-[1fr_auto] items-center gap-6">
                 <div>
-                  <div className="text-sm text-muted-foreground">SC-900 readiness</div>
+                  <div className="text-sm text-muted-foreground">{course.shortName} readiness</div>
                   <div className="text-4xl font-bold mt-1 text-shadowx-gradient">{overallPct}%</div>
                   <p className="text-sm text-muted-foreground mt-2 max-w-md">
                     {totals.completed} of {totals.labs} labs completed · {earnedBadges.length} badge{earnedBadges.length === 1 ? "" : "s"} earned
