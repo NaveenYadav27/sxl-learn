@@ -210,6 +210,67 @@ export async function runTenantCheck(
         : { ok: false, message: `Set alert${params.contains ? ` "${params.contains}"` : ""} to ${params.status}.` };
     }
 
+    case "label_exists": {
+      const q = supabase
+        .from("tenant_sensitivity_labels")
+        .select("id, display_name, encryption_enabled, watermark_text")
+        .eq("user_id", userId);
+      if (params.display_name) q.ilike("display_name", `%${params.display_name}%`);
+      const { data } = await q.limit(1);
+      const lbl = data?.[0];
+      if (!lbl) return { ok: false, message: `Create a label${params.display_name ? ` named "${params.display_name}"` : ""}.` };
+      if (params.require_encryption && !lbl.encryption_enabled) {
+        return { ok: false, message: `Label "${lbl.display_name}" must enable encryption.` };
+      }
+      if (params.require_watermark && !lbl.watermark_text) {
+        return { ok: false, message: `Label "${lbl.display_name}" must have a watermark.` };
+      }
+      return { ok: true, message: `Label "${lbl.display_name}" looks good.` };
+    }
+
+    case "dlp_policy_exists": {
+      const { data } = await supabase
+        .from("tenant_dlp_policies")
+        .select("id, display_name, state, locations, rules, action")
+        .eq("user_id", userId);
+      const match = (data ?? []).find((p) => {
+        if (params.display_name && !p.display_name.toLowerCase().includes(String(params.display_name).toLowerCase())) return false;
+        if (params.state && p.state !== params.state) return false;
+        if (params.action && p.action !== params.action) return false;
+        if (params.location) {
+          const locs: string[] = (p.locations as any) ?? [];
+          if (!locs.includes(params.location)) return false;
+        }
+        if (params.sensitive_type) {
+          const types: string[] = ((p.rules ?? {}) as any).sensitiveInfoTypes ?? [];
+          if (!types.some((t) => t.toLowerCase().includes(String(params.sensitive_type).toLowerCase()))) return false;
+        }
+        return true;
+      });
+      return match
+        ? { ok: true, message: `DLP policy "${match.display_name}" matches the requirement.` }
+        : { ok: false, message: `Create a DLP policy meeting the criteria.` };
+    }
+
+    case "file_classified": {
+      const q = supabase
+        .from("tenant_classified_files")
+        .select("id, file_name, label_id, tenant_sensitivity_labels:label_id(display_name)")
+        .eq("user_id", userId)
+        .not("label_id", "is", null);
+      if (params.file_contains) q.ilike("file_name", `%${params.file_contains}%`);
+      const { data } = await q.limit(1);
+      const f: any = data?.[0];
+      if (!f) return { ok: false, message: `Apply a label to ${params.file_contains ? `"${params.file_contains}"` : "the file"}.` };
+      if (params.label_name) {
+        const labelName = f.tenant_sensitivity_labels?.display_name ?? "";
+        if (!labelName.toLowerCase().includes(String(params.label_name).toLowerCase())) {
+          return { ok: false, message: `Apply the "${params.label_name}" label specifically.` };
+        }
+      }
+      return { ok: true, message: `"${f.file_name}" is classified.` };
+    }
+
     default:
       return { ok: false, message: `Unknown tenant check: ${check}` };
   }

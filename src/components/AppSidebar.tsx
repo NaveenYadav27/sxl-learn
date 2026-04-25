@@ -26,7 +26,7 @@ const learnerNav = [
 const portalNav = [
   { title: "Microsoft Entra", url: "/portal/entra", icon: Users, color: "text-domain-entra" },
   { title: "Defender XDR", url: "/defender", icon: Shield, color: "text-domain-security" },
-  { title: "Microsoft Purview", url: "/portal/purview", icon: Gavel, color: "text-domain-compliance" },
+  { title: "Microsoft Purview", url: "/purview", icon: Gavel, color: "text-domain-compliance" },
   { title: "Microsoft Sentinel", url: "/portal/sentinel", icon: Network, color: "text-primary-glow" },
 ];
 

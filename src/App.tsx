@@ -17,6 +17,7 @@ import PortalSandbox from "./pages/PortalSandbox.tsx";
 import Licensing from "./pages/Licensing.tsx";
 import Tenant from "./pages/Tenant.tsx";
 import Defender from "./pages/Defender.tsx";
+import Purview from "./pages/Purview.tsx";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/exam" element={<Exam />} />
             <Route path="/defender" element={<Defender />} />
             <Route path="/portal/:sim" element={<PortalSandbox />} />
+            <Route path="/purview" element={<Purview />} />
             <Route path="/tenant" element={<Tenant />} />
             <Route path="/licensing" element={<Licensing />} />
             <Route path="/instructor/cohort" element={<Placeholder title="Instructor Cockpit" breadcrumb={[{ label: "Instructor" }, { label: "Cohort" }]} />} />
