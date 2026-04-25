@@ -313,9 +313,10 @@ function ModuleSection({
                 {note.title}
                 {note.code && <Badge variant="outline" className="text-[10px]">{note.code}</Badge>}
               </div>
-              <div className="text-xs text-muted-foreground mt-0.5 inline-flex items-center gap-3">
-                <span className="inline-flex items-center gap-1"><BookOpen className="h-3 w-3" />{note.theoryMinutes}m theory</span>
-                <span className="inline-flex items-center gap-1"><FlaskConical className="h-3 w-3" />{note.labSlugs.length} labs</span>
+              <div className="text-xs text-muted-foreground mt-0.5 inline-flex items-center gap-3 flex-wrap">
+                <span className="inline-flex items-center gap-1"><BookOpen className="h-3 w-3" />{fmtMin(note.theoryMinutes)} theory</span>
+                <span className="inline-flex items-center gap-1"><FlaskConical className="h-3 w-3" />{fmtMin(note.labBudgetMinutes)} labs ({note.labSlugs.length})</span>
+                <span className="inline-flex items-center gap-1 font-medium text-foreground/70"><Clock className="h-3 w-3" />{fmtMin(note.theoryMinutes + note.labBudgetMinutes)} total</span>
               </div>
             </div>
           </div>
