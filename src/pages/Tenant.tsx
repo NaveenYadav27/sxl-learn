@@ -6,6 +6,7 @@
 import { useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { PolicyReviewPanel } from "@/components/PolicyReviewPanel";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
