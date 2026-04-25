@@ -6,7 +6,7 @@ import type { DayPlan, ModuleNote } from "./curriculum";
 /* ---------- Per-module notes ---------- */
 export const itsmModuleNotes: ModuleNote[] = [
   {
-    moduleSlug: "concepts", // reusing the slug bucket so domain styling stays consistent
+    moduleSlug: "itsm-foundations",
     domain: "concepts",
     title: "Module 1 — ITSM Foundations & ServiceNow Platform",
     code: "ITSM-M1",
@@ -22,7 +22,7 @@ export const itsmModuleNotes: ModuleNote[] = [
     labSlugs: ["itsm-explore-instance", "itsm-roles-and-groups", "itsm-process-map"],
   },
   {
-    moduleSlug: "iam",
+    moduleSlug: "itsm-incident",
     domain: "iam",
     title: "Module 2 — Incident Management",
     code: "ITSM-M2",
@@ -38,7 +38,7 @@ export const itsmModuleNotes: ModuleNote[] = [
     labSlugs: ["itsm-create-incident", "itsm-priority-matrix", "itsm-resolve-and-close", "itsm-major-incident"],
   },
   {
-    moduleSlug: "entra",
+    moduleSlug: "itsm-problem",
     domain: "entra",
     title: "Module 3 — Problem & Knowledge Management",
     code: "ITSM-M3",
@@ -54,7 +54,7 @@ export const itsmModuleNotes: ModuleNote[] = [
     labSlugs: ["itsm-create-problem", "itsm-rca-five-whys", "itsm-create-kb-article", "itsm-link-known-error"],
   },
   {
-    moduleSlug: "security",
+    moduleSlug: "itsm-change",
     domain: "security",
     title: "Module 4 — Change & Release Management",
     code: "ITSM-M4",
@@ -70,7 +70,7 @@ export const itsmModuleNotes: ModuleNote[] = [
     labSlugs: ["itsm-standard-change", "itsm-normal-change-cab", "itsm-emergency-change", "itsm-change-schedule", "itsm-release-promote"],
   },
   {
-    moduleSlug: "compliance",
+    moduleSlug: "itsm-catalog-cmdb",
     domain: "compliance",
     title: "Module 5 — Request Fulfilment, CMDB & Service Catalog",
     code: "ITSM-M5",
