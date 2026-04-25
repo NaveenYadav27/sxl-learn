@@ -18,15 +18,29 @@ import {
 } from "lucide-react";
 import { type DomainKey } from "@/lib/curriculum";
 import { getModuleExplanation } from "@/lib/moduleExplanations";
+import { getItsmModuleExplanation } from "@/lib/moduleExplanationsItsm";
 import { useCourse } from "@/hooks/useCourse";
+import { ListChecks as ProcessIcon, Workflow, Database, GitBranch } from "lucide-react";
 
-const domainMeta: Record<DomainKey, { icon: any; bar: string; soft: string; chip: string; label: string }> = {
+type DomainStyle = { icon: any; bar: string; soft: string; chip: string; label: string };
+
+const sc900DomainMeta: Record<DomainKey, DomainStyle> = {
   concepts:   { icon: Sparkles,   bar: "bg-gradient-concepts",   soft: "bg-domain-concepts/5",   chip: "bg-domain-concepts/15 text-domain-concepts border-domain-concepts/30",     label: "Concepts" },
   iam:        { icon: Users,      bar: "bg-gradient-entra",      soft: "bg-domain-entra/5",      chip: "bg-domain-entra/15 text-domain-entra border-domain-entra/30",              label: "Identity & Access" },
   entra:      { icon: Building2,  bar: "bg-gradient-entra",      soft: "bg-domain-entra/5",      chip: "bg-domain-entra/15 text-domain-entra border-domain-entra/30",              label: "Entra" },
   security:   { icon: Shield,     bar: "bg-gradient-security",   soft: "bg-domain-security/5",   chip: "bg-domain-security/15 text-domain-security border-domain-security/30",     label: "Security" },
   compliance: { icon: Gavel,      bar: "bg-gradient-compliance", soft: "bg-domain-compliance/5", chip: "bg-domain-compliance/15 text-domain-compliance border-domain-compliance/30", label: "Compliance" },
   exam:       { icon: GraduationCap, bar: "bg-gradient-hero",   soft: "bg-primary/5",           chip: "bg-primary/15 text-primary border-primary/30",                              label: "Exam" },
+};
+
+// CIS-ITSM reuses the same domain slugs but the labels/icons must reflect ITSM processes
+const itsmDomainMeta: Record<DomainKey, DomainStyle> = {
+  concepts:   { icon: Building2,     bar: "bg-gradient-concepts",   soft: "bg-domain-concepts/5",   chip: "bg-domain-concepts/15 text-domain-concepts border-domain-concepts/30",     label: "Foundations" },
+  iam:        { icon: ProcessIcon,   bar: "bg-gradient-entra",      soft: "bg-domain-entra/5",      chip: "bg-domain-entra/15 text-domain-entra border-domain-entra/30",              label: "Incident" },
+  entra:      { icon: Workflow,      bar: "bg-gradient-entra",      soft: "bg-domain-entra/5",      chip: "bg-domain-entra/15 text-domain-entra border-domain-entra/30",              label: "Problem & Knowledge" },
+  security:   { icon: GitBranch,     bar: "bg-gradient-security",   soft: "bg-domain-security/5",   chip: "bg-domain-security/15 text-domain-security border-domain-security/30",     label: "Change & Release" },
+  compliance: { icon: Database,      bar: "bg-gradient-compliance", soft: "bg-domain-compliance/5", chip: "bg-domain-compliance/15 text-domain-compliance border-domain-compliance/30", label: "Catalog & CMDB" },
+  exam:       { icon: GraduationCap, bar: "bg-gradient-hero",       soft: "bg-primary/5",           chip: "bg-primary/15 text-primary border-primary/30",                              label: "Exam" },
 };
 
 type Lab = {
