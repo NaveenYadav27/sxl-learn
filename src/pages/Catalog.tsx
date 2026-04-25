@@ -231,9 +231,8 @@ function DayCard({
     }).length, 0,
   );
   const dayTheoryMin = day.modules.reduce((s, m) => s + m.theoryMinutes, 0);
-  const dayLabMin = day.modules.reduce(
-    (s, m) => s + m.labSlugs.reduce((a, slug) => a + (labsBySlug[slug]?.duration_min ?? 0), 0), 0,
-  );
+  const dayLabMin = day.modules.reduce((s, m) => s + m.labBudgetMinutes, 0);
+  const dayTotalMin = dayTheoryMin + dayLabMin;
 
   if (dayShownCount === 0 && dayLabsCount > 0) {
     // Hidden by filter — still show empty hint
