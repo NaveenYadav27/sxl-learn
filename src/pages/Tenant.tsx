@@ -401,45 +401,48 @@ function CATab() {
   const [open, setOpen] = useState(false);
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between gap-4">
-        <div>
-          <CardTitle className="text-base">Conditional Access policies</CardTitle>
-          <CardDescription>Build identity-based access controls. Toggle state to enable, disable, or report-only.</CardDescription>
-        </div>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild><Button size="sm"><Plus className="h-3.5 w-3.5 mr-1.5" />New policy</Button></DialogTrigger>
-          <CreateCAPolicyDialog onClose={() => setOpen(false)} />
-        </Dialog>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        {policies?.map((p) => (
-          <div key={p.id} className="rounded border border-border p-3">
-            <div className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2 min-w-0">
-                <Lock className="h-4 w-4 text-primary shrink-0" />
-                <span className="font-medium truncate">{p.display_name}</span>
-                <StatePill state={p.state} />
-              </div>
-              <Button variant="ghost" size="icon" onClick={() => del.mutate(p.id)}>
-                <Trash2 className="h-3.5 w-3.5 text-destructive" />
-              </Button>
-            </div>
-            <div className="mt-2 grid md:grid-cols-2 gap-2 text-xs">
-              <div>
-                <div className="text-muted-foreground mb-1">Conditions</div>
-                <pre className="bg-muted/50 rounded p-2 overflow-x-auto text-[10px] leading-snug">{JSON.stringify(p.conditions, null, 2)}</pre>
-              </div>
-              <div>
-                <div className="text-muted-foreground mb-1">Grant controls</div>
-                <pre className="bg-muted/50 rounded p-2 overflow-x-auto text-[10px] leading-snug">{JSON.stringify(p.grant_controls, null, 2)}</pre>
-              </div>
-            </div>
+    <div className="space-y-4">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between gap-4">
+          <div>
+            <CardTitle className="text-base">Conditional Access policies</CardTitle>
+            <CardDescription>Build identity-based access controls. Toggle state to enable, disable, or report-only.</CardDescription>
           </div>
-        ))}
-        {!policies?.length && <div className="text-center text-xs text-muted-foreground py-8">No policies. Create one to start enforcing access controls.</div>}
-      </CardContent>
-    </Card>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild><Button size="sm"><Plus className="h-3.5 w-3.5 mr-1.5" />New policy</Button></DialogTrigger>
+            <CreateCAPolicyDialog onClose={() => setOpen(false)} />
+          </Dialog>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {policies?.map((p) => (
+            <div key={p.id} className="rounded border border-border p-3">
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2 min-w-0">
+                  <Lock className="h-4 w-4 text-primary shrink-0" />
+                  <span className="font-medium truncate">{p.display_name}</span>
+                  <StatePill state={p.state} />
+                </div>
+                <Button variant="ghost" size="icon" onClick={() => del.mutate(p.id)}>
+                  <Trash2 className="h-3.5 w-3.5 text-destructive" />
+                </Button>
+              </div>
+              <div className="mt-2 grid md:grid-cols-2 gap-2 text-xs">
+                <div>
+                  <div className="text-muted-foreground mb-1">Conditions</div>
+                  <pre className="bg-muted/50 rounded p-2 overflow-x-auto text-[10px] leading-snug">{JSON.stringify(p.conditions, null, 2)}</pre>
+                </div>
+                <div>
+                  <div className="text-muted-foreground mb-1">Grant controls</div>
+                  <pre className="bg-muted/50 rounded p-2 overflow-x-auto text-[10px] leading-snug">{JSON.stringify(p.grant_controls, null, 2)}</pre>
+                </div>
+              </div>
+            </div>
+          ))}
+          {!policies?.length && <div className="text-center text-xs text-muted-foreground py-8">No policies. Create one to start enforcing access controls.</div>}
+        </CardContent>
+      </Card>
+      <PolicyReviewPanel kind="ca" />
+    </div>
   );
 }
 
