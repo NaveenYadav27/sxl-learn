@@ -361,6 +361,79 @@ export type Database = {
           },
         ]
       }
+      tenant_alerts: {
+        Row: {
+          affected_device_id: string | null
+          affected_user_id: string | null
+          category: string
+          created_at: string
+          description: string | null
+          detected_at: string
+          id: string
+          incident_id: string | null
+          mitre_technique: string | null
+          product: string
+          severity: string
+          status: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          affected_device_id?: string | null
+          affected_user_id?: string | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          detected_at?: string
+          id?: string
+          incident_id?: string | null
+          mitre_technique?: string | null
+          product?: string
+          severity?: string
+          status?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          affected_device_id?: string | null
+          affected_user_id?: string | null
+          category?: string
+          created_at?: string
+          description?: string | null
+          detected_at?: string
+          id?: string
+          incident_id?: string | null
+          mitre_technique?: string | null
+          product?: string
+          severity?: string
+          status?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_alerts_affected_device_id_fkey"
+            columns: ["affected_device_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_devices"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_alerts_affected_user_id_fkey"
+            columns: ["affected_user_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_alerts_incident_fk"
+            columns: ["incident_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_incidents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tenant_audit_logs: {
         Row: {
           action: string
@@ -545,6 +618,62 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      tenant_incidents: {
+        Row: {
+          assigned_to: string | null
+          classification: string | null
+          created_at: string
+          description: string | null
+          determination: string | null
+          display_name: string
+          id: string
+          resolution_notes: string | null
+          resolved_at: string | null
+          severity: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          classification?: string | null
+          created_at?: string
+          description?: string | null
+          determination?: string | null
+          display_name: string
+          id?: string
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assigned_to?: string | null
+          classification?: string | null
+          created_at?: string
+          description?: string | null
+          determination?: string | null
+          display_name?: string
+          id?: string
+          resolution_notes?: string | null
+          resolved_at?: string | null
+          severity?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_incidents_assigned_to_fkey"
+            columns: ["assigned_to"]
+            isOneToOne: false
+            referencedRelation: "tenant_users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tenant_role_assignments: {
         Row: {
