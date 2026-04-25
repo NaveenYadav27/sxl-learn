@@ -18,6 +18,7 @@ import Licensing from "./pages/Licensing.tsx";
 import Tenant from "./pages/Tenant.tsx";
 import Defender from "./pages/Defender.tsx";
 import Purview from "./pages/Purview.tsx";
+import SessionPlan from "./pages/SessionPlan.tsx";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/lab/:slug" element={<Lab />} />
             <Route path="/progress" element={<ProgressPage />} />
             <Route path="/exam" element={<Exam />} />
+            <Route path="/session-plan" element={<SessionPlan />} />
             <Route path="/defender" element={<Defender />} />
             <Route path="/portal/:sim" element={<PortalSandbox />} />
             <Route path="/purview" element={<Purview />} />
