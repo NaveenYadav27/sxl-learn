@@ -300,12 +300,13 @@ function DayCard({
 }
 
 function ModuleSection({
-  note, labs, progress, hiddenCount,
+  note, labs, progress, hiddenCount, domainMeta,
 }: {
   note: ModuleNote;
   labs: Lab[];
   progress: Record<string, string>;
   hiddenCount: number;
+  domainMeta: Record<DomainKey, DomainStyle>;
 }) {
   const meta = domainMeta[note.domain];
   const Icon = meta.icon;
