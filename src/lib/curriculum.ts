@@ -112,12 +112,48 @@ export const moduleNotes: ModuleNote[] = [
 ];
 
 /* ---------- Day groupings ---------- */
+// Helper to grab a module by slug (or the exam block).
+const m = (slug: ModuleNote["moduleSlug"] | "exam") =>
+  moduleNotes.find((x) => (slug === "exam" ? x.domain === "exam" : x.moduleSlug === slug))!;
+
+// Default plan: 4 days × 2 hours each (one module per day, exam folded into Day 4).
+export const fourDayPlan: DayPlan[] = [
+  {
+    id: "day1",
+    label: "Day 1",
+    subtitle: "Security Concepts (2h)",
+    description: "Zero Trust, Defense in Depth, CIA triad, threats, and the shared responsibility model.",
+    modules: [m("concepts")],
+  },
+  {
+    id: "day2",
+    label: "Day 2",
+    subtitle: "Identity & Access + Entra (2h)",
+    description: "Authentication vs authorization, MFA, RBAC, Conditional Access, and Microsoft Entra capabilities.",
+    modules: [m("iam"), m("entra")],
+  },
+  {
+    id: "day3",
+    label: "Day 3",
+    subtitle: "Security Solutions (2h)",
+    description: "Microsoft Defender XDR, Sentinel SIEM/SOAR, CSPM, and endpoint protection.",
+    modules: [m("security")],
+  },
+  {
+    id: "day4",
+    label: "Day 4",
+    subtitle: "Compliance & Exam Prep (2h)",
+    description: "Microsoft Purview, DLP, sensitivity labels, eDiscovery — then SC-900 exam strategy.",
+    modules: [m("compliance"), m("exam")],
+  },
+];
+
 // 1-day intensive: everything sequential.
 export const oneDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "Full SC-900 bootcamp",
+    subtitle: "Full SC-900 bootcamp (8h)",
     description: "Run the entire curriculum in a single guided 8-hour session.",
     modules: moduleNotes,
   },
@@ -128,23 +164,23 @@ export const twoDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "Foundations & identity",
+    subtitle: "Foundations & identity (4h)",
     description: "Core concepts, identity & access, and Entra capabilities.",
-    modules: moduleNotes.filter((m) =>
-      ["concepts", "iam", "entra"].includes(m.moduleSlug ?? ""),
+    modules: moduleNotes.filter((x) =>
+      ["concepts", "iam", "entra"].includes(x.moduleSlug ?? ""),
     ),
   },
   {
     id: "day2",
     label: "Day 2",
-    subtitle: "Defence, compliance & exam",
+    subtitle: "Defence, compliance & exam (4h)",
     description: "Security solutions, compliance & governance, and exam prep.",
-    modules: moduleNotes.filter((m) =>
-      ["security", "compliance"].includes(m.moduleSlug ?? "") || m.domain === "exam",
+    modules: moduleNotes.filter((x) =>
+      ["security", "compliance"].includes(x.moduleSlug ?? "") || x.domain === "exam",
     ),
   },
 ];
 
 export function findDayForModule(plan: DayPlan[], moduleSlug: string | null): DayPlan | undefined {
-  return plan.find((d) => d.modules.some((m) => m.moduleSlug === moduleSlug));
+  return plan.find((d) => d.modules.some((x) => x.moduleSlug === moduleSlug));
 }

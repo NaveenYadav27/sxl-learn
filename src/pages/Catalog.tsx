@@ -15,7 +15,7 @@ import {
   Clock, ArrowRight, Shield, Users, Gavel, BookOpen, Lock, ExternalLink, Search, X,
   Sparkles, Building2, ClipboardCheck, FlaskConical, Calendar, GraduationCap,
 } from "lucide-react";
-import { moduleNotes, oneDayPlan, twoDayPlan, type DomainKey, type ModuleNote, type DayPlan } from "@/lib/curriculum";
+import { moduleNotes, oneDayPlan, twoDayPlan, fourDayPlan, type DomainKey, type ModuleNote, type DayPlan } from "@/lib/curriculum";
 
 const simulatorIcon: Record<string, any> = {
   entra: Users, defender: Shield, purview: Gavel, sentinel: Lock, generic: BookOpen, tenant: Building2,
@@ -52,7 +52,7 @@ export default function Catalog() {
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState<string>("all");
   const [status, setStatus] = useState<string>("all");
-  const [mode, setMode] = useState<"1day" | "2day">("1day");
+  const [mode, setMode] = useState<"4day" | "2day" | "1day">("4day");
 
   useEffect(() => {
     (async () => {
@@ -96,7 +96,7 @@ export default function Catalog() {
   );
   const filtersActive = search.trim() !== "" || difficulty !== "all" || status !== "all";
 
-  const plan = mode === "1day" ? oneDayPlan : twoDayPlan;
+  const plan = mode === "4day" ? fourDayPlan : mode === "2day" ? twoDayPlan : oneDayPlan;
   // Default expand: first day open
   const defaultDay = plan[0]?.id;
 
@@ -134,8 +134,9 @@ export default function Catalog() {
           <CardContent className="pt-4 pb-4 space-y-3">
             <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
               <TabsList>
-                <TabsTrigger value="1day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />1-Day intensive</TabsTrigger>
-                <TabsTrigger value="2day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />2-Day split</TabsTrigger>
+                <TabsTrigger value="4day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />4 days × 2h</TabsTrigger>
+                <TabsTrigger value="2day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />2 days × 4h</TabsTrigger>
+                <TabsTrigger value="1day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />1-day intensive</TabsTrigger>
               </TabsList>
             </Tabs>
 
