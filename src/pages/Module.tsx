@@ -511,3 +511,41 @@ function DDRow({ label, value, tone }: { label: string; value: string; tone?: "w
     </div>
   );
 }
+
+function SelfCheckQuestion({ index, q }: { index: number; q: { question: string; options: string[]; correctIndex: number; explanation: string } }) {
+  const [picked, setPicked] = useState<number | null>(null);
+  const isCorrect = picked === q.correctIndex;
+  return (
+    <div className="rounded-md border border-border p-3">
+      <div className="text-sm font-medium mb-2"><span className="text-muted-foreground">Q{index}. </span>{q.question}</div>
+      <div className="space-y-1.5">
+        {q.options.map((opt, i) => {
+          const selected = picked === i;
+          const showCorrect = picked !== null && i === q.correctIndex;
+          const showWrong = selected && i !== q.correctIndex;
+          return (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setPicked(i)}
+              disabled={picked !== null}
+              className={`w-full text-left text-sm px-3 py-1.5 rounded border transition-colors ${
+                showCorrect ? "border-success bg-success/10 text-success" :
+                showWrong ? "border-destructive bg-destructive/10 text-destructive" :
+                selected ? "border-primary" : "border-border hover:bg-muted"
+              }`}
+            >
+              <span className="font-semibold mr-2">{String.fromCharCode(65 + i)}.</span>{opt}
+            </button>
+          );
+        })}
+      </div>
+      {picked !== null && (
+        <div className={`mt-2 text-xs leading-relaxed rounded-md p-2 ${isCorrect ? "bg-success/5 text-foreground/90" : "bg-warning/5 text-foreground/90"}`}>
+          <span className={`font-semibold ${isCorrect ? "text-success" : "text-warning"}`}>{isCorrect ? "Correct. " : "Not quite. "}</span>
+          {q.explanation}
+        </div>
+      )}
+    </div>
+  );
+}
