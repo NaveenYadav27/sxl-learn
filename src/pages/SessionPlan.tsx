@@ -213,8 +213,14 @@ function addMinutes(start: string, minutes: number) {
 
 /* --------------------------- Page --------------------------- */
 export default function SessionPlan() {
+  const { course } = useCourse();
   const [mode, setMode] = useState<"1day" | "2day">("1day");
   const [startTime, setStartTime] = useState("09:00");
+
+  // Non-SC-900 courses render a compact day-plan view sourced from the course registry.
+  if (course.code !== "sc-900") {
+    return <CourseDayPlanView course={course} startTime={startTime} setStartTime={setStartTime} />;
+  }
 
   const totalMin = useMemo(() => sessions.reduce((s, x) => s + totalMinutes(x.blocks), 0), []);
   const labMin = useMemo(
@@ -239,7 +245,7 @@ export default function SessionPlan() {
             <div className="flex items-start justify-between gap-4 flex-wrap">
               <div>
                 <Badge variant="secondary" className="mb-2 gap-1">
-                  <GraduationCap className="h-3 w-3" /> SC-900 instructor playbook
+                  <GraduationCap className="h-3 w-3" /> {course.shortName} instructor playbook
                 </Badge>
                 <h1 className="text-2xl font-bold">Day-wise session plan</h1>
                 <p className="text-sm text-muted-foreground max-w-2xl mt-1">
@@ -276,7 +282,7 @@ export default function SessionPlan() {
 
           <TabsContent value="1day" className="mt-4">
             <DaySchedule
-              title="Day 1 — Full SC-900 bootcamp"
+              title={`Day 1 — Full ${course.shortName} bootcamp`}
               subtitle="Run from start to finish in a single guided session"
               sessions={oneDayOrder.map((id) => sessions.find((s) => s.id === id)!).filter(Boolean)}
               startTime={startTime}
@@ -316,6 +322,128 @@ export default function SessionPlan() {
             </p>
           </CardContent>
         </Card>
+      </div>
+    </AppLayout>
+  );
+}
+
+/* ----------------- Generic course day-plan view (non-SC-900) ----------------- */
+function CourseDayPlanView({
+  course, startTime, setStartTime,
+}: {
+  course: ReturnType<typeof useCourse>["course"];
+  startTime: string;
+  setStartTime: (s: string) => void;
+}) {
+  const [planMode, setPlanMode] = useState<"fiveDay" | "twoDay" | "oneDay">("fiveDay");
+  const plan: CourseDayPlan[] = course.plans[planMode];
+  const dayTotals = (d: CourseDayPlan) =>
+    d.modules.reduce((s, m) => s + m.theoryMinutes + m.labBudgetMinutes, 0);
+  const totalMin = plan.reduce((s, d) => s + dayTotals(d), 0);
+  const labCount = plan.reduce(
+    (s, d) => s + d.modules.reduce((a, m) => a + m.labSlugs.length, 0), 0,
+  );
+  const labMin = plan.reduce(
+    (s, d) => s + d.modules.reduce((a, m) => a + m.labBudgetMinutes, 0), 0,
+  );
+  const theoryMin = plan.reduce(
+    (s, d) => s + d.modules.reduce((a, m) => a + m.theoryMinutes, 0), 0,
+  );
+
+  return (
+    <AppLayout title="Session Plan">
+      <div className="container py-6 space-y-6 max-w-6xl">
+        <Card className="hero-surface border-0">
+          <CardContent className="pt-6 space-y-4">
+            <div className="flex items-start justify-between gap-4 flex-wrap">
+              <div>
+                <Badge variant="secondary" className="mb-2 gap-1">
+                  <GraduationCap className="h-3 w-3" /> {course.shortName} instructor playbook
+                </Badge>
+                <h1 className="text-2xl font-bold">Day-wise session plan</h1>
+                <p className="text-sm text-muted-foreground max-w-2xl mt-1">
+                  {course.longName} — choose a 5-day, 2-day, or 1-day intensive layout. Each day links to the
+                  matching modules and labs in the catalog.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 rounded-md bg-muted/60 border border-border px-3 py-2 text-sm">
+                <Clock className="h-4 w-4 text-muted-foreground" />
+                <label htmlFor="start" className="text-muted-foreground">Start</label>
+                <input
+                  id="start" type="time" value={startTime}
+                  onChange={(e) => setStartTime(e.target.value || "09:00")}
+                  className="bg-background border border-border rounded px-2 py-1 text-foreground [color-scheme:dark]"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2">
+              <Stat label="Total duration" value={fmtDuration(totalMin)} icon={Clock} />
+              <Stat label="Hands-on labs" value={`${labCount} labs`} icon={FlaskConical} />
+              <Stat label="Lab time" value={fmtDuration(labMin)} icon={CheckCircle2} />
+              <Stat label="Theory time" value={fmtDuration(theoryMin)} icon={BookOpen} />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Tabs value={planMode} onValueChange={(v) => setPlanMode(v as any)}>
+          <TabsList>
+            <TabsTrigger value="fiveDay">5-Day plan</TabsTrigger>
+            <TabsTrigger value="twoDay">2-Day plan</TabsTrigger>
+            <TabsTrigger value="oneDay">1-Day intensive</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value={planMode} className="mt-4 space-y-4">
+            {plan.map((d) => (
+              <Card key={d.id} className="overflow-hidden shadow-card">
+                <CardHeader>
+                  <div className="flex items-start justify-between gap-3 flex-wrap">
+                    <div>
+                      <CardTitle className="text-base">{d.label} — {d.subtitle}</CardTitle>
+                      <CardDescription>{d.description}</CardDescription>
+                    </div>
+                    <Badge variant="secondary" className="gap-1">
+                      <Clock className="h-3 w-3" />{fmtDuration(dayTotals(d))}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {d.modules.map((m) => (
+                    <div key={m.title} className="rounded-md border border-border bg-muted/20 p-3">
+                      <div className="flex items-start justify-between gap-3 flex-wrap">
+                        <div>
+                          <div className="text-sm font-semibold flex items-center gap-2">
+                            {m.title}
+                            {m.code && <Badge variant="outline" className="text-[10px]">{m.code}</Badge>}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <Badge variant="outline" className="text-[10px] gap-1">
+                            <BookOpen className="h-3 w-3" />{fmtDuration(m.theoryMinutes)} theory
+                          </Badge>
+                          <Badge variant="outline" className="text-[10px] gap-1">
+                            <FlaskConical className="h-3 w-3" />{fmtDuration(m.labBudgetMinutes)} labs
+                          </Badge>
+                        </div>
+                      </div>
+                      <ul className="mt-2 text-xs text-muted-foreground list-disc pl-5 space-y-0.5">
+                        {m.topics.slice(0, 5).map((t, i) => <li key={i}>{t}</li>)}
+                      </ul>
+                      {m.moduleSlug && (
+                        <div className="mt-2 flex justify-end">
+                          <Link to={`/module/${m.moduleSlug}`}>
+                            <Button size="sm" variant="ghost" className="gap-1 h-7">
+                              Open module <ArrowRight className="h-3 w-3" />
+                            </Button>
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            ))}
+          </TabsContent>
+        </Tabs>
       </div>
     </AppLayout>
   );
