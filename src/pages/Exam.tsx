@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useCourse } from "@/hooks/useCourse";
 import { Clock, CheckCircle2, XCircle, Trophy, AlertTriangle, ArrowLeft, ArrowRight, Flag } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -39,6 +40,7 @@ function shuffle<T>(arr: T[]): T[] {
 
 export default function Exam() {
   const { user } = useAuth();
+  const { course } = useCourse();
   const [phase, setPhase] = useState<Phase>("intro");
   const [allQuestions, setAllQuestions] = useState<Question[]>([]);
   const [pool, setPool] = useState<Question[]>([]);
@@ -142,13 +144,13 @@ export default function Exam() {
   return (
     <AppLayout
       breadcrumb={<Breadcrumb items={[{ label: "Practice Exam" }]} />}
-      title="SC-900 Practice Exam"
+      title={course.examTitle}
     >
       <div className="container py-6 max-w-4xl">
         {loading ? (
           <Card><CardContent className="py-12 text-center text-sm text-muted-foreground">Loading question bank…</CardContent></Card>
         ) : phase === "intro" ? (
-          <IntroCard count={Math.min(QUESTION_COUNT, allQuestions.length)} available={allQuestions.length} onStart={start} signedIn={!!user} />
+          <IntroCard count={Math.min(QUESTION_COUNT, allQuestions.length)} available={allQuestions.length} onStart={start} signedIn={!!user} title={course.examTitle} bullets={course.examIntroBullets} />
         ) : phase === "running" ? (
           <RunningExam
             pool={pool}
@@ -180,7 +182,7 @@ export default function Exam() {
   );
 }
 
-function IntroCard({ count, available, onStart, signedIn }: { count: number; available: number; onStart: () => void; signedIn: boolean }) {
+function IntroCard({ count, available, onStart, signedIn, title, bullets }: { count: number; available: number; onStart: () => void; signedIn: boolean; title: string; bullets: string[] }) {
   return (
     <Card className="shadow-elevated">
       <CardHeader>
@@ -189,7 +191,7 @@ function IntroCard({ count, available, onStart, signedIn }: { count: number; ava
             <Trophy className="h-5 w-5" />
           </div>
           <div>
-            <CardTitle>SC-900 Practice Exam</CardTitle>
+            <CardTitle>{title}</CardTitle>
             <CardDescription>Simulated exam conditions — pass mark {PASS_PCT}%</CardDescription>
           </div>
         </div>
@@ -203,10 +205,7 @@ function IntroCard({ count, available, onStart, signedIn }: { count: number; ava
         <div className="rounded-md border border-border bg-muted/40 p-4 text-sm space-y-2">
           <p className="font-medium">How it works</p>
           <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-            <li>Questions drawn randomly from across all SC-900 modules.</li>
-            <li>You can flag questions and revisit before submitting.</li>
-            <li>Auto-submits when the timer reaches zero.</li>
-            <li>Detailed review with per-module score and explanations on submit.</li>
+            {bullets.map((b, i) => <li key={i}>{b}</li>)}
           </ul>
         </div>
         {available < QUESTION_COUNT && (
