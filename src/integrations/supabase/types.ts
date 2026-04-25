@@ -361,6 +361,313 @@ export type Database = {
           },
         ]
       }
+      tenant_audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          id: string
+          target_id: string | null
+          target_type: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          target_id?: string | null
+          target_type?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          id?: string
+          target_id?: string | null
+          target_type?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tenant_ca_policies: {
+        Row: {
+          conditions: Json
+          created_at: string
+          display_name: string
+          grant_controls: Json
+          id: string
+          session_controls: Json | null
+          state: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          conditions?: Json
+          created_at?: string
+          display_name: string
+          grant_controls?: Json
+          id?: string
+          session_controls?: Json | null
+          state?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          conditions?: Json
+          created_at?: string
+          display_name?: string
+          grant_controls?: Json
+          id?: string
+          session_controls?: Json | null
+          state?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tenant_devices: {
+        Row: {
+          compliance_state: string
+          created_at: string
+          display_name: string
+          id: string
+          join_type: string
+          operating_system: string
+          os_version: string | null
+          owner_id: string | null
+          user_id: string
+        }
+        Insert: {
+          compliance_state?: string
+          created_at?: string
+          display_name: string
+          id?: string
+          join_type?: string
+          operating_system?: string
+          os_version?: string | null
+          owner_id?: string | null
+          user_id: string
+        }
+        Update: {
+          compliance_state?: string
+          created_at?: string
+          display_name?: string
+          id?: string
+          join_type?: string
+          operating_system?: string
+          os_version?: string | null
+          owner_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_devices_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_group_members: {
+        Row: {
+          added_at: string
+          group_id: string
+          id: string
+          member_user_id: string
+          user_id: string
+        }
+        Insert: {
+          added_at?: string
+          group_id: string
+          id?: string
+          member_user_id: string
+          user_id: string
+        }
+        Update: {
+          added_at?: string
+          group_id?: string
+          id?: string
+          member_user_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_group_members_member_user_id_fkey"
+            columns: ["member_user_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_groups: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_name: string
+          dynamic_rule: string | null
+          group_type: string
+          id: string
+          membership_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_name: string
+          dynamic_rule?: string | null
+          group_type?: string
+          id?: string
+          membership_type?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_name?: string
+          dynamic_rule?: string | null
+          group_type?: string
+          id?: string
+          membership_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tenant_role_assignments: {
+        Row: {
+          assigned_at: string
+          id: string
+          principal_id: string
+          principal_type: string
+          role_name: string
+          scope: string
+          user_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          id?: string
+          principal_id: string
+          principal_type?: string
+          role_name: string
+          scope?: string
+          user_id: string
+        }
+        Update: {
+          assigned_at?: string
+          id?: string
+          principal_id?: string
+          principal_type?: string
+          role_name?: string
+          scope?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tenant_sign_in_logs: {
+        Row: {
+          app_display_name: string
+          ca_applied: Json | null
+          id: string
+          ip_address: string | null
+          location: string | null
+          principal_id: string | null
+          risk_detail: string | null
+          risk_level: string
+          signed_in_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          app_display_name: string
+          ca_applied?: Json | null
+          id?: string
+          ip_address?: string | null
+          location?: string | null
+          principal_id?: string | null
+          risk_detail?: string | null
+          risk_level?: string
+          signed_in_at?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          app_display_name?: string
+          ca_applied?: Json | null
+          id?: string
+          ip_address?: string | null
+          location?: string | null
+          principal_id?: string | null
+          risk_detail?: string | null
+          risk_level?: string
+          signed_in_at?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_sign_in_logs_principal_id_fkey"
+            columns: ["principal_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tenant_users: {
+        Row: {
+          account_enabled: boolean
+          created_at: string
+          department: string | null
+          display_name: string
+          id: string
+          job_title: string | null
+          mfa_enabled: boolean
+          updated_at: string
+          usage_location: string | null
+          user_id: string
+          user_principal_name: string
+        }
+        Insert: {
+          account_enabled?: boolean
+          created_at?: string
+          department?: string | null
+          display_name: string
+          id?: string
+          job_title?: string | null
+          mfa_enabled?: boolean
+          updated_at?: string
+          usage_location?: string | null
+          user_id: string
+          user_principal_name: string
+        }
+        Update: {
+          account_enabled?: boolean
+          created_at?: string
+          department?: string | null
+          display_name?: string
+          id?: string
+          job_title?: string | null
+          mfa_enabled?: boolean
+          updated_at?: string
+          usage_location?: string | null
+          user_id?: string
+          user_principal_name?: string
+        }
+        Relationships: []
+      }
       tutor_messages: {
         Row: {
           attempt_id: string | null
@@ -458,6 +765,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      reset_tenant: { Args: never; Returns: undefined }
+      seed_tenant: { Args: { _user_id: string }; Returns: undefined }
     }
     Enums: {
       app_role: "learner" | "instructor" | "admin"
