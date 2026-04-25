@@ -341,19 +341,21 @@ export default function Module() {
           </CardContent>
         </Card>
 
-        {/* Key terms + Exam tips */}
+        {/* Glossary (key terms with examples) + Exam tips */}
         <div className="grid md:grid-cols-2 gap-4">
           <Card className="shadow-card">
             <CardContent className="pt-5">
               <div className="flex items-center gap-2 mb-3">
-                <BookOpen className="h-4 w-4 text-primary" />
-                <h3 className="text-base font-semibold">Key terms</h3>
+                <BookMarked className="h-4 w-4 text-primary" />
+                <h3 className="text-base font-semibold">Glossary</h3>
+                <Badge variant="outline" className="ml-auto text-[10px]">{explanation.keyTerms.length} terms</Badge>
               </div>
-              <dl className="space-y-2.5">
+              <dl className="space-y-3">
                 {explanation.keyTerms.map((t, i) => (
-                  <div key={i}>
+                  <div key={i} className="border-l-2 border-border pl-3">
                     <dt className="text-sm font-semibold">{t.term}</dt>
                     <dd className="text-xs text-muted-foreground leading-relaxed">{t.definition}</dd>
+                    {t.example && <dd className="text-[11px] text-foreground/70 mt-0.5"><span className="font-semibold">e.g. </span>{t.example}</dd>}
                   </div>
                 ))}
               </dl>
@@ -377,6 +379,81 @@ export default function Module() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Common pitfalls */}
+        <Card className="shadow-card border-l-4 border-l-destructive">
+          <CardContent className="pt-5">
+            <div className="flex items-center gap-2 mb-3">
+              <AlertTriangle className="h-4 w-4 text-destructive" />
+              <h3 className="text-base font-semibold">Common pitfalls (don't fall for these)</h3>
+            </div>
+            <ul className="space-y-2 text-sm">
+              {explanation.commonPitfalls.map((p, i) => (
+                <li key={i} className="flex gap-2">
+                  <XCircle className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
+                  <span className="text-foreground/85 leading-relaxed">{p}</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+
+        {/* FAQ */}
+        <Card className="shadow-card">
+          <CardContent className="pt-5">
+            <div className="flex items-center gap-2 mb-3">
+              <MessageCircleQuestion className="h-4 w-4 text-primary" />
+              <h3 className="text-base font-semibold">Frequently asked questions</h3>
+              <Badge variant="outline" className="ml-auto text-[10px]">Answered for you</Badge>
+            </div>
+            <Accordion type="single" collapsible className="space-y-2">
+              {explanation.faqs.map((f, i) => (
+                <AccordionItem key={i} value={`faq-${i}`} className="border border-border rounded-md px-3">
+                  <AccordionTrigger className="hover:no-underline py-2.5 text-sm font-medium text-left">{f.q}</AccordionTrigger>
+                  <AccordionContent className="text-sm text-foreground/85 leading-relaxed pb-3">{f.a}</AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </CardContent>
+        </Card>
+
+        {/* Self check */}
+        <Card className="shadow-card border-l-4 border-l-success">
+          <CardContent className="pt-5">
+            <div className="flex items-center gap-2 mb-3">
+              <CheckCircle2 className="h-4 w-4 text-success" />
+              <h3 className="text-base font-semibold">Self-check (prove you understood)</h3>
+            </div>
+            <div className="space-y-4">
+              {explanation.selfCheck.map((q, i) => (
+                <SelfCheckQuestion key={i} index={i + 1} q={q} />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Further reading */}
+        {explanation.furtherReading.length > 0 && (
+          <Card className="shadow-card">
+            <CardContent className="pt-5">
+              <div className="flex items-center gap-2 mb-3">
+                <ExternalLink className="h-4 w-4 text-primary" />
+                <h3 className="text-base font-semibold">Further reading (Microsoft Learn)</h3>
+              </div>
+              <ul className="grid sm:grid-cols-2 gap-2 text-sm">
+                {explanation.furtherReading.map((r, i) => (
+                  <li key={i}>
+                    <a href={r.url} target="_blank" rel="noopener noreferrer"
+                       className="flex items-center gap-2 px-3 py-2 rounded-md border border-border hover:bg-muted transition-colors">
+                      <ExternalLink className="h-3 w-3 text-primary shrink-0" />
+                      <span className="truncate">{r.label}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Prev / next nav */}
         <div className="flex items-center justify-between gap-3 pt-2">
