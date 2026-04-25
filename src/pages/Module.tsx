@@ -8,10 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
   ArrowRight, ArrowLeft, BookOpen, Clock, FlaskConical, Sparkles, Users,
   Building2, Shield, Gavel, Lightbulb, Target, HelpCircle, MapPin, CalendarClock,
-  Wrench, GraduationCap, ListChecks, ScrollText, Award,
+  Wrench, GraduationCap, ListChecks, ScrollText, Award, AlertTriangle, MessageCircleQuestion,
+  CheckCircle2, XCircle, BookMarked, ExternalLink, Layers,
 } from "lucide-react";
 import { moduleNotes, type DomainKey } from "@/lib/curriculum";
 import { getModuleExplanation } from "@/lib/moduleExplanations";
