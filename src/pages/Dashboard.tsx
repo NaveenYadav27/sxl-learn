@@ -110,7 +110,7 @@ export default function Dashboard() {
               <div className="text-sm text-muted-foreground">Welcome back,</div>
               <div className="text-2xl font-bold text-foreground">{user?.user_metadata?.display_name ?? user?.email?.split("@")[0]}</div>
               <p className="mt-2 text-foreground/80 max-w-xl">
-                You're {overallPct}% of the way to SC-900 ready. Keep your streak going.
+                You're {overallPct}% of the way to {course.shortName} ready. Keep your streak going.
               </p>
             </div>
             <Link to={resumeLab ? `/lab/${resumeLab.slug}` : "/catalog"} className="max-w-xs">
@@ -175,7 +175,7 @@ export default function Dashboard() {
 
         {/* Modules grid */}
         <section>
-          <h2 className="text-lg font-semibold mb-3">Your SC-900 path</h2>
+          <h2 className="text-lg font-semibold mb-3">Your {course.shortName} path</h2>
           <div className="grid md:grid-cols-2 gap-4">
             {modules.map((m) => {
               const Icon = domainIcon[m.slug] ?? BookOpen;
