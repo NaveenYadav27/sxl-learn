@@ -123,37 +123,48 @@ export const moduleNotes: ModuleNote[] = [
 const m = (slug: ModuleNote["moduleSlug"] | "exam") =>
   moduleNotes.find((x) => (slug === "exam" ? x.domain === "exam" : x.moduleSlug === slug))!;
 
-// Default plan: 4 days × 2 hours each (one module per day, exam folded into Day 4).
-export const fourDayPlan: DayPlan[] = [
+// Default plan: 5 days × ~2 hours (one module per day, exam folded into Day 5).
+// Matches the official SC-900 TOC time table (Theory + Lab per module).
+export const fiveDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "Security Concepts (2h)",
+    subtitle: "Security Concepts (1h 30m)",
     description: "Zero Trust, Defense in Depth, CIA triad, threats, and the shared responsibility model.",
     modules: [m("concepts")],
   },
   {
     id: "day2",
     label: "Day 2",
-    subtitle: "Identity & Access + Entra (2h)",
-    description: "Authentication vs authorization, MFA, RBAC, Conditional Access, and Microsoft Entra capabilities.",
-    modules: [m("iam"), m("entra")],
+    subtitle: "Identity & Access Management (2h)",
+    description: "Authentication vs authorization, MFA, RBAC, Conditional Access, and PIM.",
+    modules: [m("iam")],
   },
   {
     id: "day3",
     label: "Day 3",
-    subtitle: "Security Solutions (2h)",
-    description: "Microsoft Defender XDR, Sentinel SIEM/SOAR, CSPM, and endpoint protection.",
-    modules: [m("security")],
+    subtitle: "Microsoft Entra Capabilities (2h)",
+    description: "Entra ID architecture, hybrid identity, identity protection, passwordless, B2B/B2C.",
+    modules: [m("entra")],
   },
   {
     id: "day4",
     label: "Day 4",
-    subtitle: "Compliance & Exam Prep (2h)",
-    description: "Microsoft Purview, DLP, sensitivity labels, eDiscovery — then SC-900 exam strategy.",
+    subtitle: "Security Solutions in Microsoft (1h 45m)",
+    description: "Microsoft Defender XDR, Sentinel SIEM/SOAR, CSPM, endpoint protection.",
+    modules: [m("security")],
+  },
+  {
+    id: "day5",
+    label: "Day 5",
+    subtitle: "Compliance & Governance + Exam (2h 15m)",
+    description: "Purview, DLP, sensitivity labels, eDiscovery — then SC-900 exam strategy.",
     modules: [m("compliance"), m("exam")],
   },
 ];
+
+// Backwards-compatible alias (Catalog still imports `fourDayPlan`).
+export const fourDayPlan = fiveDayPlan;
 
 // 1-day intensive: everything sequential.
 export const oneDayPlan: DayPlan[] = [
