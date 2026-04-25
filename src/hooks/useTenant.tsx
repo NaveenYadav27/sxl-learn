@@ -153,6 +153,9 @@ export function useResetTenant() {
       qc.invalidateQueries({ queryKey: ["tenant_sign_in_logs"] });
       qc.invalidateQueries({ queryKey: ["tenant_incidents"] });
       qc.invalidateQueries({ queryKey: ["tenant_alerts"] });
+      qc.invalidateQueries({ queryKey: ["tenant_sensitivity_labels"] });
+      qc.invalidateQueries({ queryKey: ["tenant_dlp_policies"] });
+      qc.invalidateQueries({ queryKey: ["tenant_classified_files"] });
       toast({ title: "Tenant reset", description: "Your virtual tenant has been re-seeded." });
     },
     onError: (e: any) => toast({ title: "Reset failed", description: e.message, variant: "destructive" }),
@@ -470,5 +473,201 @@ export function useUpdateAlert() {
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["tenant_alerts"] }),
     onError: (e: any) => toast({ title: "Update failed", description: e.message, variant: "destructive" }),
+  });
+}
+
+// ----- Purview-style: sensitivity labels, DLP policies, classified files -----
+
+export type TenantSensitivityLabel = {
+  id: string;
+  display_name: string;
+  description: string | null;
+  priority: number;
+  color: string;
+  encryption_enabled: boolean;
+  watermark_text: string | null;
+  scope: string;
+  created_at: string;
+};
+
+export type TenantDLPPolicy = {
+  id: string;
+  display_name: string;
+  description: string | null;
+  state: string; // enabled | disabled | test
+  locations: string[];
+  rules: any;
+  action: string; // block | notify | allowOverride
+  created_at: string;
+};
+
+export type TenantClassifiedFile = {
+  id: string;
+  file_name: string;
+  location: string;
+  owner_id: string | null;
+  label_id: string | null;
+  classification_source: string;
+  sensitivity_score: number;
+  created_at: string;
+};
+
+export function useTenantLabels() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["tenant_sensitivity_labels", user?.id],
+    enabled: !!user,
+    queryFn: async (): Promise<TenantSensitivityLabel[]> => {
+      const { data, error } = await supabase
+        .from("tenant_sensitivity_labels").select("*").order("priority");
+      if (error) throw error;
+      return (data ?? []) as TenantSensitivityLabel[];
+    },
+  });
+}
+
+export function useTenantDLPPolicies() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["tenant_dlp_policies", user?.id],
+    enabled: !!user,
+    queryFn: async (): Promise<TenantDLPPolicy[]> => {
+      const { data, error } = await supabase
+        .from("tenant_dlp_policies").select("*").order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as TenantDLPPolicy[];
+    },
+  });
+}
+
+export function useTenantClassifiedFiles() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["tenant_classified_files", user?.id],
+    enabled: !!user,
+    queryFn: async (): Promise<TenantClassifiedFile[]> => {
+      const { data, error } = await supabase
+        .from("tenant_classified_files").select("*").order("file_name");
+      if (error) throw error;
+      return (data ?? []) as TenantClassifiedFile[];
+    },
+  });
+}
+
+export function useCreateLabel() {
+  const { user } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: Omit<TenantSensitivityLabel, "id" | "created_at">) => {
+      if (!user) throw new Error("Not authenticated");
+      const { data, error } = await supabase
+        .from("tenant_sensitivity_labels")
+        .insert({ ...input, user_id: user.id })
+        .select().single();
+      if (error) throw error;
+      await supabase.from("tenant_audit_logs").insert({
+        user_id: user.id, action: "create_label", target_type: "tenant_sensitivity_label",
+        target_id: data.id, details: { display_name: input.display_name },
+      });
+      return data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["tenant_sensitivity_labels"] });
+      toast({ title: "Label created" });
+    },
+    onError: (e: any) => toast({ title: "Create failed", description: e.message, variant: "destructive" }),
+  });
+}
+
+export function useDeleteLabel() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("tenant_sensitivity_labels").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["tenant_sensitivity_labels"] });
+      qc.invalidateQueries({ queryKey: ["tenant_classified_files"] });
+      toast({ title: "Label deleted" });
+    },
+    onError: (e: any) => toast({ title: "Delete failed", description: e.message, variant: "destructive" }),
+  });
+}
+
+export function useCreateDLPPolicy() {
+  const { user } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: {
+      display_name: string;
+      description?: string;
+      state: string;
+      locations: string[];
+      rules: any;
+      action: string;
+    }) => {
+      if (!user) throw new Error("Not authenticated");
+      const { data, error } = await supabase
+        .from("tenant_dlp_policies")
+        .insert({ ...input, user_id: user.id })
+        .select().single();
+      if (error) throw error;
+      await supabase.from("tenant_audit_logs").insert({
+        user_id: user.id, action: "create_dlp_policy", target_type: "tenant_dlp_policy",
+        target_id: data.id, details: { display_name: input.display_name },
+      });
+      return data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["tenant_dlp_policies"] });
+      toast({ title: "DLP policy created" });
+    },
+    onError: (e: any) => toast({ title: "Create failed", description: e.message, variant: "destructive" }),
+  });
+}
+
+export function useUpdateDLPPolicy() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ...patch }: Partial<TenantDLPPolicy> & { id: string }) => {
+      const { error } = await supabase.from("tenant_dlp_policies").update(patch).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["tenant_dlp_policies"] }),
+    onError: (e: any) => toast({ title: "Update failed", description: e.message, variant: "destructive" }),
+  });
+}
+
+export function useDeleteDLPPolicy() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("tenant_dlp_policies").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["tenant_dlp_policies"] });
+      toast({ title: "Policy deleted" });
+    },
+    onError: (e: any) => toast({ title: "Delete failed", description: e.message, variant: "destructive" }),
+  });
+}
+
+export function useApplyLabelToFile() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, label_id }: { id: string; label_id: string | null }) => {
+      const { error } = await supabase
+        .from("tenant_classified_files")
+        .update({ label_id, classification_source: "manual" })
+        .eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["tenant_classified_files"] });
+      toast({ title: "Label applied" });
+    },
+    onError: (e: any) => toast({ title: "Apply failed", description: e.message, variant: "destructive" }),
   });
 }

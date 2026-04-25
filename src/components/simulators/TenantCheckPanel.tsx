@@ -57,6 +57,16 @@ export function TenantCheckPanel({ check, params, onValidate }: Props) {
 
   const ok = result?.ok ?? false;
 
+  // Route deep link to the right portal based on check type
+  const targetUrl = check.startsWith("incident_") || check.startsWith("alert_")
+    ? "/defender"
+    : check === "label_exists" || check === "dlp_policy_exists" || check === "file_classified"
+      ? "/purview"
+      : "/tenant";
+  const targetLabel = targetUrl === "/defender" ? "Open Defender"
+    : targetUrl === "/purview" ? "Open Purview"
+    : "Open My Tenant";
+
   return (
     <div className="rounded-md border border-border bg-card overflow-hidden shadow-elevated">
       <div className="flex items-center justify-between px-4 py-2.5 bg-[hsl(220,26%,14%)] text-primary-foreground">
@@ -67,9 +77,9 @@ export function TenantCheckPanel({ check, params, onValidate }: Props) {
           <span className="font-semibold">Live tenant validator</span>
           <Badge variant="outline" className="border-success/40 text-success bg-success/10 text-[9px] uppercase tracking-wider">Real DB</Badge>
         </div>
-        <Link to="/tenant" target="_blank">
+        <Link to={targetUrl} target="_blank">
           <Button variant="secondary" size="sm" className="h-7 text-xs">
-            Open My Tenant <ExternalLink className="h-3 w-3 ml-1.5" />
+            {targetLabel} <ExternalLink className="h-3 w-3 ml-1.5" />
           </Button>
         </Link>
       </div>

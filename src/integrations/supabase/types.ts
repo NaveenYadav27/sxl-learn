@@ -500,6 +500,60 @@ export type Database = {
         }
         Relationships: []
       }
+      tenant_classified_files: {
+        Row: {
+          classification_source: string
+          created_at: string
+          file_name: string
+          id: string
+          label_id: string | null
+          location: string
+          owner_id: string | null
+          sensitivity_score: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          classification_source?: string
+          created_at?: string
+          file_name: string
+          id?: string
+          label_id?: string | null
+          location?: string
+          owner_id?: string | null
+          sensitivity_score?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          classification_source?: string
+          created_at?: string
+          file_name?: string
+          id?: string
+          label_id?: string | null
+          location?: string
+          owner_id?: string | null
+          sensitivity_score?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_classified_files_label_id_fkey"
+            columns: ["label_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_sensitivity_labels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_classified_files_owner_id_fkey"
+            columns: ["owner_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tenant_devices: {
         Row: {
           compliance_state: string
@@ -543,6 +597,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      tenant_dlp_policies: {
+        Row: {
+          action: string
+          created_at: string
+          description: string | null
+          display_name: string
+          id: string
+          locations: Json
+          rules: Json
+          state: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action?: string
+          created_at?: string
+          description?: string | null
+          display_name: string
+          id?: string
+          locations?: Json
+          rules?: Json
+          state?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          description?: string | null
+          display_name?: string
+          id?: string
+          locations?: Json
+          rules?: Json
+          state?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       tenant_group_members: {
         Row: {
@@ -702,6 +795,48 @@ export type Database = {
           role_name?: string
           scope?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      tenant_sensitivity_labels: {
+        Row: {
+          color: string
+          created_at: string
+          description: string | null
+          display_name: string
+          encryption_enabled: boolean
+          id: string
+          priority: number
+          scope: string
+          updated_at: string
+          user_id: string
+          watermark_text: string | null
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          description?: string | null
+          display_name: string
+          encryption_enabled?: boolean
+          id?: string
+          priority?: number
+          scope?: string
+          updated_at?: string
+          user_id: string
+          watermark_text?: string | null
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          description?: string | null
+          display_name?: string
+          encryption_enabled?: boolean
+          id?: string
+          priority?: number
+          scope?: string
+          updated_at?: string
+          user_id?: string
+          watermark_text?: string | null
         }
         Relationships: []
       }
