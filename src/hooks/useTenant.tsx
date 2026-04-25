@@ -151,7 +151,9 @@ export function useResetTenant() {
       qc.invalidateQueries({ queryKey: ["tenant_role_assignments"] });
       qc.invalidateQueries({ queryKey: ["tenant_ca_policies"] });
       qc.invalidateQueries({ queryKey: ["tenant_sign_in_logs"] });
-      toast({ title: "Tenant reset", description: "Your virtual tenant has been re-seeded with the default directory." });
+      qc.invalidateQueries({ queryKey: ["tenant_incidents"] });
+      qc.invalidateQueries({ queryKey: ["tenant_alerts"] });
+      toast({ title: "Tenant reset", description: "Your virtual tenant has been re-seeded." });
     },
     onError: (e: any) => toast({ title: "Reset failed", description: e.message, variant: "destructive" }),
   });
@@ -365,5 +367,108 @@ export function useDeleteCAPolicy() {
       toast({ title: "Policy deleted" });
     },
     onError: (e: any) => toast({ title: "Delete failed", description: e.message, variant: "destructive" }),
+  });
+}
+
+// ----- Defender XDR-style: incidents & alerts -----
+
+export type TenantIncident = {
+  id: string;
+  display_name: string;
+  description: string | null;
+  severity: string;
+  status: string; // active | inProgress | resolved
+  classification: string | null; // truePositive | falsePositive | informationalExpectedActivity
+  determination: string | null;
+  assigned_to: string | null;
+  resolution_notes: string | null;
+  created_at: string;
+  updated_at: string;
+  resolved_at: string | null;
+};
+
+export type TenantAlert = {
+  id: string;
+  incident_id: string | null;
+  title: string;
+  description: string | null;
+  severity: string;
+  status: string;
+  category: string;
+  product: string;
+  mitre_technique: string | null;
+  affected_user_id: string | null;
+  affected_device_id: string | null;
+  detected_at: string;
+};
+
+export function useTenantIncidents() {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["tenant_incidents", user?.id],
+    enabled: !!user,
+    queryFn: async (): Promise<TenantIncident[]> => {
+      const { data, error } = await supabase
+        .from("tenant_incidents").select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
+export function useTenantAlerts(incidentId?: string) {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["tenant_alerts", user?.id, incidentId ?? "all"],
+    enabled: !!user,
+    queryFn: async (): Promise<TenantAlert[]> => {
+      const q = supabase.from("tenant_alerts").select("*").order("detected_at", { ascending: false });
+      if (incidentId) q.eq("incident_id", incidentId);
+      const { data, error } = await q;
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+}
+
+export function useUpdateIncident() {
+  const { user } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ...patch }: Partial<TenantIncident> & { id: string }) => {
+      const update: any = { ...patch };
+      if (patch.status === "resolved" && !patch.resolved_at) {
+        update.resolved_at = new Date().toISOString();
+      }
+      const { error } = await supabase.from("tenant_incidents").update(update).eq("id", id);
+      if (error) throw error;
+      if (user) {
+        await supabase.from("tenant_audit_logs").insert({
+          user_id: user.id,
+          action: "update_incident",
+          target_type: "tenant_incident",
+          target_id: id,
+          details: patch as any,
+        });
+      }
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["tenant_incidents"] });
+      toast({ title: "Incident updated" });
+    },
+    onError: (e: any) => toast({ title: "Update failed", description: e.message, variant: "destructive" }),
+  });
+}
+
+export function useUpdateAlert() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ...patch }: Partial<TenantAlert> & { id: string }) => {
+      const { error } = await supabase.from("tenant_alerts").update(patch).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["tenant_alerts"] }),
+    onError: (e: any) => toast({ title: "Update failed", description: e.message, variant: "destructive" }),
   });
 }
