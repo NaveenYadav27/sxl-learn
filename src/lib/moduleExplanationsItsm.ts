@@ -911,7 +911,420 @@ const m5: ModuleExplanation = {
   ],
 };
 
-export const itsmModuleExplanations: ModuleExplanation[] = [m1, m2, m3, m4, m5];
+/* ============================================================== */
+/* M6 — SLAs, OLAs & WORKFLOW AUTOMATION                          */
+/* ============================================================== */
+const m6: ModuleExplanation = {
+  moduleSlug: "itsm-sla-workflow",
+  tagline: "Make the platform measure itself and act on its own.",
+  overview:
+    "Module 6 turns ServiceNow from a system of record into a system of action. You'll build SLA Definitions that watch tasks and start the clock automatically, pause and resume on customer-wait states, and breach with notifications. Then you'll automate the human work behind those SLAs in Flow Designer — triggers, actions and reusable subflows — so fulfillers spend their time fixing problems, not chasing fields.",
+  whyItMatters:
+    "CIS-ITSM scenarios constantly ask 'how would you make this happen automatically?' The expected answer is almost always Flow Designer (modern) or an SLA Definition (timed). Knowing the difference between a Business Rule, a Flow, and an SLA — and when each is the right tool — is one of the highest-yield exam skills.",
+  what: {
+    heading: "What is SLA management on ServiceNow?",
+    body:
+      "An SLA Definition is a configuration record that says 'when condition X is true on a task, start timing against schedule Y; pause when condition Z is true; breach if not stopped within N hours.' Task SLA records are created behind the scenes and drive percentages, breach flags and notifications.",
+    bullets: [
+      "SLA Definition lives in the Service Level Management app",
+      "Task SLA is the running instance attached to one task",
+      "Schedule defines working hours (e.g. 8x5 vs 24x7)",
+      "Retroactive start lets the SLA back-date its clock",
+    ],
+  },
+  why: {
+    heading: "Why bake SLAs into the platform?",
+    body:
+      "Without SLA records, breach calculations live in spreadsheets and arguments. With them, every task carries its own clock that the platform measures, reports on, and uses to drive escalation flows.",
+  },
+  who: {
+    heading: "Who configures vs consumes SLAs?",
+    body:
+      "Service Owners define commitments (the SLA contract). Implementers turn those into SLA Definitions. Fulfillers see breach percentages on the form. Managers see breach trends in Performance Analytics.",
+    bullets: [
+      "sla_admin — manages SLA Definitions and schedules",
+      "itil — sees Task SLA on the form",
+      "Approvers — receive escalation notifications",
+    ],
+  },
+  when: {
+    heading: "When does an SLA start, pause and stop?",
+    body:
+      "Start condition fires when met (or retroactively from a chosen field). Pause condition pauses the clock (e.g. state = 'Awaiting User Info'). Stop condition cancels the SLA. All three are filter conditions you build like any list filter.",
+  },
+  where: {
+    heading: "Where do SLAs live in the data model?",
+    body:
+      "SLA Definition: contract_sla. Task SLA: task_sla (one record per task per SLA). Schedules: cmn_schedule. All discoverable from the SLA module in the application navigator.",
+  },
+  how: {
+    heading: "How does Flow Designer fit in?",
+    body:
+      "Flows replace classic Workflow and most Business Rules. Triggers (record created/updated, schedule, inbound email) call Actions (update record, ask for approval, send notification, call REST). Subflows wrap reusable logic (e.g. 'notify assignment group').",
+  },
+  conceptDeepDives: [
+    {
+      id: "sla-def",
+      name: "SLA Definition",
+      oneLine: "A reusable rule that starts a clock on tasks matching a condition.",
+      formal: "A configuration record in contract_sla that, when its Start condition matches a task, instantiates a task_sla record bound to a schedule and target duration.",
+      plainEnglish: "Like setting a kitchen timer that starts the moment a customer places an order and pauses while you're waiting on them for ingredients.",
+      analogy: "A pizza-tracker — except instead of a single pizza, it watches every order in the shop in parallel.",
+      howItWorks: "Trigger condition matches → task_sla row inserted → Schedule ticks elapsed time → Pause/Stop conditions evaluated on each update → breach flag set when target exceeded.",
+      microsoftMapping: "Lives entirely in the Service Level Management application.",
+      whenToUse: "Any time you need to measure or guarantee a turnaround on a task type.",
+      commonMistake: "Forgetting to pick a Schedule — defaults to 24x7, which over-counts non-business hours.",
+      examAngle: "Expect a scenario asking which condition (Start/Pause/Stop) to use to handle 'awaiting customer' time.",
+    },
+    {
+      id: "flow-vs-br",
+      name: "Flow Designer vs Business Rule",
+      oneLine: "Flow Designer is the modern, declarative, low-code replacement for most Business Rules.",
+      formal: "Flow Designer is a metadata-driven orchestration tool with versioned, scope-aware flows; Business Rules are server-side scripts on table operations.",
+      plainEnglish: "Flows = drag-and-drop with versions and rollback. Business Rules = code that runs on insert/update — powerful but harder to maintain.",
+      analogy: "Flow Designer is Lego; Business Rules are 3D-printing your own bricks.",
+      howItWorks: "Flow trigger fires → step-by-step Actions execute → outputs feed downstream steps. BRs run inline with the DB operation and can mutate the record being saved.",
+      microsoftMapping: "ServiceNow recommends Flow Designer for new automation; BRs remain for low-level data integrity.",
+      whenToUse: "Use Flow Designer for cross-table orchestration, approvals and integrations. Use BR for record-level validation/derivation.",
+      commonMistake: "Building a 30-step Business Rule when a Flow with branches would have been clearer and version-controlled.",
+      examAngle: "If the question mentions approvals, notifications or REST calls — answer is Flow Designer.",
+    },
+  ],
+  comparisons: [
+    {
+      title: "SLA vs OLA vs UC",
+      columns: ["Aspect", "SLA", "OLA", "Underpinning Contract"],
+      rows: [
+        ["Parties", "Provider ↔ Customer", "Provider internal teams", "Provider ↔ external supplier"],
+        ["Visibility", "Customer-facing", "Internal only", "Procurement-managed"],
+        ["Tracked in", "task_sla on customer task", "task_sla on internal task", "Often outside ITSM"],
+      ],
+      bottomLine: "SLAs face the customer; OLAs are how internal teams support the SLA; UCs are vendor-side commitments.",
+    },
+  ],
+  realExamples: [
+    {
+      title: "Pause SLA when waiting on user",
+      scenario: "Priority-2 incident SLA breaches because users take days to respond to questions.",
+      outcome: "Add a Pause condition state = 'Awaiting User Info'. SLA stops counting that time and the team's stats become fair.",
+    },
+  ],
+  keyTerms: [
+    { term: "Task SLA", definition: "The runtime record that holds elapsed/remaining/breach for one task against one SLA Definition.", example: "INC0010001 has 2 task_sla rows: Response and Resolution." },
+    { term: "Schedule", definition: "A reusable working-hours definition that drives elapsed-time math.", example: "8-5 weekdays excluding bank holidays." },
+    { term: "Subflow", definition: "A reusable Flow Designer flow that can be called from other flows like a function.", example: "'Notify on-call engineer'." },
+  ],
+  commonPitfalls: [
+    "Using 24x7 schedule when the contract is business hours — inflates breach counts.",
+    "Building automation in Business Rules first instead of Flow Designer.",
+    "Forgetting that Stop condition cancels the SLA — you usually want the resolved/closed state.",
+  ],
+  faqs: [
+    { q: "Can a task have multiple SLAs at once?", a: "Yes — one task_sla per matching SLA Definition. Common pattern: separate Response and Resolution SLAs on the same incident." },
+    { q: "Does a Flow Designer flow run synchronously?", a: "By default flows run asynchronously. For synchronous behaviour use a Flow with the 'Run synchronously' option or fall back to a Business Rule." },
+  ],
+  selfCheck: [
+    {
+      question: "An incident SLA needs to ignore time spent waiting on the user. Which condition do you configure?",
+      options: ["Start", "Pause", "Stop", "Cancel"],
+      correctIndex: 1,
+      explanation: "Pause condition halts the clock without ending the SLA — Stop would cancel it entirely.",
+    },
+    {
+      question: "Which is the recommended modern tool for record-driven approvals and notifications?",
+      options: ["Business Rules", "Workflow Editor (legacy)", "Flow Designer", "Script Includes"],
+      correctIndex: 2,
+      explanation: "Flow Designer is the recommended low-code orchestrator. Workflow Editor is being deprecated.",
+    },
+  ],
+  examTips: [
+    "Start / Pause / Stop conditions — burn it in.",
+    "Flow Designer beats Business Rules for new automation.",
+    "Schedule always — never accept the 24x7 default by accident.",
+  ],
+  furtherReading: [
+    { label: "ServiceNow Docs — Service Level Management", url: "https://www.servicenow.com/docs/bundle/yokohama-it-service-management/page/product/service-level-management/concept/c_ServiceLevelMgmt.html" },
+    { label: "ServiceNow Docs — Flow Designer", url: "https://www.servicenow.com/docs/bundle/yokohama-build-workflows/page/administer/flow-designer/concept/flow-designer.html" },
+  ],
+};
+
+/* ============================================================== */
+/* M7 — SERVICE PORTAL & VIRTUAL AGENT                            */
+/* ============================================================== */
+const m7: ModuleExplanation = {
+  moduleSlug: "itsm-portal-va",
+  tagline: "The end-user front door — branded, conversational and self-service.",
+  overview:
+    "Module 7 covers the two surfaces real users interact with: the Service Portal (a CMS-style web front-end with portals, pages and widgets) and Virtual Agent (the conversational interface that deflects tickets via topic flows). You'll brand a portal, add a widget to a page, build a Virtual Agent topic and configure live-agent handoff.",
+  whyItMatters:
+    "End-user adoption is the #1 success metric for an ITSM rollout. A confusing portal or a hostile chatbot wastes the implementation. CIS-ITSM exam questions on this module focus on configuration choices — themes vs CSS, topic blocks vs scripted flows — that experienced implementers get right and beginners overthink.",
+  what: {
+    heading: "What is Service Portal?",
+    body:
+      "Service Portal is a responsive front-end framework that renders portal pages composed of widgets. Each portal has a theme (logo, colours, fonts) and a route map. Out-of-box portals include the main Employee Service Portal (sp), the Now Create portal and HR Service Delivery.",
+    bullets: [
+      "Portal — top-level container with a URL prefix",
+      "Page — a route within a portal made of containers and widgets",
+      "Widget — a reusable Bootstrap-based component (HTML, CSS, client/server script)",
+      "Theme — branding (logo, palette, custom CSS)",
+    ],
+  },
+  why: {
+    heading: "Why have a portal at all?",
+    body:
+      "End users should never see the platform UI. The portal is the curated, branded, mobile-responsive experience that hides table complexity behind catalog items, KB and 'My Requests'.",
+  },
+  who: {
+    heading: "Who builds vs uses portals?",
+    body:
+      "Implementers (sp_admin) configure portals, pages and themes. Designers/UX provide brand assets. End users consume — typically with no role at all, just an authenticated profile.",
+    bullets: [
+      "sp_admin — full Service Portal config",
+      "va_admin — manages Virtual Agent topics",
+      "End user — consumes portal + chats with VA",
+    ],
+  },
+  when: {
+    heading: "When in a project?",
+    body:
+      "Portal branding ships in the first sprint so stakeholders see 'their' platform. Virtual Agent is usually phase 2 once the top deflection candidates (password reset, status checks) are identified.",
+  },
+  where: {
+    heading: "Where does it live?",
+    body:
+      "Portals: sp_portal. Pages: sp_page. Widgets: sp_widget (with instances per page). Themes: sp_theme. Virtual Agent topics: sys_cb_topic. Topic blocks: sys_cb_topic_block.",
+  },
+  how: {
+    heading: "How does Virtual Agent route conversations?",
+    body:
+      "An incoming user message is matched against published topics by NLU model. The chosen topic walks topic blocks (utterances, decisions, actions). Topic blocks can be reused across topics. Live Agent handoff transfers the conversation to a human in Connect Support along with the transcript.",
+  },
+  conceptDeepDives: [
+    {
+      id: "widget-instance",
+      name: "Widget vs Widget Instance",
+      oneLine: "The widget is the template; the instance is one placement on one page.",
+      formal: "sp_widget defines reusable HTML/script; sp_instance places a widget into a page container with instance options.",
+      plainEnglish: "Widget = the recipe. Instance = a specific cake you baked from it for a specific table.",
+      analogy: "React component vs JSX usage — the component is defined once, used many times.",
+      howItWorks: "Designer drops a widget into a container, fills in instance options (e.g. 'show 5 most recent'), and the page renders that configured copy.",
+      microsoftMapping: "Native to Service Portal — no Microsoft equivalent.",
+      whenToUse: "Whenever a UI element should appear on multiple pages with slight variations.",
+      commonMistake: "Cloning the widget instead of using instance options — leads to maintenance nightmares.",
+      examAngle: "Expect a question contrasting widget vs instance, or asking how to vary one widget across pages.",
+    },
+    {
+      id: "topic-block",
+      name: "Virtual Agent Topic Block",
+      oneLine: "A reusable, parameterised step that other topics can include.",
+      formal: "sys_cb_topic_block — a callable mini-flow with inputs/outputs that lives independently of any single topic.",
+      plainEnglish: "A function for chat flows.",
+      analogy: "A subflow in Flow Designer, but for conversation.",
+      howItWorks: "Topic A reaches a step that calls Topic Block B with parameters. Block executes its decisions/actions and returns control to A.",
+      microsoftMapping: "Closest analogue: Power Virtual Agents 'topic re-direction'.",
+      whenToUse: "When the same dialog (e.g. authenticate user, ask for incident number) is needed in multiple topics.",
+      commonMistake: "Duplicating utterances inside topics instead of extracting to a block.",
+      examAngle: "Question may describe re-using an authentication step — answer is Topic Block.",
+    },
+  ],
+  comparisons: [
+    {
+      title: "Service Portal vs Now Mobile",
+      columns: ["Aspect", "Service Portal", "Now Mobile (app)"],
+      rows: [
+        ["Tech", "Web (responsive)", "Native iOS/Android"],
+        ["Auth", "SSO / instance login", "Mobile auth profile"],
+        ["Build tool", "Service Portal Designer", "Mobile App Builder"],
+        ["When to choose", "Broad reach, no install", "Field workers, push notifications"],
+      ],
+      bottomLine: "Portal for breadth, Now Mobile for depth and offline.",
+    },
+  ],
+  realExamples: [
+    {
+      title: "Password reset deflection",
+      scenario: "20% of incidents are 'I forgot my password'.",
+      outcome: "Build a VA topic that authenticates the user, calls AD reset via integration and confirms — 18% deflection in month 1.",
+    },
+  ],
+  keyTerms: [
+    { term: "Portal", definition: "A top-level Service Portal entity with its own URL suffix (e.g. /sp).", example: "Employee Service Portal." },
+    { term: "Topic", definition: "A Virtual Agent conversation flow about one subject.", example: "'Reset my password'." },
+    { term: "NLU model", definition: "The natural-language model that maps utterances to intents (topics).", example: "ServiceNow OOB NLU model for ITSM." },
+  ],
+  commonPitfalls: [
+    "Hand-editing portal HTML instead of using widget instance options.",
+    "Building a long scripted flow when a Topic Block would have made the topic readable.",
+    "Skipping the live-agent handoff configuration — users hit dead ends.",
+  ],
+  faqs: [
+    { q: "Can I have multiple portals on one instance?", a: "Yes — each gets its own theme, route and home page (e.g. /sp for employees, /esc for customers, /now for HR)." },
+    { q: "Does Virtual Agent need a paid subscription?", a: "Virtual Agent Lite ships free with ITSM; full NLU and pre-built topics require the Now Assist / VA Pro subscription." },
+  ],
+  selfCheck: [
+    {
+      question: "You want the same 'My Open Tickets' list to appear on three portal pages with different page sizes. Best approach?",
+      options: ["Clone the widget three times", "Add the same widget three times, vary instance options", "Build three custom widgets", "Use a Business Rule to decide page size"],
+      correctIndex: 1,
+      explanation: "Place one widget in three pages and configure each instance — clean, maintainable.",
+    },
+    {
+      question: "Two VA topics both need to ask the user for an incident number first. Best practice?",
+      options: ["Duplicate the steps in both topics", "Build a shared Topic Block and call it from both topics", "Ask the user twice", "Use a Business Rule"],
+      correctIndex: 1,
+      explanation: "Topic Blocks exist exactly for this — one definition, many topics.",
+    },
+  ],
+  examTips: [
+    "Portal hierarchy: Portal → Page → Container → Widget Instance.",
+    "Topic Block = reusable conversation step.",
+    "Themes brand all pages of a portal at once.",
+  ],
+  furtherReading: [
+    { label: "ServiceNow Docs — Service Portal", url: "https://www.servicenow.com/docs/bundle/yokohama-servicenow-platform/page/build/service-portal/concept/c_ServicePortal.html" },
+    { label: "ServiceNow Docs — Virtual Agent", url: "https://www.servicenow.com/docs/bundle/yokohama-conversational-interfaces/page/administer/virtual-agent/concept/virtual-agent-overview.html" },
+  ],
+};
+
+/* ============================================================== */
+/* M8 — PERFORMANCE ANALYTICS & CONTINUAL IMPROVEMENT             */
+/* ============================================================== */
+const m8: ModuleExplanation = {
+  moduleSlug: "itsm-pa-ci",
+  tagline: "Turn the data you collect into the improvements you need.",
+  overview:
+    "Module 8 closes the loop. Performance Analytics (PA) collects historical snapshots of indicators (MTTR, FCR, change success rate) so you can see trends, not just current state. Continual Improvement Management (CIM) takes those signals and runs them through a structured improvement lifecycle. Together they're how a mature ITSM rollout justifies its existence to the business.",
+  whyItMatters:
+    "Reports show 'now'; PA shows 'how things are trending'. CIS-ITSM scenarios that mention 'historical', 'trend', 'breakdown by group', or 'scorecard' are PA questions, not Reporting questions. Confusing the two is the most common pitfall on this topic.",
+  what: {
+    heading: "What is Performance Analytics?",
+    body:
+      "PA is a premium application that periodically snapshots the result of a query (an Indicator) and stores it as a Score. Scores are sliced by Breakdowns (e.g. by Assignment Group) and visualised in Widgets and Scorecards.",
+    bullets: [
+      "Indicator — what to measure (e.g. count of open priority-1 incidents)",
+      "Breakdown — how to slice it (by group, by category)",
+      "Score — the snapshot value at a moment in time",
+      "Scorecard — drill-down view of an indicator over time",
+    ],
+  },
+  why: {
+    heading: "Why not just use Reports?",
+    body:
+      "Reports query live data — re-run them tomorrow and yesterday's value is lost. PA persists the value at collection time, so you can see 'open P1 count every day for the last year' even after those incidents close.",
+  },
+  who: {
+    heading: "Who consumes PA?",
+    body:
+      "Service Owners watch their indicators. Process owners run CIM initiatives. Executives view scorecards. Implementers (pa_admin) configure indicators, breakdowns and data collectors.",
+    bullets: [
+      "pa_admin — configures PA",
+      "pa_viewer — consumes scorecards/widgets",
+      "itil — sees indicators on home pages",
+    ],
+  },
+  when: {
+    heading: "When does PA collect data?",
+    body:
+      "Data Collectors run on a schedule (typically nightly) and produce Score records. You can also trigger ad-hoc collection. Older Scores can be archived or kept for trend analysis.",
+  },
+  where: {
+    heading: "Where does PA data live?",
+    body:
+      "Indicators: pa_indicators. Scores: pa_scores. Breakdowns: pa_breakdowns. Scorecards/widgets render from these tables. CIM lives in the Continual Improvement Management application.",
+  },
+  how: {
+    heading: "How does CIM use PA?",
+    body:
+      "CIM walks an Improvement Initiative through phases: Define → Identify → Analyze → Plan → Implement → Measure → Close. Each phase has tasks and gating criteria. PA indicators provide the 'measure' phase evidence and trigger 'identify' opportunities when they trend wrong.",
+  },
+  conceptDeepDives: [
+    {
+      id: "indicator",
+      name: "Performance Analytics Indicator",
+      oneLine: "A configured measurement that produces one Score per collection cycle.",
+      formal: "pa_indicators record specifying a fact table, query, aggregate function and unit; collected by a Data Collector job into pa_scores.",
+      plainEnglish: "A weather station for one specific KPI — every night it records the temperature.",
+      analogy: "An odometer reading taken every day so you can chart distance over time.",
+      howItWorks: "Data Collector runs → executes the indicator's query → writes one Score per Breakdown element → Scorecard renders the timeline.",
+      microsoftMapping: "Closest analogue: Power BI dataset refresh, but built into the platform.",
+      whenToUse: "Whenever you need historical trend, breakdown slicing or threshold-based alerts.",
+      commonMistake: "Building a Report when the requirement is 'show last 12 months' — that's PA territory.",
+      examAngle: "Trigger words: 'trend', 'historical', 'breakdown by', 'over time'.",
+    },
+    {
+      id: "cim-initiative",
+      name: "CIM Improvement Initiative",
+      oneLine: "A managed improvement project with phases, owners and outcomes.",
+      formal: "A record in the CIM application that walks a measurable improvement opportunity through Define → Implement → Measure → Close gates.",
+      plainEnglish: "Like a Jira epic specifically for 'we will make this number better and prove it'.",
+      analogy: "Project management for KPI improvement — with the KPI baked in.",
+      howItWorks: "Initiative is created (often from a PA threshold breach) → phases tracked as tasks → improvement implemented → PA indicator confirms the change → initiative closed with proof.",
+      microsoftMapping: "ServiceNow-specific.",
+      whenToUse: "Any time someone says 'we should fix our MTTR' — wrap it in a CIM initiative so the work is tracked and provable.",
+      commonMistake: "Running improvement work as ad-hoc tasks with no measurement gate.",
+      examAngle: "If the question mentions structured improvement with phases, the answer is CIM.",
+    },
+  ],
+  comparisons: [
+    {
+      title: "Reports vs Performance Analytics",
+      columns: ["Aspect", "Reports", "Performance Analytics"],
+      rows: [
+        ["Time dimension", "Live snapshot only", "Historical scores over time"],
+        ["Cost", "Included with platform", "Premium add-on"],
+        ["Scheduling", "On-demand or emailed", "Automatic data collectors"],
+        ["Drill-down", "Limited", "Full breakdown navigation"],
+      ],
+      bottomLine: "Use Reports for 'now', PA for 'trend'.",
+    },
+  ],
+  realExamples: [
+    {
+      title: "MTTR initiative",
+      scenario: "MTTR is creeping up month over month for the Network team.",
+      outcome: "PA indicator triggers a CIM initiative; team adopts run-book automation; MTTR drops 30% — proof in the same indicator.",
+    },
+  ],
+  keyTerms: [
+    { term: "Score", definition: "The numeric value of an Indicator at one collection moment.", example: "Open P1 incidents = 14 on 2026-01-15." },
+    { term: "Breakdown", definition: "A dimension used to slice an Indicator (e.g. by Assignment Group).", example: "MTTR by Group." },
+    { term: "Scorecard", definition: "A drill-down view of one Indicator across time, breakdowns and targets.", example: "MTTR scorecard with 90-day target line." },
+  ],
+  commonPitfalls: [
+    "Confusing Reports with PA — they answer different questions.",
+    "Creating indicators with no Breakdown — loses half the analytical value.",
+    "Skipping the Measure phase of CIM — improvement claims become anecdotes, not evidence.",
+  ],
+  faqs: [
+    { q: "Does PA need its own license?", a: "Yes — PA is a premium subscription on top of ITSM." },
+    { q: "Can I use Predictive Intelligence without PA?", a: "PI runs on its own ML models against any table — but is most powerful when paired with PA trend signals." },
+  ],
+  selfCheck: [
+    {
+      question: "A stakeholder asks for 'MTTR by team for the last 12 months'. Which tool?",
+      options: ["A Report", "A PA Scorecard with Breakdown by team", "A Dashboard widget over live data", "A spreadsheet export"],
+      correctIndex: 1,
+      explanation: "Historical, breakdown-based — that's PA, not Reports.",
+    },
+    {
+      question: "Which CIM phase gates the initiative on proof of measurable improvement?",
+      options: ["Define", "Implement", "Measure", "Close"],
+      correctIndex: 2,
+      explanation: "Measure validates the improvement against the original PA indicator before Close.",
+    },
+  ],
+  examTips: [
+    "Trend / historical / breakdown → Performance Analytics.",
+    "CIM phases: Define → Identify → Analyze → Plan → Implement → Measure → Close.",
+    "Reports = now, PA = over time.",
+  ],
+  furtherReading: [
+    { label: "ServiceNow Docs — Performance Analytics", url: "https://www.servicenow.com/docs/bundle/yokohama-now-intelligence/page/use/performance-analytics/concept/c_PerformanceAnalytics.html" },
+    { label: "ServiceNow Docs — Continual Improvement Management", url: "https://www.servicenow.com/docs/bundle/yokohama-it-service-management/page/product/continual-improvement-management/concept/cim-overview.html" },
+  ],
+};
+
+export const itsmModuleExplanations: ModuleExplanation[] = [m1, m2, m3, m4, m5, m6, m7, m8];
 
 export function getItsmModuleExplanation(slug: string): ModuleExplanation | undefined {
   return itsmModuleExplanations.find((m) => m.moduleSlug === slug);
