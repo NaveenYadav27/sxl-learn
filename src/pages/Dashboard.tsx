@@ -117,6 +117,21 @@ export default function Dashboard() {
 
   const overallPct = stats.totalLabs ? Math.round((stats.completed / stats.totalLabs) * 100) : 0;
 
+  async function handleResetProgress() {
+    if (!user) return;
+    const { error } = await supabase.rpc(
+      "reset_user_lab_progress" as any,
+      { _user_id: user.id } as any,
+    );
+    if (error) {
+      toast.error("Reset failed", { description: error.message });
+      return;
+    }
+    toast.success("Lab progress reset", { description: "All attempts, steps, and quiz responses cleared." });
+    // Refresh page state
+    setTimeout(() => window.location.reload(), 600);
+  }
+
   return (
     <AppLayout title="Dashboard">
       <div className="container py-6 space-y-6">
