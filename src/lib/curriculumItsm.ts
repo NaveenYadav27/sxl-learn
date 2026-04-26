@@ -100,7 +100,7 @@ export const itsmModuleNotes: ModuleNote[] = [
   },
 ];
 
-const m = (slug: ModuleNote["moduleSlug"] | "exam") =>
+const m = (slug: string) =>
   itsmModuleNotes.find((x) => (slug === "exam" ? x.domain === "exam" : x.moduleSlug === slug))!;
 
 /* ---------- Day plans ---------- */
@@ -110,35 +110,35 @@ export const itsmFiveDayPlan: DayPlan[] = [
     label: "Day 1",
     subtitle: "ITSM Foundations & ServiceNow Platform (1h 30m)",
     description: "ITIL 4 service value system, the Now Platform, roles, and the end-to-end process flow.",
-    modules: [m("concepts")],
+    modules: [m("itsm-foundations")],
   },
   {
     id: "day2",
     label: "Day 2",
     subtitle: "Incident Management (2h)",
     description: "Lifecycle, priority matrix, SLAs, assignment groups, and Major Incident Management.",
-    modules: [m("iam")],
+    modules: [m("itsm-incident")],
   },
   {
     id: "day3",
     label: "Day 3",
     subtitle: "Problem & Knowledge Management (2h)",
     description: "Root cause analysis, Known Errors, workarounds, and KCS-style knowledge articles.",
-    modules: [m("entra")],
+    modules: [m("itsm-problem")],
   },
   {
     id: "day4",
     label: "Day 4",
     subtitle: "Change & Release Management (2h 15m)",
     description: "Standard / Normal / Emergency changes, CAB workflow, risk, and the change schedule.",
-    modules: [m("security")],
+    modules: [m("itsm-change")],
   },
   {
     id: "day5",
     label: "Day 5",
     subtitle: "Catalog, CMDB & Exam (2h 30m)",
     description: "Service Catalog, RITM/Catalog Tasks, CMDB & CSDM, ITSM KPIs, then CIS-ITSM exam strategy.",
-    modules: [m("compliance"), m("exam")],
+    modules: [m("itsm-catalog-cmdb"), m("exam")],
   },
 ];
 
@@ -149,7 +149,7 @@ export const itsmTwoDayPlan: DayPlan[] = [
     subtitle: "Foundations, Incident & Problem (4h)",
     description: "Platform tour, then Incident lifecycle and Problem / Knowledge management.",
     modules: itsmModuleNotes.filter((x) =>
-      ["concepts", "iam", "entra"].includes(x.moduleSlug ?? ""),
+      ["itsm-foundations", "itsm-incident", "itsm-problem"].includes(x.moduleSlug ?? ""),
     ),
   },
   {
@@ -158,7 +158,7 @@ export const itsmTwoDayPlan: DayPlan[] = [
     subtitle: "Change, Catalog, CMDB & Exam (4h)",
     description: "Change & Release, Service Catalog & CMDB, then exam strategy.",
     modules: itsmModuleNotes.filter((x) =>
-      ["security", "compliance"].includes(x.moduleSlug ?? "") || x.domain === "exam",
+      ["itsm-change", "itsm-catalog-cmdb"].includes(x.moduleSlug ?? "") || x.domain === "exam",
     ),
   },
 ];
