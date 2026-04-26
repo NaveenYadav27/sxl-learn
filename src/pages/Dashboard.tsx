@@ -24,7 +24,7 @@ const domainGrad: Record<string, string> = {
 };
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const { course } = useCourse();
   const allowedSlugs = useMemo(() => new Set(course.modules.flatMap((m) => m.labSlugs)), [course.code]);
   const allowedModuleSlugs = useMemo(
