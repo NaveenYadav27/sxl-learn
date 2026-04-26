@@ -9,7 +9,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useCourse } from "@/hooks/useCourse";
 import { getXpStats, type XpStats } from "@/lib/xp";
-import { Trophy, Clock, BookOpen, ArrowRight, Sparkles, Shield, Users, Lock, Gavel, Flame, Zap, ClipboardCheck } from "lucide-react";
+import { Trophy, Clock, BookOpen, ArrowRight, Sparkles, Shield, Users, Lock, Gavel, Flame, Zap, ClipboardCheck, RotateCcw } from "lucide-react";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 const domainIcon: Record<string, any> = { concepts: Sparkles, entra: Users, security: Shield, compliance: Gavel };
 const domainGrad: Record<string, string> = {
