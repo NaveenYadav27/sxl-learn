@@ -225,6 +225,9 @@ export default function Dashboard() {
           </Card>
         </div>
 
+        {/* PDI companion (CIS-ITSM only) */}
+        {course.code === "CIS-ITSM" && <PdiCompanionCard />}
+
         {/* KPIs */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <Kpi icon={BookOpen} label="Labs available" value={stats.totalLabs} tone="text-primary" />
