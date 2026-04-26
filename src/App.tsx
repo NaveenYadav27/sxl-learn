@@ -21,6 +21,7 @@ import Defender from "./pages/Defender.tsx";
 import Purview from "./pages/Purview.tsx";
 import SessionPlan from "./pages/SessionPlan.tsx";
 import Module from "./pages/Module.tsx";
+import ServiceNowJourney from "./pages/ServiceNowJourney.tsx";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/purview" element={<Purview />} />
             <Route path="/tenant" element={<Tenant />} />
             <Route path="/licensing" element={<Licensing />} />
+            <Route path="/servicenow-journey" element={<ServiceNowJourney />} />
             <Route path="/instructor/cohort" element={<Placeholder title="Instructor Cockpit" breadcrumb={[{ label: "Instructor" }, { label: "Cohort" }]} />} />
             <Route path="/admin/content" element={<Placeholder title="Content Management" breadcrumb={[{ label: "Admin" }, { label: "Content" }]} />} />
             <Route path="*" element={<NotFound />} />

@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboard, BookOpen, Users, Shield, Lock, Gavel, Trophy,
-  Settings, GraduationCap, Network, ClipboardCheck, Flame, Zap, Wallet, Building2, CalendarDays,
+  Settings, GraduationCap, Network, ClipboardCheck, Flame, Zap, Wallet, Building2, CalendarDays, Award,
 } from "lucide-react";
 import { getXpStats, type XpStats } from "@/lib/xp";
 import { useAuth } from "@/hooks/useAuth";
@@ -22,6 +22,7 @@ const baseLearnerNav = [
   { title: "Course Catalog", url: "/catalog", icon: BookOpen },
   { title: "Session Plan", url: "/session-plan", icon: CalendarDays },
   { title: "My Live Tenant", url: "/tenant", icon: Building2, courseOnly: "sc-900" as const },
+  { title: "ServiceNow Journey", url: "/servicenow-journey", icon: Award, courseOnly: "cis-itsm" as const },
   { title: "Practice Exam", url: "/exam", icon: ClipboardCheck },
   { title: "My Progress", url: "/progress", icon: Trophy },
   { title: "License Guide", url: "/licensing", icon: Wallet },

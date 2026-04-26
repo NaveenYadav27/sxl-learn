@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import { PdiCompanionCard } from "@/components/PdiCompanionCard";
+import { NowLearningCard } from "@/components/NowLearningCard";
 
 const domainIcon: Record<string, any> = { concepts: Sparkles, entra: Users, security: Shield, compliance: Gavel };
 const domainGrad: Record<string, string> = {
@@ -227,7 +228,12 @@ export default function Dashboard() {
         </div>
 
         {/* PDI companion (CIS-ITSM only) */}
-        {course.code === "cis-itsm" && <PdiCompanionCard />}
+        {course.code === "cis-itsm" && (
+          <div className="grid lg:grid-cols-2 gap-4">
+            <NowLearningCard />
+            <PdiCompanionCard />
+          </div>
+        )}
 
         {/* KPIs */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
