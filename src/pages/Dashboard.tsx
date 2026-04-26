@@ -16,6 +16,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { PdiCompanionCard } from "@/components/PdiCompanionCard";
 
 const domainIcon: Record<string, any> = { concepts: Sparkles, entra: Users, security: Shield, compliance: Gavel };
 const domainGrad: Record<string, string> = {
@@ -226,7 +227,7 @@ export default function Dashboard() {
         </div>
 
         {/* PDI companion (CIS-ITSM only) */}
-        {course.code === "CIS-ITSM" && <PdiCompanionCard />}
+        {course.code === "cis-itsm" && <PdiCompanionCard />}
 
         {/* KPIs */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
