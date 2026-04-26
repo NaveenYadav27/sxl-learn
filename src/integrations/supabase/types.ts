@@ -1030,6 +1030,10 @@ export type Database = {
         Returns: boolean
       }
       reset_tenant: { Args: never; Returns: undefined }
+      reset_user_lab_progress: {
+        Args: { _user_id: string }
+        Returns: undefined
+      }
       seed_tenant: { Args: { _user_id: string }; Returns: undefined }
     }
     Enums: {

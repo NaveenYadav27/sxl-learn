@@ -9,7 +9,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useCourse } from "@/hooks/useCourse";
 import { getXpStats, type XpStats } from "@/lib/xp";
-import { Trophy, Clock, BookOpen, ArrowRight, Sparkles, Shield, Users, Lock, Gavel, Flame, Zap, ClipboardCheck } from "lucide-react";
+import { Trophy, Clock, BookOpen, ArrowRight, Sparkles, Shield, Users, Lock, Gavel, Flame, Zap, ClipboardCheck, RotateCcw } from "lucide-react";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 const domainIcon: Record<string, any> = { concepts: Sparkles, entra: Users, security: Shield, compliance: Gavel };
 const domainGrad: Record<string, string> = {
@@ -18,7 +24,7 @@ const domainGrad: Record<string, string> = {
 };
 
 export default function Dashboard() {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const { course } = useCourse();
   const allowedSlugs = useMemo(() => new Set(course.modules.flatMap((m) => m.labSlugs)), [course.code]);
   const allowedModuleSlugs = useMemo(
@@ -111,6 +117,21 @@ export default function Dashboard() {
 
   const overallPct = stats.totalLabs ? Math.round((stats.completed / stats.totalLabs) * 100) : 0;
 
+  async function handleResetProgress() {
+    if (!user) return;
+    const { error } = await supabase.rpc(
+      "reset_user_lab_progress" as any,
+      { _user_id: user.id } as any,
+    );
+    if (error) {
+      toast.error("Reset failed", { description: error.message });
+      return;
+    }
+    toast.success("Lab progress reset", { description: "All attempts, steps, and quiz responses cleared." });
+    // Refresh page state
+    setTimeout(() => window.location.reload(), 600);
+  }
+
   return (
     <AppLayout title="Dashboard">
       <div className="container py-6 space-y-6">
@@ -124,14 +145,42 @@ export default function Dashboard() {
                 You're {overallPct}% of the way to {course.shortName} ready. Keep your streak going.
               </p>
             </div>
-            <Link to={resumeLab ? `/lab/${resumeLab.slug}` : "/catalog"} className="max-w-xs">
-              <Button size="lg" className="gap-2 w-full">
-                <span className="truncate">
-                  {resumeLab ? `Resume: ${resumeLab.title}` : "Continue learning"}
-                </span>
-                <ArrowRight className="h-4 w-4 shrink-0" />
-              </Button>
-            </Link>
+            <div className="flex items-center gap-2 max-w-xs">
+              {isAdmin && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button size="lg" variant="outline" className="gap-2" title="Admin: reset all your lab progress">
+                      <RotateCcw className="h-4 w-4" />
+                      Reset progress
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Reset all lab progress?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This wipes every lab attempt, step completion and quiz response on your account
+                        across <strong>all courses</strong> (SC-900 and CIS-ITSM). Badges and tenant data
+                        are kept. This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleResetProgress}>
+                        Yes, reset everything
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
+              <Link to={resumeLab ? `/lab/${resumeLab.slug}` : "/catalog"} className="flex-1">
+                <Button size="lg" className="gap-2 w-full">
+                  <span className="truncate">
+                    {resumeLab ? `Resume: ${resumeLab.title}` : "Continue learning"}
+                  </span>
+                  <ArrowRight className="h-4 w-4 shrink-0" />
+                </Button>
+              </Link>
+            </div>
           </CardContent>
         </Card>
 
