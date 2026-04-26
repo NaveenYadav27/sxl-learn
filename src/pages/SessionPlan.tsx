@@ -387,7 +387,7 @@ function CourseDayPlanView({
 
         <Tabs value={planMode} onValueChange={(v) => setPlanMode(v as any)}>
           <TabsList>
-            <TabsTrigger value="fiveDay">5-Day plan</TabsTrigger>
+            <TabsTrigger value="fiveDay">{course.plans.fiveDay.length}-Day plan</TabsTrigger>
             <TabsTrigger value="twoDay">2-Day plan</TabsTrigger>
             <TabsTrigger value="oneDay">1-Day intensive</TabsTrigger>
           </TabsList>
