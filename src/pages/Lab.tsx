@@ -17,6 +17,7 @@ import { ServiceNowSimulator } from "@/components/simulators/ServiceNowSimulator
 import { TenantCheckPanel } from "@/components/simulators/TenantCheckPanel";
 import { QuizPanel } from "@/components/QuizPanel";
 import { LabCompletionModal } from "@/components/LabCompletionModal";
+import { PdiDeepLink } from "@/components/PdiDeepLink";
 import { awardBadgesForUser } from "@/lib/badges";
 import {
   CheckCircle2, Circle, ChevronRight, Clock, Target, Sparkles, Trophy, ArrowLeft, Lightbulb, ExternalLink, BookOpen,
@@ -193,6 +194,11 @@ export default function Lab() {
                 </span>
                 <ExternalLink className="h-3 w-3 text-muted-foreground group-hover:text-primary shrink-0" />
               </a>
+            )}
+            {lab.simulator === "servicenow" && (
+              <div className="mt-2">
+                <PdiDeepLink labSlug={lab.slug} />
+              </div>
             )}
           </div>
           <div className="px-4 py-3 border-b border-border">
