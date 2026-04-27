@@ -56,7 +56,7 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     icon: Wrench,
     accentClass: "text-domain-entra",
     modules: itsmModuleNotes,
-    plans: { fiveDay: itsmFiveDayPlan, twoDay: itsmTwoDayPlan, oneDay: itsmOneDayPlan },
+    plans: { fiveDay: itsmFiveDayPlan, twoDay: itsmTwoDayPlan, oneDay: itsmOneDayPlan, oneHour: itsmOneHourPlan },
     examTitle: "CIS-ITSM Practice Exam",
     examIntroBullets: [
       "Scenario-based questions across Incident, Problem, Change, Request, CMDB & Knowledge.",
