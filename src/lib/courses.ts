@@ -5,7 +5,7 @@
 import type { LucideIcon } from "lucide-react";
 import { Shield, Wrench } from "lucide-react";
 import { fiveDayPlan as sc900FiveDay, twoDayPlan as sc900TwoDay, oneDayPlan as sc900OneDay, moduleNotes as sc900Modules, type DayPlan, type ModuleNote } from "./curriculum";
-import { itsmFiveDayPlan, itsmTwoDayPlan, itsmOneDayPlan, itsmModuleNotes } from "./curriculumItsm";
+import { itsmFiveDayPlan, itsmTwoDayPlan, itsmOneDayPlan, itsmOneHourPlan, itsmModuleNotes } from "./curriculumItsm";
 
 export type CourseCode = "sc-900" | "cis-itsm";
 
