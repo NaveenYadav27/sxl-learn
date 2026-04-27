@@ -163,6 +163,9 @@ export default function Catalog() {
                 <TabsTrigger value="5day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />{course.plans.fiveDay.length} days × 2h</TabsTrigger>
                 <TabsTrigger value="2day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />2 days × 4h</TabsTrigger>
                 <TabsTrigger value="1day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />1-day intensive</TabsTrigger>
+                {course.plans.oneHour ? (
+                  <TabsTrigger value="1hr" className="gap-1.5"><Clock className="h-3.5 w-3.5" />1-hour tool tour</TabsTrigger>
+                ) : null}
               </TabsList>
             </Tabs>
 
