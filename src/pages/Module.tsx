@@ -20,6 +20,7 @@ import { type DomainKey } from "@/lib/curriculum";
 import { getModuleExplanation } from "@/lib/moduleExplanations";
 import { getItsmModuleExplanation } from "@/lib/moduleExplanationsItsm";
 import { useCourse } from "@/hooks/useCourse";
+import { COURSE_LIST } from "@/lib/courses";
 import { ListChecks as ProcessIcon, Workflow, Database, GitBranch } from "lucide-react";
 
 type DomainStyle = { icon: any; bar: string; soft: string; chip: string; label: string };
@@ -64,9 +65,27 @@ export default function Module() {
   const [labs, setLabs] = useState<Lab[]>([]);
   const [progress, setProgress] = useState<Record<string, string>>({});
 
-  const note = useMemo(() => moduleNotes.find((m) => m.moduleSlug === slug), [slug, moduleNotes]);
+  // Look up the curriculum note + explanation in the active course first; if
+  // not found (e.g. user navigated here from a different course's catalog and
+  // then switched courses), fall back to the other course so we still render
+  // useful content instead of "Module not found".
+  const note = useMemo(() => {
+    const inActive = moduleNotes.find((m) => m.moduleSlug === slug);
+    if (inActive) return inActive;
+    // Fallback: search every registered course for a matching slug
+    for (const c of COURSE_LIST) {
+      const found = c.modules.find((m) => m.moduleSlug === slug);
+      if (found) return found;
+    }
+    return undefined;
+  }, [slug, moduleNotes]);
   const explanation = useMemo(
-    () => (slug ? (course.code === "cis-itsm" ? getItsmModuleExplanation(slug) : getModuleExplanation(slug)) : undefined),
+    () =>
+      slug
+        ? (course.code === "cis-itsm"
+            ? getItsmModuleExplanation(slug) ?? getModuleExplanation(slug)
+            : getModuleExplanation(slug) ?? getItsmModuleExplanation(slug))
+        : undefined,
     [slug, course.code],
   );
 
