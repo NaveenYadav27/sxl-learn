@@ -1,152 +1,146 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Shield, Users, Lock, Gavel, Sparkles, GraduationCap, Trophy, Zap,
-  CheckCircle2, ArrowRight, Network, Brain,
-} from "lucide-react";
+import { Shield, Cog, ArrowRight, Sparkles, Users, Briefcase, GraduationCap } from "lucide-react";
 import { Logo } from "@/components/Logo";
-
-const domains = [
-  { icon: Shield, name: "Concepts", desc: "Zero Trust, Defense in Depth, Encryption", weight: "10–15%", grad: "bg-gradient-concepts" },
-  { icon: Users, name: "Microsoft Entra", desc: "Identity, MFA, Conditional Access, PIM", weight: "25–30%", grad: "bg-gradient-entra" },
-  { icon: Lock, name: "Security Solutions", desc: "Defender XDR, Sentinel, Secure Score", weight: "25–30%", grad: "bg-gradient-security" },
-  { icon: Gavel, name: "Compliance", desc: "Purview, DLP, Insider Risk, eDiscovery", weight: "25–30%", grad: "bg-gradient-compliance" },
-];
-
-const features = [
-  { icon: Network, title: "High-fidelity simulators", desc: "Practise inside pixel-accurate Entra, Defender, Purview and Sentinel twins. No Azure subscription needed." },
-  { icon: Brain, title: "AI tutor on every step", desc: "Get hints, explanations and 'why this matters' coaching from a Gemini-powered SC-900 tutor — without giving away answers." },
-  { icon: Zap, title: "Real industry scenarios", desc: "Triage Midnight Blizzard, MFA bombing, India DPDP-Act DLP, departing-employee data theft, and more." },
-  { icon: GraduationCap, title: "Instructor cockpit", desc: "Trainers see live cohort progress, scores and stuck learners during VILT sessions." },
-  { icon: Trophy, title: "Badges & SC-900 readiness score", desc: "Earn Identity Pro, SOC Analyst, Compliance Champion and the SC-900 Ready trophy." },
-  { icon: CheckCircle2, title: "Maps to every exam objective", desc: "22 hands-on labs covering every sub-objective in Microsoft's official SC-900 study guide." },
-];
+import { ProgramMarketingHeader } from "@/components/ProgramMarketingHeader";
 
 const Index = () => (
   <div className="min-h-screen bg-background">
-    {/* Top bar */}
-    <header className="border-b border-border bg-card/60 backdrop-blur sticky top-0 z-30">
-      <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
-          <Logo size="sm" showWordmark showTagline />
-          <span className="text-[10px] ml-2 px-1.5 py-0.5 rounded bg-primary-soft text-primary-glow font-mono font-medium border border-primary/30">SC-900</span>
-        </Link>
-        <nav className="flex items-center gap-2">
-          <Link to="/auth"><Button variant="ghost" size="sm">Sign in</Button></Link>
-          <Link to="/auth?mode=signup"><Button size="sm" className="bg-gradient-shadowx text-shadowx-obsidian font-semibold hover:opacity-90">Get started</Button></Link>
-        </nav>
-      </div>
-    </header>
+    <ProgramMarketingHeader />
 
     {/* Hero */}
     <section className="relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-hero" />
-      <div className="absolute inset-0 pointer-events-none"
-           style={{ backgroundImage: "radial-gradient(circle at 20% 30%, hsl(var(--shadow-azure) / 0.25), transparent 45%), radial-gradient(circle at 80% 70%, hsl(var(--shadow-ember) / 0.22), transparent 45%), radial-gradient(circle at 50% 50%, hsl(var(--shadow-gold) / 0.12), transparent 35%)" }} />
-      <div className="relative container py-24 md:py-32 text-foreground">
-        <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 rounded-full bg-shadowx-obsidian/60 backdrop-blur px-3 py-1 text-xs font-medium mb-6 border border-shadowx-gold/30 text-shadowx-gold">
-            <Sparkles className="h-3 w-3" /> Empower · Illuminate · Uphold
-          </div>
-          <h1 className="font-display text-5xl md:text-7xl font-bold tracking-tight leading-[1.02]">
-            The hands-on way to <span className="text-shadowx-gradient">pass SC-900</span> and actually understand it.
-          </h1>
-          <p className="mt-6 text-lg md:text-xl text-foreground/75 max-w-2xl">
-            22 interactive labs inside simulated Microsoft Entra, Defender XDR, Purview and Sentinel — guided by an AI tutor, scored in real time, no Azure tenant required.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/auth?mode=signup">
-              <Button size="lg" className="gap-2 bg-gradient-shadowx text-shadowx-obsidian font-semibold hover:opacity-90">
-                Start free <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
-            <Link to="/catalog">
-              <Button size="lg" variant="outline" className="border-shadowx-azure/40 text-foreground hover:bg-shadowx-azure/10">
-                Browse the 22 labs
-              </Button>
-            </Link>
-          </div>
-          <div className="mt-10 grid grid-cols-3 gap-6 max-w-md">
-            <Stat n="22" l="Hands-on labs" />
-            <Stat n="4" l="Exam domains" />
-            <Stat n="100%" l="Objective coverage" />
-          </div>
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle at 20% 30%, hsl(var(--shadow-azure) / 0.25), transparent 45%), radial-gradient(circle at 80% 70%, hsl(var(--shadow-ember) / 0.22), transparent 45%), radial-gradient(circle at 50% 50%, hsl(var(--shadow-gold) / 0.12), transparent 35%)",
+        }}
+      />
+      <div className="relative container py-20 md:py-28 text-center">
+        <div className="inline-flex items-center gap-2 rounded-full bg-shadowx-obsidian/60 backdrop-blur px-3 py-1 text-xs font-medium mb-6 border border-shadowx-gold/30 text-shadowx-gold">
+          <Sparkles className="h-3 w-3" /> 7-Day Job Ready Programs · ₹999 Intro
         </div>
+        <h1 className="font-display text-4xl md:text-6xl font-bold tracking-tight leading-[1.05]">
+          Choose Your <span className="text-shadowx-gradient">Career Path</span>
+        </h1>
+        <p className="mt-5 text-lg md:text-xl text-foreground/75 max-w-2xl mx-auto">
+          Start your career in Cybersecurity or IT Operations with hands-on training and interview preparation.
+        </p>
       </div>
     </section>
 
-    {/* Domains */}
-    <section className="container py-20">
-      <div className="max-w-2xl mx-auto text-center mb-12">
-        <h2 className="text-3xl md:text-4xl font-bold">Cover every SC-900 exam domain</h2>
-        <p className="mt-3 text-muted-foreground">Each domain is broken into bite-sized interactive labs that mirror real Microsoft admin centers.</p>
-      </div>
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-        {domains.map((d) => (
-          <Card key={d.name} className="overflow-hidden border-border shadow-card hover:shadow-elevated transition-shadow">
-            <div className={`h-1.5 ${d.grad}`} />
-            <CardContent className="pt-6">
-              <div className={`h-10 w-10 rounded grid place-items-center ${d.grad} text-primary-foreground mb-4`}>
-                <d.icon className="h-5 w-5" />
-              </div>
-              <div className="text-xs text-muted-foreground font-medium">EXAM WEIGHT {d.weight}</div>
-              <h3 className="mt-1 font-semibold text-lg">{d.name}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{d.desc}</p>
-            </CardContent>
-          </Card>
-        ))}
+    {/* Two-card chooser */}
+    <section className="container -mt-12 md:-mt-16 pb-20 relative z-10">
+      <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+        {/* SOC */}
+        <Card className="overflow-hidden border-border shadow-elevated hover:shadow-glow transition-all hover:-translate-y-1 bg-card">
+          <div className="h-1.5 bg-gradient-security" />
+          <CardContent className="p-8">
+            <div className="h-12 w-12 rounded-xl bg-gradient-security text-primary-foreground grid place-items-center mb-5">
+              <Shield className="h-6 w-6" />
+            </div>
+            <div className="text-xs font-mono uppercase tracking-widest text-shadowx-azure mb-1">Cybersecurity</div>
+            <h2 className="font-display text-2xl md:text-3xl font-bold">SOC Analyst (SC-900)</h2>
+            <p className="mt-3 text-muted-foreground">
+              Learn SOC fundamentals, alerts, incident response, and prepare for cybersecurity interviews.
+            </p>
+            <ul className="mt-5 space-y-2 text-sm">
+              <Bullet>Microsoft Defender, Entra & Sentinel hands-on</Bullet>
+              <Bullet>Real alert triage & incident response</Bullet>
+              <Bullet>SOC interview question bank</Bullet>
+            </ul>
+            <Link to="/soc" className="block mt-7">
+              <Button size="lg" className="w-full gap-2 font-semibold">
+                Join SOC Program <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <div className="mt-3 text-center text-xs text-muted-foreground">7 days · ₹999 intro · batch starts this week</div>
+          </CardContent>
+        </Card>
+
+        {/* ITSM */}
+        <Card className="overflow-hidden border-border shadow-elevated hover:shadow-glow transition-all hover:-translate-y-1 bg-card">
+          <div className="h-1.5 bg-gradient-entra" />
+          <CardContent className="p-8">
+            <div className="h-12 w-12 rounded-xl bg-gradient-entra text-primary-foreground grid place-items-center mb-5">
+              <Cog className="h-6 w-6" />
+            </div>
+            <div className="text-xs font-mono uppercase tracking-widest text-shadowx-gold mb-1">IT Operations</div>
+            <h2 className="font-display text-2xl md:text-3xl font-bold">ITSM / ServiceNow</h2>
+            <p className="mt-3 text-muted-foreground">
+              Learn ITSM workflows, ticket handling, and prepare for ServiceNow and IT support roles.
+            </p>
+            <ul className="mt-5 space-y-2 text-sm">
+              <Bullet>Incident, Problem, Change end-to-end</Bullet>
+              <Bullet>CMDB, Service Catalog & Workflows</Bullet>
+              <Bullet>ServiceNow / IT support interview prep</Bullet>
+            </ul>
+            <Link to="/itsm" className="block mt-7">
+              <Button size="lg" className="w-full gap-2 font-semibold">
+                Join ITSM Program <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <div className="mt-3 text-center text-xs text-muted-foreground">7 days · ₹999 intro · batch starts this week</div>
+          </CardContent>
+        </Card>
       </div>
     </section>
 
-    {/* Features */}
+    {/* Who it's for */}
     <section className="bg-secondary/40 border-y border-border">
-      <div className="container py-20">
-        <div className="max-w-2xl mx-auto text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold">Built like a Microsoft portal. Taught like a tutor.</h2>
-          <p className="mt-3 text-muted-foreground">Every detail engineered so muscle memory transfers to the real thing.</p>
+      <div className="container py-16">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <h2 className="text-2xl md:text-3xl font-bold">Built for people who want a job — not another certificate</h2>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {features.map((f) => (
-            <Card key={f.title} className="border-border shadow-card">
-              <CardContent className="pt-6">
-                <div className="h-9 w-9 rounded grid place-items-center bg-primary-soft text-primary mb-4">
-                  <f.icon className="h-4 w-4" />
-                </div>
-                <h3 className="font-semibold">{f.title}</h3>
-                <p className="mt-1.5 text-sm text-muted-foreground">{f.desc}</p>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="grid sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
+          <Persona icon={GraduationCap} title="Freshers" desc="Get your first IT or cyber job." />
+          <Persona icon={Users} title="Career switchers" desc="Move into security or IT ops with confidence." />
+          <Persona icon={Briefcase} title="Stuck in interviews" desc="Crack the questions that keep failing you." />
         </div>
       </div>
     </section>
 
     {/* CTA */}
-    <section className="container py-20 text-center">
-      <h2 className="text-3xl md:text-4xl font-bold">Ready to earn your SC-900?</h2>
-      <p className="mt-3 text-muted-foreground max-w-xl mx-auto">Free to start. No credit card. Instant access to all 22 simulated labs and the AI tutor.</p>
-      <Link to="/auth?mode=signup" className="inline-block mt-8">
-        <Button size="lg" className="gap-2">Create free account <ArrowRight className="h-4 w-4" /></Button>
-      </Link>
+    <section className="container py-16 text-center">
+      <h2 className="text-2xl md:text-3xl font-bold">Ready to start?</h2>
+      <p className="mt-2 text-muted-foreground">Pick your program above. Batches start this week.</p>
+      <div className="mt-6 flex flex-wrap justify-center gap-3">
+        <Link to="/soc"><Button size="lg" variant="default">Join SOC Program</Button></Link>
+        <Link to="/itsm"><Button size="lg" variant="outline">Join ITSM Program</Button></Link>
+      </div>
     </section>
 
-    <footer className="border-t border-border py-10">
+    <footer className="border-t border-border py-8">
       <div className="container flex flex-col md:flex-row items-center justify-between gap-4">
         <Logo size="xs" showWordmark showTagline />
         <div className="text-xs text-muted-foreground text-center md:text-right">
-          ShadowX Lab · An independent SC-900 training simulator. Not affiliated with Microsoft.
+          ShadowXLab Academy · Job-ready training in Cybersecurity & IT Operations.
         </div>
       </div>
     </footer>
   </div>
 );
 
-function Stat({ n, l }: { n: string; l: string }) {
+function Bullet({ children }: { children: React.ReactNode }) {
   return (
-    <div>
-      <div className="font-display text-4xl font-bold text-shadowx-gradient">{n}</div>
-      <div className="text-[10px] uppercase tracking-[0.2em] text-shadowx-gold/80 mt-1">{l}</div>
+    <li className="flex items-start gap-2 text-foreground/85">
+      <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary shrink-0" />
+      <span>{children}</span>
+    </li>
+  );
+}
+
+function Persona({ icon: Icon, title, desc }: { icon: React.ComponentType<{ className?: string }>; title: string; desc: string }) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-5 text-center">
+      <div className="h-10 w-10 rounded-lg bg-primary-soft text-primary grid place-items-center mx-auto mb-3">
+        <Icon className="h-5 w-5" />
+      </div>
+      <h3 className="font-semibold">{title}</h3>
+      <p className="mt-1 text-sm text-muted-foreground">{desc}</p>
     </div>
   );
 }

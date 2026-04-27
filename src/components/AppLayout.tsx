@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { useAuth } from "@/hooks/useAuth";
+import { useProgramAccess } from "@/hooks/useProgramAccess";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface Props {
@@ -10,12 +11,15 @@ interface Props {
   title?: string;
   breadcrumb?: ReactNode;
   actions?: ReactNode;
+  /** When true, skip the program-access gate (used by /pending and admin pages). */
+  skipAccessGate?: boolean;
 }
 
-export function AppLayout({ children, title, breadcrumb, actions }: Props) {
-  const { user, loading } = useAuth();
+export function AppLayout({ children, title, breadcrumb, actions, skipAccessGate }: Props) {
+  const { user, loading, isAdmin } = useAuth();
+  const { hasAny, loading: accessLoading } = useProgramAccess();
 
-  if (loading) {
+  if (loading || (user && !skipAccessGate && accessLoading)) {
     return (
       <div className="min-h-screen p-8 space-y-4">
         <Skeleton className="h-12 w-1/3" />
@@ -24,6 +28,7 @@ export function AppLayout({ children, title, breadcrumb, actions }: Props) {
     );
   }
   if (!user) return <Navigate to="/auth" replace />;
+  if (!skipAccessGate && !isAdmin && !hasAny) return <Navigate to="/pending" replace />;
 
   return (
     <SidebarProvider>

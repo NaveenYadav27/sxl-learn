@@ -41,6 +41,45 @@ export type Database = {
         }
         Relationships: []
       }
+      enrollments: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          notes: string | null
+          phone: string | null
+          program: Database["public"]["Enums"]["program_code"]
+          status: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          program: Database["public"]["Enums"]["program_code"]
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          notes?: string | null
+          phone?: string | null
+          program?: Database["public"]["Enums"]["program_code"]
+          status?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       lab_attempts: {
         Row: {
           completed_at: string | null
@@ -277,6 +316,30 @@ export type Database = {
           id?: string
           pdi_instance_url?: string | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      program_access: {
+        Row: {
+          granted_at: string
+          granted_by: string | null
+          id: string
+          program: Database["public"]["Enums"]["program_code"]
+          user_id: string
+        }
+        Insert: {
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          program: Database["public"]["Enums"]["program_code"]
+          user_id: string
+        }
+        Update: {
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          program?: Database["public"]["Enums"]["program_code"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -1025,6 +1088,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      has_program_access: {
+        Args: {
+          _program: Database["public"]["Enums"]["program_code"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1041,6 +1111,7 @@ export type Database = {
     }
     Enums: {
       app_role: "learner" | "instructor" | "admin"
+      program_code: "soc" | "itsm"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1169,6 +1240,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["learner", "instructor", "admin"],
+      program_code: ["soc", "itsm"],
     },
   },
 } as const
