@@ -76,6 +76,16 @@ export default function Module() {
     for (const c of COURSE_LIST) {
       const found = c.modules.find((m) => m.moduleSlug === slug);
       if (found) return found;
+      // Also search plan-only modules (e.g. the 1-hour tool tour, which is
+      // not in the main `modules` list but lives inside plans.oneHour)
+      const planLists = [c.plans.oneHour, c.plans.oneDay, c.plans.twoDay, c.plans.fiveDay];
+      for (const plan of planLists) {
+        if (!plan) continue;
+        for (const day of plan) {
+          const m2 = day.modules.find((mm) => mm.moduleSlug === slug);
+          if (m2) return m2;
+        }
+      }
     }
     return undefined;
   }, [slug, moduleNotes]);
