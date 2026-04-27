@@ -1432,7 +1432,19 @@ const t1: ModuleExplanation = {
       commonMistake: "Letting the CMDB rot — stale data is worse than no data.",
       examAngle: "CMDB relationships and CSDM appear repeatedly across CIS-ITSM.",
     },
-  ],
+    {
+      id: "where-things-live",
+      name: "Where SLAs, Flow Designer & Service Portal live",
+      oneLine: "Three pointers so you know what to open when you go deeper.",
+      formal: "SLA Definitions live under Service Level Management > SLA > SLA Definitions. Flow Designer lives under Process Automation > Flow Designer. Service Portal lives under Service Portal > Service Portal Configuration.",
+      plainEnglish: "Type 'sla def' for SLAs, 'flow designer' for automation, 'service portal' for the end-user UI — all from the Application Navigator filter.",
+      analogy: "Think of these as three doors in the same building: timers (SLA), robots (Flow), and the front desk (Portal).",
+      howItWorks: "Each is a separate application but reads/writes against the same task tables (incident, sc_request, sc_req_item, sc_task) you toured earlier.",
+      microsoftMapping: "Star each module on first visit so they appear under Favourites for the rest of the bootcamp.",
+      whenToUse: "Whenever a learner asks 'where do I configure X?' — open the navigator, type, star, move on.",
+      commonMistake: "Trying to configure these in the 1-hour tour — they are pointers only; configuration belongs in Modules 6 & 7.",
+      examAngle: "Knowing the application path each surface lives under is part of the platform-fluency baseline.",
+    },
 
   comparisons: [
     {
