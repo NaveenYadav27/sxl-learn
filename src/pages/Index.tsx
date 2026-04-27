@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Shield, Cog, ArrowRight, Sparkles, Users, Briefcase, GraduationCap } from "lucide-react";
+import { Shield, Cog, ArrowRight, Sparkles, Users, Briefcase, GraduationCap, CheckCircle2, Star } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { ProgramMarketingHeader } from "@/components/ProgramMarketingHeader";
 
@@ -11,25 +11,88 @@ const Index = () => (
 
     {/* Hero */}
     <section className="relative overflow-hidden">
+      {/* Deep obsidian base */}
       <div className="absolute inset-0 bg-gradient-hero" />
+
+      {/* Premium ambient lighting */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 20% 30%, hsl(var(--shadow-azure) / 0.25), transparent 45%), radial-gradient(circle at 80% 70%, hsl(var(--shadow-ember) / 0.22), transparent 45%), radial-gradient(circle at 50% 50%, hsl(var(--shadow-gold) / 0.12), transparent 35%)",
+            "radial-gradient(ellipse 60% 50% at 15% 20%, hsl(var(--shadow-azure) / 0.32), transparent 55%), radial-gradient(ellipse 55% 45% at 85% 80%, hsl(var(--shadow-ember) / 0.28), transparent 55%), radial-gradient(ellipse 40% 30% at 50% 50%, hsl(var(--shadow-gold) / 0.10), transparent 60%)",
         }}
       />
-      <div className="relative container py-20 md:py-28 text-center">
-        <div className="inline-flex items-center gap-2 rounded-full bg-shadowx-obsidian/60 backdrop-blur px-3 py-1 text-xs font-medium mb-6 border border-shadowx-gold/30 text-shadowx-gold">
-          <Sparkles className="h-3 w-3" /> 7-Day Job Ready Programs · ₹999 Intro
+
+      {/* Subtle grid texture */}
+      <div
+        className="absolute inset-0 pointer-events-none opacity-[0.07]"
+        style={{
+          backgroundImage:
+            "linear-gradient(hsl(var(--shadow-gold)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--shadow-gold)) 1px, transparent 1px)",
+          backgroundSize: "64px 64px",
+          maskImage: "radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent 75%)",
+          WebkitMaskImage: "radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent 75%)",
+        }}
+      />
+
+      {/* Top hairline brand stripe */}
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-shadowx-gold/60 to-transparent" />
+
+      <div className="relative container py-24 md:py-32 text-center">
+        {/* Eyebrow badge — refined */}
+        <div className="inline-flex items-center gap-2.5 rounded-full bg-shadowx-obsidian/70 backdrop-blur-md px-4 py-1.5 text-[11px] font-mono uppercase tracking-[0.18em] mb-8 border border-shadowx-gold/40 text-shadowx-gold shadow-glow-gold">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-shadowx-gold opacity-60" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-shadowx-gold" />
+          </span>
+          Cohort live · Batch starts this week
         </div>
-        <h1 className="font-display text-4xl md:text-6xl font-bold tracking-tight leading-[1.05]">
-          Choose Your <span className="text-shadowx-gradient">Career Path</span>
+
+        {/* Headline — editorial, larger, tighter */}
+        <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-bold tracking-tight leading-[0.98] text-white">
+          Engineered for the
+          <br />
+          <span className="text-shadowx-gradient">job you deserve.</span>
         </h1>
-        <p className="mt-5 text-lg md:text-xl text-foreground/75 max-w-2xl mx-auto">
-          Start your career in Cybersecurity or IT Operations with hands-on training and interview preparation.
+
+        {/* Subheadline — refined */}
+        <p className="mt-7 text-lg md:text-xl text-white/70 max-w-2xl mx-auto leading-relaxed">
+          Two elite 7-day programs in <span className="text-white font-medium">Cybersecurity</span> and <span className="text-white font-medium">IT Operations</span>. Live training, real labs, interview-ready outcomes.
         </p>
+
+        {/* Trust row */}
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-xs text-white/60">
+          <div className="flex items-center gap-1.5">
+            <CheckCircle2 className="h-3.5 w-3.5 text-shadowx-gold" />
+            <span>Hands-on labs</span>
+          </div>
+          <div className="hidden sm:block h-3 w-px bg-white/15" />
+          <div className="flex items-center gap-1.5">
+            <CheckCircle2 className="h-3.5 w-3.5 text-shadowx-gold" />
+            <span>Live mentor support</span>
+          </div>
+          <div className="hidden sm:block h-3 w-px bg-white/15" />
+          <div className="flex items-center gap-1.5">
+            <CheckCircle2 className="h-3.5 w-3.5 text-shadowx-gold" />
+            <span>Interview-focused</span>
+          </div>
+          <div className="hidden sm:block h-3 w-px bg-white/15" />
+          <div className="flex items-center gap-1.5">
+            <Star className="h-3.5 w-3.5 fill-shadowx-gold text-shadowx-gold" />
+            <span>4.9 / 5 from learners</span>
+          </div>
+        </div>
+
+        {/* Price tag */}
+        <div className="mt-10 inline-flex items-baseline gap-2 text-white/80">
+          <span className="text-xs uppercase tracking-widest text-white/50">Intro pricing</span>
+          <span className="font-display text-2xl font-bold text-shadowx-gold">₹999</span>
+          <span className="text-xs text-white/40 line-through">₹4,999</span>
+        </div>
       </div>
+
+      {/* Bottom fade for seamless card overlap */}
+      <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent to-background" />
     </section>
 
     {/* Two-card chooser */}
