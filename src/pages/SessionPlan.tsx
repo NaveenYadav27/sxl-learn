@@ -335,8 +335,8 @@ function CourseDayPlanView({
   startTime: string;
   setStartTime: (s: string) => void;
 }) {
-  const [planMode, setPlanMode] = useState<"fiveDay" | "twoDay" | "oneDay">("fiveDay");
-  const plan: CourseDayPlan[] = course.plans[planMode];
+  const [planMode, setPlanMode] = useState<"fiveDay" | "twoDay" | "oneDay" | "oneHour">("fiveDay");
+  const plan: CourseDayPlan[] = (course.plans[planMode] ?? course.plans.fiveDay);
   const dayTotals = (d: CourseDayPlan) =>
     d.modules.reduce((s, m) => s + m.theoryMinutes + m.labBudgetMinutes, 0);
   const totalMin = plan.reduce((s, d) => s + dayTotals(d), 0);
