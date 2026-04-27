@@ -6,6 +6,7 @@ import type { LucideIcon } from "lucide-react";
 import { Shield, Wrench, Crosshair } from "lucide-react";
 import { fiveDayPlan as sc900FiveDay, twoDayPlan as sc900TwoDay, oneDayPlan as sc900OneDay, moduleNotes as sc900Modules, type DayPlan, type ModuleNote } from "./curriculum";
 import { itsmFiveDayPlan, itsmTwoDayPlan, itsmOneDayPlan, itsmOneHourPlan, itsmModuleNotes } from "./curriculumItsm";
+import { pen200ModuleNotes, pen200FiveDayPlan, pen200TwoDayPlan, pen200OneDayPlan, pen200OneHourPlan } from "./curriculumPen200";
 
 export type CourseCode = "sc-900" | "cis-itsm" | "pen-200";
 
@@ -75,8 +76,8 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     tagline: "Offensive Security Penetration Testing with Kali Linux (OSCP+).",
     icon: Crosshair,
     accentClass: "text-domain-security",
-    modules: [],
-    plans: { fiveDay: [], twoDay: [], oneDay: [] },
+    modules: pen200ModuleNotes,
+    plans: { fiveDay: pen200FiveDayPlan, twoDay: pen200TwoDayPlan, oneDay: pen200OneDayPlan, oneHour: pen200OneHourPlan },
     examTitle: "OSCP+ Practice Exam",
     examIntroBullets: [
       "Hands-on offensive security curriculum — practice exam coming soon.",

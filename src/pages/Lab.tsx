@@ -14,6 +14,7 @@ import { TutorPanel } from "@/components/TutorPanel";
 import { EntraSimulator } from "@/components/simulators/EntraSimulator";
 import { PortalSimulator } from "@/components/simulators/PortalSimulator";
 import { ServiceNowSimulator } from "@/components/simulators/ServiceNowSimulator";
+import { KaliTerminalSimulator } from "@/components/simulators/KaliTerminalSimulator";
 import { TenantCheckPanel } from "@/components/simulators/TenantCheckPanel";
 import { QuizPanel } from "@/components/QuizPanel";
 import { LabCompletionModal } from "@/components/LabCompletionModal";
@@ -322,6 +323,15 @@ export default function Lab() {
               if (lab.simulator === "entra" && lab.slug === "mfa-conditional-access") {
                 return (
                   <EntraSimulator
+                    expectedAction={currentStep.expected_action}
+                    onValidate={(ok) => { if (ok) markStepDone(); }}
+                  />
+                );
+              }
+              // Kali terminal — PEN-200 / OSCP+ labs
+              if (lab.simulator === "kali-terminal" || lab.simulator === "kali") {
+                return (
+                  <KaliTerminalSimulator
                     expectedAction={currentStep.expected_action}
                     onValidate={(ok) => { if (ok) markStepDone(); }}
                   />
