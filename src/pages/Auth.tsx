@@ -157,7 +157,22 @@ export default function Auth() {
                     <Input id="su-pw" type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} />
                     <p className="text-xs text-muted-foreground mt-1">Min 8 chars. Avoid breached passwords (we check).</p>
                   </div>
-                  <Button type="submit" className="w-full" disabled={busy}>
+                  <div className="flex items-start gap-2 pt-1">
+                    <Checkbox
+                      id="su-terms"
+                      checked={agreed}
+                      onCheckedChange={(v) => setAgreed(v === true)}
+                      className="mt-0.5"
+                    />
+                    <Label htmlFor="su-terms" className="text-xs font-normal leading-snug text-muted-foreground cursor-pointer">
+                      I have read and agree to the{" "}
+                      <Link to="/terms" target="_blank" className="text-primary underline underline-offset-2 hover:text-primary/80">
+                        Terms &amp; Conditions
+                      </Link>
+                      .
+                    </Label>
+                  </div>
+                  <Button type="submit" className="w-full" disabled={busy || !agreed}>
                     {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create account"}
                   </Button>
                 </form>
