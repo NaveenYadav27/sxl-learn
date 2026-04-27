@@ -3,11 +3,11 @@
 // this registry so they stay in sync.
 
 import type { LucideIcon } from "lucide-react";
-import { Shield, Wrench } from "lucide-react";
+import { Shield, Wrench, Crosshair } from "lucide-react";
 import { fiveDayPlan as sc900FiveDay, twoDayPlan as sc900TwoDay, oneDayPlan as sc900OneDay, moduleNotes as sc900Modules, type DayPlan, type ModuleNote } from "./curriculum";
 import { itsmFiveDayPlan, itsmTwoDayPlan, itsmOneDayPlan, itsmOneHourPlan, itsmModuleNotes } from "./curriculumItsm";
 
-export type CourseCode = "sc-900" | "cis-itsm";
+export type CourseCode = "sc-900" | "cis-itsm" | "pen-200";
 
 export type CourseDefinition = {
   code: CourseCode;
