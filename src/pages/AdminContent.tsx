@@ -29,8 +29,7 @@ type Lab = {
   difficulty: string; duration_min: number; is_published: boolean;
   sort_order: number; ms_learn_url: string | null; objective: string | null;
 };
-type CountRow = { lab_id: string; count: number };
-type Badge = { id: string; slug: string; name: string; description: string | null };
+type BadgeRow = { id: string; slug: string; name: string; description: string | null };
 
 const AdminContent = () => {
   const { isAdmin, loading: authLoading } = useAuth();
@@ -39,7 +38,7 @@ const AdminContent = () => {
   const [stepCounts, setStepCounts] = useState<Map<string, number>>(new Map());
   const [questionCounts, setQuestionCounts] = useState<Map<string, number>>(new Map());
   const [attemptCounts, setAttemptCounts] = useState<Map<string, number>>(new Map());
-  const [badges, setBadges] = useState<Badge[]>([]);
+  const [badges, setBadges] = useState<BadgeRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -63,7 +62,7 @@ const AdminContent = () => {
     ]);
     setModules((m ?? []) as Module[]);
     setLabs((l ?? []) as Lab[]);
-    setBadges((bg ?? []) as Badge[]);
+    setBadges((bg ?? []) as BadgeRow[]);
 
     const sMap = new Map<string, number>();
     (steps ?? []).forEach((r: any) => sMap.set(r.lab_id, (sMap.get(r.lab_id) ?? 0) + 1));
