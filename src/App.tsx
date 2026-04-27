@@ -25,6 +25,7 @@ import Module from "./pages/Module.tsx";
 import ServiceNowJourney from "./pages/ServiceNowJourney.tsx";
 import SocProgram from "./pages/SocProgram.tsx";
 import ItsmProgram from "./pages/ItsmProgram.tsx";
+import Pen200Program from "./pages/Pen200Program.tsx";
 import Pending from "./pages/Pending.tsx";
 import AdminEnrollments from "./pages/AdminEnrollments.tsx";
 import AdminLearners from "./pages/AdminLearners.tsx";
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/soc" element={<SocProgram />} />
             <Route path="/itsm" element={<ItsmProgram />} />
+            <Route path="/pen200" element={<Pen200Program />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/pending" element={<Pending />} />
             <Route path="/terms" element={<Terms />} />
