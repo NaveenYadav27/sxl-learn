@@ -24,6 +24,7 @@ const baseLearnerNav = [
   { title: "Session Plan", url: "/session-plan", icon: CalendarDays },
   { title: "My Live Tenant", url: "/tenant", icon: Building2, courseOnly: "sc-900" as const },
   { title: "ServiceNow Journey", url: "/servicenow-journey", icon: Award, courseOnly: "cis-itsm" as const },
+  { title: "PEN-200 Program", url: "/pen200", icon: Crosshair, courseOnly: "pen-200" as const },
   { title: "Practice Exam", url: "/exam", icon: ClipboardCheck },
   { title: "My Progress", url: "/progress", icon: Trophy },
   { title: "License Guide", url: "/licensing", icon: Wallet },
