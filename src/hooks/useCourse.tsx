@@ -42,6 +42,14 @@ export function CourseProvider({ children }: { children: ReactNode }) {
 
 export function useCourse(): CourseContextValue {
   const ctx = useContext(CourseContext);
-  if (!ctx) throw new Error("useCourse must be used within a CourseProvider");
+  if (!ctx) {
+    // Fallback prevents HMR / mount-order edge cases from blank-screening the app.
+    return {
+      courseCode: DEFAULT_COURSE,
+      course: COURSES[DEFAULT_COURSE],
+      setCourseCode: () => {},
+      courses: COURSE_LIST,
+    };
+  }
   return ctx;
 }
