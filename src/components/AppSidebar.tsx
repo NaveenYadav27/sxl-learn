@@ -77,7 +77,7 @@ export function AppSidebar() {
     return () => { cancelled = true; };
   }, [user, pathname, course.code, courseLabSlugs]); // refresh when navigating or switching course
 
-  const isActive = (url: string) => pathname === url || pathname.startsWith(url + "/");
+  const isActive = (url: string) => url === "/" ? pathname === "/" : pathname === url || pathname.startsWith(url + "/");
   const pct = progress.total ? Math.round((progress.done / progress.total) * 100) : 0;
 
   return (
