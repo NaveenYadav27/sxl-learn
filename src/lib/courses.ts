@@ -3,11 +3,11 @@
 // this registry so they stay in sync.
 
 import type { LucideIcon } from "lucide-react";
-import { Shield, Wrench } from "lucide-react";
+import { Shield, Wrench, Crosshair } from "lucide-react";
 import { fiveDayPlan as sc900FiveDay, twoDayPlan as sc900TwoDay, oneDayPlan as sc900OneDay, moduleNotes as sc900Modules, type DayPlan, type ModuleNote } from "./curriculum";
 import { itsmFiveDayPlan, itsmTwoDayPlan, itsmOneDayPlan, itsmOneHourPlan, itsmModuleNotes } from "./curriculumItsm";
 
-export type CourseCode = "sc-900" | "cis-itsm";
+export type CourseCode = "sc-900" | "cis-itsm" | "pen-200";
 
 export type CourseDefinition = {
   code: CourseCode;
@@ -65,6 +65,24 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
       "Detailed review with per-process score and rationale on submit.",
     ],
     licensingFocus: "What you need to access a real ServiceNow instance for CIS-ITSM hands-on practice.",
+  },
+  "pen-200": {
+    code: "pen-200",
+    shortName: "PEN-200",
+    longName: "Penetration Testing with Kali Linux — OSCP+",
+    vendor: "OffSec",
+    certCode: "OSCP+",
+    tagline: "Offensive Security Penetration Testing with Kali Linux (OSCP+).",
+    icon: Crosshair,
+    accentClass: "text-domain-security",
+    modules: [],
+    plans: { fiveDay: [], twoDay: [], oneDay: [] },
+    examTitle: "OSCP+ Practice Exam",
+    examIntroBullets: [
+      "Hands-on offensive security curriculum — practice exam coming soon.",
+      "Visit the PEN-200 program page for the full module map and enrollment.",
+    ],
+    licensingFocus: "What you need to spin up your own pentest lab environment for PEN-200 / OSCP+ practice.",
   },
 };
 
