@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Shield, Cog, ArrowRight, Sparkles, Users, Briefcase, GraduationCap, CheckCircle2, Star } from "lucide-react";
+import { Shield, Cog, Crosshair, ArrowRight, Sparkles, Users, Briefcase, GraduationCap, CheckCircle2, Star } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { ProgramMarketingHeader } from "@/components/ProgramMarketingHeader";
 
@@ -57,7 +57,7 @@ const Index = () => (
 
         {/* Subheadline — refined */}
         <p className="mt-7 text-lg md:text-xl text-white/70 max-w-2xl mx-auto leading-relaxed">
-          Two elite 7-day programs in <span className="text-white font-medium">Cybersecurity</span> and <span className="text-white font-medium">IT Operations</span>. Live training, real labs, interview-ready outcomes.
+          Three elite programs in <span className="text-white font-medium">Cybersecurity</span>, <span className="text-white font-medium">IT Operations</span> and <span className="text-white font-medium">Offensive Security</span>. Live training, real labs, interview-ready outcomes.
         </p>
 
         {/* Trust row */}
@@ -97,7 +97,7 @@ const Index = () => (
 
     {/* Two-card chooser */}
     <section className="container -mt-12 md:-mt-16 pb-20 relative z-10">
-      <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
         {/* SOC */}
         <Card className="overflow-hidden border-border shadow-elevated hover:shadow-glow transition-all hover:-translate-y-1 bg-card">
           <div className="h-1.5 bg-gradient-security" />
@@ -149,6 +149,32 @@ const Index = () => (
             <div className="mt-3 text-center text-xs text-muted-foreground">7 days · ₹999 intro · batch starts this week</div>
           </CardContent>
         </Card>
+
+        {/* PEN-200 */}
+        <Card className="overflow-hidden border-border shadow-elevated hover:shadow-glow transition-all hover:-translate-y-1 bg-card">
+          <div className="h-1.5 bg-gradient-security" />
+          <CardContent className="p-8">
+            <div className="h-12 w-12 rounded-xl bg-gradient-security text-primary-foreground grid place-items-center mb-5">
+              <Crosshair className="h-6 w-6" />
+            </div>
+            <div className="text-xs font-mono uppercase tracking-widest text-shadowx-azure mb-1">Offensive Security</div>
+            <h2 className="font-display text-2xl md:text-3xl font-bold">PEN-200 / OSCP+</h2>
+            <p className="mt-3 text-muted-foreground">
+              Penetration testing with Kali Linux. Build the skills and mindset to pass OSCP+ and work as a pentester.
+            </p>
+            <ul className="mt-5 space-y-2 text-sm">
+              <Bullet>Web, SQLi & client-side attacks</Bullet>
+              <Bullet>Windows / Linux privilege escalation</Bullet>
+              <Bullet>Active Directory attack paths</Bullet>
+            </ul>
+            <Link to="/pen200" className="block mt-7">
+              <Button size="lg" className="w-full gap-2 font-semibold">
+                Join PEN-200 Program <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <div className="mt-3 text-center text-xs text-muted-foreground">OSCP+ aligned · ₹999 intro · batch starts this week</div>
+          </CardContent>
+        </Card>
       </div>
     </section>
 
@@ -173,6 +199,7 @@ const Index = () => (
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <Link to="/soc"><Button size="lg" variant="default">Join SOC Program</Button></Link>
         <Link to="/itsm"><Button size="lg" variant="outline">Join ITSM Program</Button></Link>
+        <Link to="/pen200"><Button size="lg" variant="outline">Join PEN-200 Program</Button></Link>
       </div>
     </section>
 

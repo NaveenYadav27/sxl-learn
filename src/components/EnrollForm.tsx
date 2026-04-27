@@ -8,7 +8,7 @@ import { CheckCircle2, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 interface Props {
-  program: "soc" | "itsm";
+  program: "soc" | "itsm" | "pen200";
   programName: string;
 }
 
