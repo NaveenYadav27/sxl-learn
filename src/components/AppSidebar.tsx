@@ -158,7 +158,7 @@ export function AppSidebar() {
           </SidebarGroup>
         )}
 
-        {isInstructor && (
+        {isInstructor && !isAdmin && (
           <SidebarGroup>
             <SidebarGroupLabel>Instructor</SidebarGroupLabel>
             <SidebarGroupContent>
