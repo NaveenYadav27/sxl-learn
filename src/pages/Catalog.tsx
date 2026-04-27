@@ -118,7 +118,11 @@ export default function Catalog() {
   );
   const filtersActive = search.trim() !== "" || difficulty !== "all" || status !== "all";
 
-  const plan = mode === "5day" ? course.plans.fiveDay : mode === "2day" ? course.plans.twoDay : course.plans.oneDay;
+  const plan =
+    mode === "5day" ? course.plans.fiveDay
+      : mode === "2day" ? course.plans.twoDay
+      : mode === "1day" ? course.plans.oneDay
+      : (course.plans.oneHour ?? course.plans.oneDay);
   // Default expand: first day open
   const defaultDay = plan[0]?.id;
 
