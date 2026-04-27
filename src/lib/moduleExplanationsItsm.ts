@@ -1445,6 +1445,7 @@ const t1: ModuleExplanation = {
       commonMistake: "Trying to configure these in the 1-hour tour — they are pointers only; configuration belongs in Modules 6 & 7.",
       examAngle: "Knowing the application path each surface lives under is part of the platform-fluency baseline.",
     },
+  ],
 
   comparisons: [
     {
