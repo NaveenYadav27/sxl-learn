@@ -19,7 +19,7 @@ export type CourseDefinition = {
   icon: LucideIcon;
   accentClass: string;        // tailwind text class for chips
   modules: ModuleNote[];
-  plans: { fiveDay: DayPlan[]; twoDay: DayPlan[]; oneDay: DayPlan[] };
+  plans: { fiveDay: DayPlan[]; twoDay: DayPlan[]; oneDay: DayPlan[]; oneHour?: DayPlan[] };
   examTitle: string;          // "SC-900 Practice Exam"
   examIntroBullets: string[]; // shown on the exam intro card
   licensingFocus: string;     // banner copy on /licensing
