@@ -390,6 +390,9 @@ function CourseDayPlanView({
             <TabsTrigger value="fiveDay">{course.plans.fiveDay.length}-Day plan</TabsTrigger>
             <TabsTrigger value="twoDay">2-Day plan</TabsTrigger>
             <TabsTrigger value="oneDay">1-Day intensive</TabsTrigger>
+            {course.plans.oneHour ? (
+              <TabsTrigger value="oneHour">1-Hour tool tour</TabsTrigger>
+            ) : null}
           </TabsList>
 
           <TabsContent value={planMode} className="mt-4 space-y-4">
