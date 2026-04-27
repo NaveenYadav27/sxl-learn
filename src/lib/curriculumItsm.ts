@@ -257,3 +257,42 @@ export const itsmOneDayPlan: DayPlan[] = [
     modules: itsmModuleNotes,
   },
 ];
+
+/* ---------- 1-hour tool-based session ---------- */
+// A condensed, hands-on ServiceNow tour. Minimal theory, maximum clicks
+// inside the platform: instance navigation, Incident lifecycle, Catalog
+// request and CMDB lookup. Designed for demos, taster sessions and
+// "tool walkthrough" classes where learners just want to see the product.
+const itsmToolTourModule: ModuleNote = {
+  moduleSlug: "itsm-tool-tour",
+  domain: "concepts",
+  title: "ServiceNow tool tour — Incident, Catalog & CMDB in 60 minutes",
+  code: "ITSM-T1",
+  theoryMinutes: 10,
+  labBudgetMinutes: 50,
+  topics: [
+    "Now Platform navigation: Application Navigator, filter, favourites",
+    "Create & resolve an Incident end-to-end (priority, assignment, resolution code)",
+    "Submit a Service Catalog request and watch the RITM / Catalog Task flow",
+    "Look up a Configuration Item in the CMDB and view its relationships",
+    "Where SLAs, Flow Designer and Service Portal live — quick pointers",
+  ],
+  labSlugs: [
+    "itsm-explore-instance",
+    "itsm-create-incident",
+    "itsm-resolve-and-close",
+    "itsm-fulfil-request",
+    "itsm-relate-cis",
+  ],
+};
+
+export const itsmOneHourPlan: DayPlan[] = [
+  {
+    id: "session1",
+    label: "Session",
+    subtitle: "Tool-based ServiceNow tour (1h)",
+    description:
+      "Hands-on 60-minute walkthrough of a real ServiceNow instance — Incident, Service Catalog and CMDB. Ideal as a taster or pre-bootcamp warm-up.",
+    modules: [itsmToolTourModule],
+  },
+];

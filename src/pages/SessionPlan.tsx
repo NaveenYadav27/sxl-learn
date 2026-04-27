@@ -335,8 +335,8 @@ function CourseDayPlanView({
   startTime: string;
   setStartTime: (s: string) => void;
 }) {
-  const [planMode, setPlanMode] = useState<"fiveDay" | "twoDay" | "oneDay">("fiveDay");
-  const plan: CourseDayPlan[] = course.plans[planMode];
+  const [planMode, setPlanMode] = useState<"fiveDay" | "twoDay" | "oneDay" | "oneHour">("fiveDay");
+  const plan: CourseDayPlan[] = (course.plans[planMode] ?? course.plans.fiveDay);
   const dayTotals = (d: CourseDayPlan) =>
     d.modules.reduce((s, m) => s + m.theoryMinutes + m.labBudgetMinutes, 0);
   const totalMin = plan.reduce((s, d) => s + dayTotals(d), 0);
@@ -390,6 +390,9 @@ function CourseDayPlanView({
             <TabsTrigger value="fiveDay">{course.plans.fiveDay.length}-Day plan</TabsTrigger>
             <TabsTrigger value="twoDay">2-Day plan</TabsTrigger>
             <TabsTrigger value="oneDay">1-Day intensive</TabsTrigger>
+            {course.plans.oneHour ? (
+              <TabsTrigger value="oneHour">1-Hour tool tour</TabsTrigger>
+            ) : null}
           </TabsList>
 
           <TabsContent value={planMode} className="mt-4 space-y-4">

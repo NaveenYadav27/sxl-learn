@@ -74,7 +74,7 @@ export default function Catalog() {
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState<string>("all");
   const [status, setStatus] = useState<string>("all");
-  const [mode, setMode] = useState<"5day" | "2day" | "1day">("5day");
+  const [mode, setMode] = useState<"5day" | "2day" | "1day" | "1hr">("5day");
 
   useEffect(() => {
     (async () => {
@@ -118,7 +118,11 @@ export default function Catalog() {
   );
   const filtersActive = search.trim() !== "" || difficulty !== "all" || status !== "all";
 
-  const plan = mode === "5day" ? course.plans.fiveDay : mode === "2day" ? course.plans.twoDay : course.plans.oneDay;
+  const plan =
+    mode === "5day" ? course.plans.fiveDay
+      : mode === "2day" ? course.plans.twoDay
+      : mode === "1day" ? course.plans.oneDay
+      : (course.plans.oneHour ?? course.plans.oneDay);
   // Default expand: first day open
   const defaultDay = plan[0]?.id;
 
@@ -159,6 +163,9 @@ export default function Catalog() {
                 <TabsTrigger value="5day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />{course.plans.fiveDay.length} days × 2h</TabsTrigger>
                 <TabsTrigger value="2day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />2 days × 4h</TabsTrigger>
                 <TabsTrigger value="1day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />1-day intensive</TabsTrigger>
+                {course.plans.oneHour ? (
+                  <TabsTrigger value="1hr" className="gap-1.5"><Clock className="h-3.5 w-3.5" />1-hour tool tour</TabsTrigger>
+                ) : null}
               </TabsList>
             </Tabs>
 
