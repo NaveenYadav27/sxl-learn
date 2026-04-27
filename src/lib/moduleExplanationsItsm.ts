@@ -1376,7 +1376,7 @@ const t1: ModuleExplanation = {
   how: {
     heading: "How is the hour structured?",
     body:
-      "10 min — orientation: what is a record, table, form, list. 15 min — Incident: create, prioritise, resolve. 15 min — Service Catalog: order an item, watch the request flow. 10 min — CMDB: look up a server CI and view its relationship graph. 10 min — wrap-up: where to go next (Modules 1-8).",
+      "10 min — Topic 1: Application Navigator, filter & favourites. 15 min — Topic 2: create an Incident with priority + assignment, then resolve with a resolution code. 15 min — Topic 3: submit a Catalog request and follow REQ → RITM → Catalog Task. 10 min — Topic 4: look up a CI in the CMDB and view its relationship map. 10 min — Topic 5: guided pointers to where SLAs, Flow Designer and Service Portal live (no configuration, just orientation).",
   },
 
   conceptDeepDives: [
