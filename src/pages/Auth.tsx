@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
@@ -20,6 +21,7 @@ export default function Auth() {
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [busy, setBusy] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
   useEffect(() => {
     if (params.get("mode") === "signup") setMode("signup");
@@ -40,8 +42,12 @@ export default function Auth() {
 
   async function handleSignUp(e: React.FormEvent) {
     e.preventDefault();
+    if (!agreed) {
+      toast.error("Please accept the Terms & Conditions to continue.");
+      return;
+    }
     setBusy(true);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -49,19 +55,31 @@ export default function Auth() {
         data: { display_name: displayName || email.split("@")[0] },
       },
     });
-    setBusy(false);
     if (error) {
+      setBusy(false);
       if (error.message.toLowerCase().includes("already registered")) {
         toast.error("That email is already registered. Try signing in.");
         setMode("signin");
       } else toast.error(error.message);
       return;
     }
+    // Record consent timestamp on the user's profile (best-effort)
+    if (data.user?.id) {
+      await supabase
+        .from("profiles")
+        .update({ terms_accepted_at: new Date().toISOString() })
+        .eq("id", data.user.id);
+    }
+    setBusy(false);
     toast.success("Account created — you're in!");
     navigate("/dashboard");
   }
 
   async function handleGoogle() {
+    if (!agreed) {
+      toast.error("Please accept the Terms & Conditions before continuing with Google.");
+      return;
+    }
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: `${window.location.origin}/dashboard` },
@@ -139,7 +157,22 @@ export default function Auth() {
                     <Input id="su-pw" type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} />
                     <p className="text-xs text-muted-foreground mt-1">Min 8 chars. Avoid breached passwords (we check).</p>
                   </div>
-                  <Button type="submit" className="w-full" disabled={busy}>
+                  <div className="flex items-start gap-2 pt-1">
+                    <Checkbox
+                      id="su-terms"
+                      checked={agreed}
+                      onCheckedChange={(v) => setAgreed(v === true)}
+                      className="mt-0.5"
+                    />
+                    <Label htmlFor="su-terms" className="text-xs font-normal leading-snug text-muted-foreground cursor-pointer">
+                      I have read and agree to the{" "}
+                      <Link to="/terms" target="_blank" className="text-primary underline underline-offset-2 hover:text-primary/80">
+                        Terms &amp; Conditions
+                      </Link>
+                      .
+                    </Label>
+                  </div>
+                  <Button type="submit" className="w-full" disabled={busy || !agreed}>
                     {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create account"}
                   </Button>
                 </form>
