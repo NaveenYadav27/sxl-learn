@@ -18,6 +18,7 @@ import { Logo } from "@/components/Logo";
 import { CourseSwitcher } from "@/components/CourseSwitcher";
 
 const baseLearnerNav = [
+  { title: "Home", url: "/", icon: Home },
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Course Catalog", url: "/catalog", icon: BookOpen },
   { title: "Session Plan", url: "/session-plan", icon: CalendarDays },
