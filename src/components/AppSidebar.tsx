@@ -5,7 +5,7 @@ import {
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, SidebarFooter, useSidebar,
 } from "@/components/ui/sidebar";
 import {
-  LayoutDashboard, BookOpen, Users, Shield, Lock, Gavel, Trophy,
+  Home, LayoutDashboard, BookOpen, Users, Shield, Lock, Gavel, Trophy,
   Settings, GraduationCap, Network, ClipboardCheck, Flame, Zap, Wallet, Building2, CalendarDays, Award,
 } from "lucide-react";
 import { getXpStats, type XpStats } from "@/lib/xp";
