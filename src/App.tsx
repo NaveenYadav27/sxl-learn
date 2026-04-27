@@ -20,6 +20,7 @@ import Tenant from "./pages/Tenant.tsx";
 import Defender from "./pages/Defender.tsx";
 import Purview from "./pages/Purview.tsx";
 import SessionPlan from "./pages/SessionPlan.tsx";
+import SessionPlanDuration from "./pages/SessionPlanDuration.tsx";
 import Module from "./pages/Module.tsx";
 import ServiceNowJourney from "./pages/ServiceNowJourney.tsx";
 import SocProgram from "./pages/SocProgram.tsx";
@@ -58,6 +59,7 @@ const App = () => (
             <Route path="/progress" element={<ProgressPage />} />
             <Route path="/exam" element={<Exam />} />
             <Route path="/session-plan" element={<SessionPlan />} />
+            <Route path="/session-plan/:duration" element={<SessionPlanDuration />} />
             <Route path="/module/:slug" element={<Module />} />
             <Route path="/defender" element={<Defender />} />
             <Route path="/portal/:sim" element={<PortalSandbox />} />
