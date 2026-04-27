@@ -1324,7 +1324,197 @@ const m8: ModuleExplanation = {
   ],
 };
 
-export const itsmModuleExplanations: ModuleExplanation[] = [m1, m2, m3, m4, m5, m6, m7, m8];
+/* ============================================================== */
+/* T1 — 1-HOUR SERVICENOW TOOL TOUR                                */
+/* ============================================================== */
+const t1: ModuleExplanation = {
+  moduleSlug: "itsm-tool-tour",
+  tagline: "60 minutes inside a real ServiceNow instance — Incident, Catalog and CMDB without the theory.",
+  overview:
+    "The Tool Tour is a single guided session that opens a real Personal Developer Instance (PDI) and walks you through the four most-used surfaces of the Now Platform: navigation, the Incident form, a Service Catalog request and a CMDB CI lookup. There is almost no theory — every minute is spent clicking, typing and watching state change. By the end you can confidently demo ServiceNow ITSM to a colleague, manager or interviewer even if you have never seen the platform before.",
+  whyItMatters:
+    "Most learners freeze the first time they see the ServiceNow UI — there are dozens of menus, multiple lists, weird URLs and forms with 50+ fields. This session removes that fear in one hour. Once you have actually created INC0010001 and watched it move from New → In Progress → Resolved, the rest of the curriculum becomes 'I have seen this before, I just need the deeper why.'",
+
+  what: {
+    heading: "What is the Tool Tour?",
+    body:
+      "A condensed, hands-on walkthrough — 10 minutes of orientation followed by 50 minutes of guided clicks across five labs. It is deliberately not exam prep; it is product familiarity.",
+    bullets: [
+      "Application Navigator + filter + favourites",
+      "Create, work and resolve an Incident end-to-end",
+      "Submit a Catalog request and follow RITM → Catalog Task",
+      "Find a CI in the CMDB and view its relationships",
+      "Pointers to where SLAs, Flow Designer and Service Portal live",
+    ],
+  },
+  why: {
+    heading: "Why a 1-hour format?",
+    body:
+      "Attention spans for product demos peak around 60 minutes. This session is sized to fit a lunch break, a sales taster, a discovery call or a 'try before you buy' for the full bootcamp. Every minute earns its keep.",
+  },
+  who: {
+    heading: "Who should take it?",
+    body:
+      "Anyone who needs to see ServiceNow without committing to a full week. Particularly useful for managers approving training spend, recruiters screening candidates, ITIL-certified people new to ServiceNow, and bootcamp learners who want a taste before day 1.",
+    bullets: [
+      "Career switchers evaluating CIS-ITSM as a path",
+      "ITIL practitioners moving to a ServiceNow shop",
+      "Hiring managers deciding what 'ServiceNow experience' means",
+      "Bootcamp candidates wanting a no-risk preview",
+    ],
+  },
+  when: {
+    heading: "When to run it?",
+    body:
+      "Best as a pre-bootcamp warm-up (the day before week 1), as a standalone taster, or as the last hour of a longer Now Platform sales discovery. It assumes zero prior knowledge.",
+  },
+  where: {
+    heading: "Where does it run?",
+    body:
+      "Inside any free ServiceNow Personal Developer Instance (PDI). No ITSM Pro, no paid licence, no install — just sign in to developer.servicenow.com, request an instance and follow the lab cards.",
+  },
+  how: {
+    heading: "How is the hour structured?",
+    body:
+      "10 min — orientation: what is a record, table, form, list. 15 min — Incident: create, prioritise, resolve. 15 min — Service Catalog: order an item, watch the request flow. 10 min — CMDB: look up a server CI and view its relationship graph. 10 min — wrap-up: where to go next (Modules 1-8).",
+  },
+
+  conceptDeepDives: [
+    {
+      id: "app-nav",
+      name: "Application Navigator",
+      oneLine: "The left-hand sidebar that opens every module in the platform.",
+      formal: "A type-ahead navigation pane that lists every Application and its child Modules the current user has access to.",
+      plainEnglish: "Hit the filter box, type 'inc', press enter — you are looking at all incidents.",
+      analogy: "A super-fast 'spotlight search' for the entire ServiceNow UI.",
+      howItWorks: "Each entry corresponds to a sys_app_application or sys_app_module record. ACLs hide modules you cannot use.",
+      microsoftMapping: "Add stars to favourite modules — they appear in the Favourites tab and survive sessions.",
+      whenToUse: "Always. Stop hunting through menus; type and go.",
+      commonMistake: "Bookmarking instance URLs instead of starring modules — links break across instances.",
+      examAngle: "Not directly examined, but knowing the table behind a module is.",
+    },
+    {
+      id: "incident-lifecycle",
+      name: "Incident lifecycle in 5 minutes",
+      oneLine: "New → In Progress → On Hold → Resolved → Closed.",
+      formal: "A state machine driven by the incident.state field, with side effects (SLA timers, notifications, assignment) triggered by business rules and Flow Designer.",
+      plainEnglish: "You create the ticket, work it, pause it if you need info, resolve it with a code, and the system auto-closes after a few days.",
+      analogy: "Like a help-desk email thread, but with structured fields and timers attached.",
+      howItWorks: "State drop-down updates incident.state. Resolution code + notes are mandatory before resolved. Auto-close runs as a scheduled job.",
+      microsoftMapping: "Priority is calculated from impact × urgency the moment you save.",
+      whenToUse: "Every break/fix interaction with IT.",
+      commonMistake: "Skipping the resolution code — most reports break without it.",
+      examAngle: "Order of states and which fields are mandatory at each transition.",
+    },
+    {
+      id: "catalog-flow",
+      name: "Service Catalog request flow",
+      oneLine: "Order → REQ → RITM → Catalog Task → fulfilment.",
+      formal: "Submitting a catalog item creates one sc_request (REQ), one sc_req_item per ordered item (RITM) and N sc_task records driven by the workflow.",
+      plainEnglish: "One basket (REQ) holds many items (RITM); each item generates the work tickets (TASK) that fulfil it.",
+      analogy: "Amazon: an order contains line items, each line item gets picked, packed and shipped separately.",
+      howItWorks: "Catalog item triggers a workflow / flow. Tasks are assigned to fulfilment groups. RITM closes when all tasks close. REQ closes when all RITMs close.",
+      microsoftMapping: "Look at the Stage column on RITM to see fulfilment progress at a glance.",
+      whenToUse: "For predictable, repeatable requests (laptop, access, software).",
+      commonMistake: "Confusing REQ, RITM and TASK numbers — they all start with RITM/REQ/SCTASK and live on different tables.",
+      examAngle: "Which table holds which number prefix is a frequent question.",
+    },
+    {
+      id: "cmdb-ci",
+      name: "CMDB Configuration Items",
+      oneLine: "A record on cmdb_ci that represents a real-world thing IT cares about.",
+      formal: "cmdb_ci is the base class; subclasses (cmdb_ci_server, cmdb_ci_app_server, cmdb_ci_business_app) inherit common fields.",
+      plainEnglish: "Every server, laptop, app and database is a row in the CMDB.",
+      analogy: "An asset register, but with relationships — 'this app runs on this server, which lives in this rack'.",
+      howItWorks: "Discovery, Service Mapping or manual entry populates CIs. Relationships (cmdb_rel_ci) link them.",
+      microsoftMapping: "On any task record, the Configuration Item field links straight to the CMDB.",
+      whenToUse: "To answer 'what is impacted?' during incidents and changes.",
+      commonMistake: "Letting the CMDB rot — stale data is worse than no data.",
+      examAngle: "CMDB relationships and CSDM appear repeatedly across CIS-ITSM.",
+    },
+  ],
+
+  comparisons: [
+    {
+      title: "What you see in the 1-hour vs the full bootcamp",
+      columns: ["Topic", "1-hour tour", "Full bootcamp"],
+      rows: [
+        ["Incident", "Create + resolve once", "Priority matrix, MIM, parent/child, SLAs"],
+        ["Catalog", "Order one item", "Build catalog items, variables, workflows"],
+        ["CMDB", "Find a CI, view relations", "Discovery, Service Mapping, CSDM"],
+        ["SLAs / Flow / Portal", "Pointer only", "Full configuration"],
+      ],
+      bottomLine: "The tour gives you the map; the bootcamp gives you the keys to every room.",
+    },
+  ],
+
+  realExamples: [
+    {
+      title: "Interview prep in 60 minutes",
+      scenario: "Candidate has ITIL v4 Foundation but has never opened ServiceNow. Interview is tomorrow.",
+      outcome: "After the tour they can talk through the Incident form, explain RITM vs REQ, and demo a CI lookup — enough to pass a screening round.",
+    },
+    {
+      title: "Manager-approved bootcamp sign-off",
+      scenario: "A team lead is unsure whether to fund the full CIS-ITSM bootcamp for their team.",
+      outcome: "Running the 1-hour tour with the team gives the manager a clear before/after view and converts hesitation into approval.",
+    },
+  ],
+
+  keyTerms: [
+    { term: "PDI", definition: "Personal Developer Instance — a free, full ServiceNow instance for learning.", example: "dev123456.service-now.com" },
+    { term: "Application Navigator", definition: "The left-hand searchable menu of every module.", example: "Type 'incident' → Incident > All" },
+    { term: "Record", definition: "One row on a table, e.g. one incident.", example: "INC0010001" },
+    { term: "RITM", definition: "Requested Item — one line of a catalog REQ.", example: "RITM0010005 for a new laptop" },
+    { term: "CI", definition: "Configuration Item — a row in the CMDB.", example: "Server APP-DB-PROD-01" },
+  ],
+
+  commonPitfalls: [
+    "Treating the tour as exam prep — it is product familiarity, not depth.",
+    "Skipping the orientation 10 minutes — without it, the rest is just clicking.",
+    "Using a hibernated PDI — wake it up first or labs will time out.",
+    "Trying to memorise field names instead of understanding the form pattern.",
+  ],
+
+  faqs: [
+    { q: "Do I need a paid ServiceNow licence?", a: "No. A free Personal Developer Instance (PDI) is everything you need." },
+    { q: "Will I be exam-ready after this?", a: "No — this is a tool tour, not exam prep. It is the pre-step before Modules 1-8." },
+    { q: "Can I run it without an instructor?", a: "Yes. The labs are self-guided; the explanation page is your map." },
+  ],
+
+  selfCheck: [
+    {
+      question: "What is the relationship between REQ, RITM and Catalog Task?",
+      options: [
+        "REQ holds RITMs; each RITM generates Catalog Tasks for fulfilment.",
+        "Catalog Task holds RITMs; RITMs roll up into one REQ.",
+        "REQ, RITM and Task are the same record viewed three ways.",
+        "RITM is the parent; REQ and Task are its children.",
+      ],
+      correctIndex: 0,
+      explanation: "REQ is the basket, RITM is each ordered item, and Catalog Tasks are the work needed to fulfil each RITM.",
+    },
+    {
+      question: "Which surface should you use to navigate quickly between modules?",
+      options: ["Application Navigator filter", "Browser URL bar", "Email links", "System Settings"],
+      correctIndex: 0,
+      explanation: "Type-ahead in the Application Navigator is the fastest way to reach any module you have access to.",
+    },
+  ],
+
+  examTips: [
+    "Treat this tour as orientation — do not expect direct exam questions from it.",
+    "Take screenshots as you go; you will reuse them during Modules 1-8.",
+    "After the tour, jump straight into Module 1 (Foundations) while the UI is fresh.",
+  ],
+
+  furtherReading: [
+    { label: "ServiceNow Developer — get a free PDI", url: "https://developer.servicenow.com/" },
+    { label: "Now Learning — free product fundamentals", url: "https://nowlearning.servicenow.com/" },
+  ],
+};
+
+export const itsmModuleExplanations: ModuleExplanation[] = [m1, m2, m3, m4, m5, m6, m7, m8, t1];
 
 export function getItsmModuleExplanation(slug: string): ModuleExplanation | undefined {
   return itsmModuleExplanations.find((m) => m.moduleSlug === slug);
