@@ -42,8 +42,12 @@ export default function Auth() {
 
   async function handleSignUp(e: React.FormEvent) {
     e.preventDefault();
+    if (!agreed) {
+      toast.error("Please accept the Terms & Conditions to continue.");
+      return;
+    }
     setBusy(true);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -51,19 +55,31 @@ export default function Auth() {
         data: { display_name: displayName || email.split("@")[0] },
       },
     });
-    setBusy(false);
     if (error) {
+      setBusy(false);
       if (error.message.toLowerCase().includes("already registered")) {
         toast.error("That email is already registered. Try signing in.");
         setMode("signin");
       } else toast.error(error.message);
       return;
     }
+    // Record consent timestamp on the user's profile (best-effort)
+    if (data.user?.id) {
+      await supabase
+        .from("profiles")
+        .update({ terms_accepted_at: new Date().toISOString() })
+        .eq("id", data.user.id);
+    }
+    setBusy(false);
     toast.success("Account created — you're in!");
     navigate("/dashboard");
   }
 
   async function handleGoogle() {
+    if (!agreed) {
+      toast.error("Please accept the Terms & Conditions before continuing with Google.");
+      return;
+    }
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: { redirectTo: `${window.location.origin}/dashboard` },
