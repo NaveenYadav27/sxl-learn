@@ -127,7 +127,7 @@ const AdminLearnerDetail = () => {
         <Breadcrumb
           items={[
             { label: "Admin" },
-            { label: "Learners", href: "/admin/learners" },
+            { label: "Learners", to: "/admin/learners" },
             { label: profile?.display_name || "Learner" },
           ]}
         />
