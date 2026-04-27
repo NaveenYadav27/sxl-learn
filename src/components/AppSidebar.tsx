@@ -37,9 +37,12 @@ const sc900PortalNav = [
 
 const instructorNav = [
   { title: "Cohort", url: "/instructor/cohort", icon: GraduationCap },
+  { title: "Learners", url: "/admin/learners", icon: Users },
 ];
 
 const adminNav = [
+  { title: "Learners", url: "/admin/learners", icon: Users },
+  { title: "Enrollments", url: "/admin/enrollments", icon: ClipboardCheck },
   { title: "Manage Content", url: "/admin/content", icon: Settings },
 ];
 

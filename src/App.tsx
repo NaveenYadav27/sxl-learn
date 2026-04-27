@@ -26,6 +26,8 @@ import SocProgram from "./pages/SocProgram.tsx";
 import ItsmProgram from "./pages/ItsmProgram.tsx";
 import Pending from "./pages/Pending.tsx";
 import AdminEnrollments from "./pages/AdminEnrollments.tsx";
+import AdminLearners from "./pages/AdminLearners.tsx";
+import AdminLearnerDetail from "./pages/AdminLearnerDetail.tsx";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +46,8 @@ const App = () => (
             <Route path="/auth" element={<Auth />} />
             <Route path="/pending" element={<Pending />} />
             <Route path="/admin/enrollments" element={<AdminEnrollments />} />
+            <Route path="/admin/learners" element={<AdminLearners />} />
+            <Route path="/admin/learners/:userId" element={<AdminLearnerDetail />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/catalog" element={<Catalog />} />
             <Route path="/lab/:slug" element={<Lab />} />
