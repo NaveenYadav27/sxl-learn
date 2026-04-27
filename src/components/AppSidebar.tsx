@@ -5,7 +5,7 @@ import {
   SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarHeader, SidebarFooter, useSidebar,
 } from "@/components/ui/sidebar";
 import {
-  LayoutDashboard, BookOpen, Users, Shield, Lock, Gavel, Trophy,
+  Home, LayoutDashboard, BookOpen, Users, Shield, Lock, Gavel, Trophy,
   Settings, GraduationCap, Network, ClipboardCheck, Flame, Zap, Wallet, Building2, CalendarDays, Award,
 } from "lucide-react";
 import { getXpStats, type XpStats } from "@/lib/xp";
@@ -18,6 +18,7 @@ import { Logo } from "@/components/Logo";
 import { CourseSwitcher } from "@/components/CourseSwitcher";
 
 const baseLearnerNav = [
+  { title: "Home", url: "/", icon: Home },
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Course Catalog", url: "/catalog", icon: BookOpen },
   { title: "Session Plan", url: "/session-plan", icon: CalendarDays },
@@ -76,7 +77,7 @@ export function AppSidebar() {
     return () => { cancelled = true; };
   }, [user, pathname, course.code, courseLabSlugs]); // refresh when navigating or switching course
 
-  const isActive = (url: string) => pathname === url || pathname.startsWith(url + "/");
+  const isActive = (url: string) => url === "/" ? pathname === "/" : pathname === url || pathname.startsWith(url + "/");
   const pct = progress.total ? Math.round((progress.done / progress.total) * 100) : 0;
 
   return (
