@@ -22,6 +22,10 @@ import Purview from "./pages/Purview.tsx";
 import SessionPlan from "./pages/SessionPlan.tsx";
 import Module from "./pages/Module.tsx";
 import ServiceNowJourney from "./pages/ServiceNowJourney.tsx";
+import SocProgram from "./pages/SocProgram.tsx";
+import ItsmProgram from "./pages/ItsmProgram.tsx";
+import Pending from "./pages/Pending.tsx";
+import AdminEnrollments from "./pages/AdminEnrollments.tsx";
 
 const queryClient = new QueryClient();
 
@@ -35,7 +39,11 @@ const App = () => (
           <CourseProvider>
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/soc" element={<SocProgram />} />
+            <Route path="/itsm" element={<ItsmProgram />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/pending" element={<Pending />} />
+            <Route path="/admin/enrollments" element={<AdminEnrollments />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/catalog" element={<Catalog />} />
             <Route path="/lab/:slug" element={<Lab />} />
