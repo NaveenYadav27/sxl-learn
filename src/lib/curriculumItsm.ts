@@ -294,9 +294,9 @@ export const itsmOneHourPlan: DayPlan[] = [
   {
     id: "session1",
     label: "Session",
-    subtitle: "Tool-based ServiceNow tour (1h)",
+    subtitle: "Tool-based ServiceNow tour — 5 topics in 1h",
     description:
-      "Hands-on 60-minute walkthrough of a real ServiceNow instance — Incident, Service Catalog and CMDB. Ideal as a taster or pre-bootcamp warm-up.",
+      "Hands-on 60-minute walkthrough strictly focused on 5 topics: Application Navigator, Incident end-to-end, Service Catalog request flow, CMDB CI lookup, and where SLAs / Flow Designer / Service Portal live.",
     modules: [itsmToolTourModule],
   },
 ];
