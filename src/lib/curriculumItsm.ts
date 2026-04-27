@@ -266,23 +266,27 @@ export const itsmOneDayPlan: DayPlan[] = [
 const itsmToolTourModule: ModuleNote = {
   moduleSlug: "itsm-tool-tour",
   domain: "concepts",
-  title: "ServiceNow tool tour — Incident, Catalog & CMDB in 60 minutes",
+  title: "ServiceNow tool tour — 5 topics in 60 minutes",
   code: "ITSM-T1",
   theoryMinutes: 10,
   labBudgetMinutes: 50,
+  // EXACT 5-topic syllabus — do not add or reorder.
   topics: [
-    "Now Platform navigation: Application Navigator, filter, favourites",
-    "Create & resolve an Incident end-to-end (priority, assignment, resolution code)",
-    "Submit a Service Catalog request and watch the RITM / Catalog Task flow",
-    "Look up a Configuration Item in the CMDB and view its relationships",
-    "Where SLAs, Flow Designer and Service Portal live — quick pointers",
+    "1. ServiceNow Platform navigation: Application Navigator, filter, favourites",
+    "2. Create & resolve an Incident end-to-end (priority, assignment, resolution code)",
+    "3. Submit a Service Catalog request and watch the RITM / Catalog Task flow",
+    "4. Look up a Configuration Item in the CMDB and view its relationships",
+    "5. Where SLAs, Flow Designer and Service Portal live — quick pointers",
   ],
+  // One lab per topic, in the same order as the topics above.
   labSlugs: [
-    "itsm-explore-instance",
-    "itsm-create-incident",
-    "itsm-resolve-and-close",
-    "itsm-fulfil-request",
-    "itsm-relate-cis",
+    "itsm-explore-instance", // Topic 1 — navigation, filter, favourites
+    "itsm-create-incident",  // Topic 2a — create with priority & assignment
+    "itsm-resolve-and-close",// Topic 2b — resolve with resolution code
+    "itsm-fulfil-request",   // Topic 3 — Catalog request → RITM → Task
+    "itsm-relate-cis",       // Topic 4 — CI lookup & relationships
+    // Topic 5 is a guided pointer tour (no dedicated lab) — covered in the
+    // module explanation's "where things live" deep dive.
   ],
 };
 
@@ -290,9 +294,9 @@ export const itsmOneHourPlan: DayPlan[] = [
   {
     id: "session1",
     label: "Session",
-    subtitle: "Tool-based ServiceNow tour (1h)",
+    subtitle: "Tool-based ServiceNow tour — 5 topics in 1h",
     description:
-      "Hands-on 60-minute walkthrough of a real ServiceNow instance — Incident, Service Catalog and CMDB. Ideal as a taster or pre-bootcamp warm-up.",
+      "Hands-on 60-minute walkthrough strictly focused on 5 topics: Application Navigator, Incident end-to-end, Service Catalog request flow, CMDB CI lookup, and where SLAs / Flow Designer / Service Portal live.",
     modules: [itsmToolTourModule],
   },
 ];

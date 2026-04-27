@@ -1376,7 +1376,7 @@ const t1: ModuleExplanation = {
   how: {
     heading: "How is the hour structured?",
     body:
-      "10 min — orientation: what is a record, table, form, list. 15 min — Incident: create, prioritise, resolve. 15 min — Service Catalog: order an item, watch the request flow. 10 min — CMDB: look up a server CI and view its relationship graph. 10 min — wrap-up: where to go next (Modules 1-8).",
+      "10 min — Topic 1: Application Navigator, filter & favourites. 15 min — Topic 2: create an Incident with priority + assignment, then resolve with a resolution code. 15 min — Topic 3: submit a Catalog request and follow REQ → RITM → Catalog Task. 10 min — Topic 4: look up a CI in the CMDB and view its relationship map. 10 min — Topic 5: guided pointers to where SLAs, Flow Designer and Service Portal live (no configuration, just orientation).",
   },
 
   conceptDeepDives: [
@@ -1431,6 +1431,19 @@ const t1: ModuleExplanation = {
       whenToUse: "To answer 'what is impacted?' during incidents and changes.",
       commonMistake: "Letting the CMDB rot — stale data is worse than no data.",
       examAngle: "CMDB relationships and CSDM appear repeatedly across CIS-ITSM.",
+    },
+    {
+      id: "where-things-live",
+      name: "Where SLAs, Flow Designer & Service Portal live",
+      oneLine: "Three pointers so you know what to open when you go deeper.",
+      formal: "SLA Definitions live under Service Level Management > SLA > SLA Definitions. Flow Designer lives under Process Automation > Flow Designer. Service Portal lives under Service Portal > Service Portal Configuration.",
+      plainEnglish: "Type 'sla def' for SLAs, 'flow designer' for automation, 'service portal' for the end-user UI — all from the Application Navigator filter.",
+      analogy: "Think of these as three doors in the same building: timers (SLA), robots (Flow), and the front desk (Portal).",
+      howItWorks: "Each is a separate application but reads/writes against the same task tables (incident, sc_request, sc_req_item, sc_task) you toured earlier.",
+      microsoftMapping: "Star each module on first visit so they appear under Favourites for the rest of the bootcamp.",
+      whenToUse: "Whenever a learner asks 'where do I configure X?' — open the navigator, type, star, move on.",
+      commonMistake: "Trying to configure these in the 1-hour tour — they are pointers only; configuration belongs in Modules 6 & 7.",
+      examAngle: "Knowing the application path each surface lives under is part of the platform-fluency baseline.",
     },
   ],
 
