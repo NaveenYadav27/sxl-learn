@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Shield, Cog, Crosshair, ArrowRight, Sparkles, Users, Briefcase, GraduationCap, CheckCircle2, Star } from "lucide-react";
+import { Shield, Cog, Crosshair, Radar, ArrowRight, Sparkles, Users, Briefcase, GraduationCap, CheckCircle2, Star } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { ProgramMarketingHeader } from "@/components/ProgramMarketingHeader";
 
@@ -97,7 +97,7 @@ const Index = () => (
 
     {/* Two-card chooser */}
     <section className="container -mt-12 md:-mt-16 pb-20 relative z-10">
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
         {/* SOC */}
         <Card className="overflow-hidden border-border shadow-elevated hover:shadow-glow transition-all hover:-translate-y-1 bg-card">
           <div className="h-1.5 bg-gradient-security" />
@@ -175,6 +175,32 @@ const Index = () => (
             <div className="mt-3 text-center text-xs text-muted-foreground">OSCP+ aligned · ₹999 intro · batch starts this week</div>
           </CardContent>
         </Card>
+
+        {/* CSA */}
+        <Card className="overflow-hidden border-border shadow-elevated hover:shadow-glow transition-all hover:-translate-y-1 bg-card">
+          <div className="h-1.5 bg-gradient-security" />
+          <CardContent className="p-8">
+            <div className="h-12 w-12 rounded-xl bg-gradient-security text-primary-foreground grid place-items-center mb-5">
+              <Radar className="h-6 w-6" />
+            </div>
+            <div className="text-xs font-mono uppercase tracking-widest text-shadowx-azure mb-1">Blue Team · Advanced</div>
+            <h2 className="font-display text-2xl md:text-3xl font-bold">Certified SOC Analyst (CSA)</h2>
+            <p className="mt-3 text-muted-foreground">
+              Deep Blue Team training across SIEM, threat hunting, IR, forensics and cloud SOC — aligned to the EC-Council CSA syllabus.
+            </p>
+            <ul className="mt-5 space-y-2 text-sm">
+              <Bullet>SIEM, log management & correlation</Bullet>
+              <Bullet>Threat intel, hunting & IR playbooks</Bullet>
+              <Bullet>Forensics & cloud SOC (AWS / Azure / GCP)</Bullet>
+            </ul>
+            <Link to="/csa" className="block mt-7">
+              <Button size="lg" className="w-full gap-2 font-semibold">
+                Join CSA Program <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <div className="mt-3 text-center text-xs text-muted-foreground">8 modules · ₹999 intro · batch starts this week</div>
+          </CardContent>
+        </Card>
       </div>
     </section>
 
@@ -200,6 +226,7 @@ const Index = () => (
         <Link to="/soc"><Button size="lg" variant="default">Join SOC Program</Button></Link>
         <Link to="/itsm"><Button size="lg" variant="outline">Join ITSM Program</Button></Link>
         <Link to="/pen200"><Button size="lg" variant="outline">Join PEN-200 Program</Button></Link>
+        <Link to="/csa"><Button size="lg" variant="outline">Join CSA Program</Button></Link>
       </div>
     </section>
 
