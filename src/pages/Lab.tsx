@@ -21,7 +21,7 @@ import { LabCompletionModal } from "@/components/LabCompletionModal";
 import { PdiDeepLink } from "@/components/PdiDeepLink";
 import { awardBadgesForUser } from "@/lib/badges";
 import {
-  CheckCircle2, Circle, ChevronRight, Clock, Target, Sparkles, Trophy, ArrowLeft, Lightbulb, ExternalLink, BookOpen,
+  CheckCircle2, Circle, ChevronRight, Clock, Target, Sparkles, Trophy, ArrowLeft, Lightbulb, ExternalLink, BookOpen, Maximize2,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -166,6 +166,17 @@ export default function Lab() {
         <div className="flex items-center gap-2 text-xs">
           <Badge variant="outline"><Clock className="h-3 w-3 mr-1" />{lab.duration_min} min</Badge>
           <Badge variant="outline"><Trophy className="h-3 w-3 mr-1" />{attempt?.score ?? 0} pts</Badge>
+          <a
+            href={`/lab/${lab.slug}/sim?step=${currentIdx}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Open simulator in a new tab (full screen)"
+          >
+            <Button variant="outline" size="sm" className="h-7 gap-1">
+              <Maximize2 className="h-3 w-3" /> Full screen
+              <ExternalLink className="h-3 w-3" />
+            </Button>
+          </a>
         </div>
       }
     >
