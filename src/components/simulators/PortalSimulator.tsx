@@ -655,13 +655,19 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
       </Card>
     ),
     assets: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Devices & Identities</h3>
-        <div className="grid grid-cols-3 gap-2 text-xs">
-          <Stat label="Onboarded devices" value="847" />
-          <Stat label="At risk" value="12" tone="text-destructive" />
-          <Stat label="Compromised users" value="3" tone="text-warning" />
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_100px_120px_80px]">
+          <span>Device / User</span><span>OS / Type</span><span>Risk</span><span>Last seen</span><span>Exposure</span>
         </div>
+        {DEVICES.map((d) => (
+          <div key={d.name} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_100px_120px_80px] border-t border-border hover:bg-muted/30">
+            <span className="truncate font-medium">{d.name}</span>
+            <span className="text-muted-foreground">{d.os}</span>
+            <span><Badge variant={d.risk === "High" ? "destructive" : d.risk === "Medium" ? "secondary" : "outline"}>{d.risk}</Badge></span>
+            <span className="text-muted-foreground">{d.seen}</span>
+            <span className={d.exp > 60 ? "text-destructive" : d.exp > 30 ? "text-warning" : ""}>{d.exp}</span>
+          </div>
+        ))}
       </Card>
     ),
     "secure-score": () => (
@@ -683,52 +689,100 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
     ),
     recommendations: () => (
       <Card className="overflow-hidden">
-        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_100px_100px]">
-          <span>Recommendation</span><span>Severity</span><span>Score impact</span>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_100px_100px_120px]">
+          <span>Recommendation</span><span>Severity</span><span>Score impact</span><span>Status</span>
         </div>
         {RECOS.map((r) => (
-          <div key={r.name} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_100px] border-t border-border">
+          <div key={r.name} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_100px_120px] border-t border-border hover:bg-muted/30">
             <span className="truncate">{r.name}</span>
             <span><Badge variant={r.sev === "High" ? "destructive" : "secondary"}>{r.sev}</Badge></span>
             <span>+{r.impact}</span>
+            <span className="text-muted-foreground">To address</span>
           </div>
         ))}
       </Card>
     ),
     "recommended-actions": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Improvement actions · top by impact</h3>
-        <ul className="text-xs space-y-1.5">
-          <li>• Enable MFA for all users (+12 pts)</li>
-          <li>• Block legacy authentication (+8 pts)</li>
-          <li>• Enable Conditional Access for admins (+6 pts)</li>
-        </ul>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border text-sm font-semibold">Improvement actions · top by impact</div>
+        {[
+          { n: "Enable MFA for all users", pts: 12, cat: "Identity" },
+          { n: "Block legacy authentication", pts: 8, cat: "Identity" },
+          { n: "Enable Conditional Access for admins", pts: 6, cat: "Identity" },
+          { n: "Turn on tamper protection (Defender for Endpoint)", pts: 5, cat: "Devices" },
+          { n: "Restrict guest invitations to admins", pts: 4, cat: "Apps" },
+          { n: "Enable ASR rule: Block Office macros from Internet", pts: 3, cat: "Devices" },
+        ].map((r) => (
+          <div key={r.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_60px] border-t border-border">
+            <span>{r.n}</span>
+            <span className="text-muted-foreground">{r.cat}</span>
+            <span className="text-success font-medium">+{r.pts}</span>
+          </div>
+        ))}
       </Card>
     ),
     "defender-cloud": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Defender for Cloud · CSPM</h3>
-        <div className="grid grid-cols-3 gap-2 text-xs">
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border flex items-center justify-between">
+          <h3 className="text-sm font-semibold">Defender for Cloud · CSPM</h3>
+          <Badge variant="outline">3 subscriptions</Badge>
+        </div>
+        <div className="p-3 grid grid-cols-3 gap-2 text-xs">
           <Stat label="Subscriptions" value="3" />
           <Stat label="Recommendations" value="68" tone="text-warning" />
           <Stat label="Regulatory %" value="71%" />
         </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_100px_120px]">
+          <span>Subscription</span><span>Score</span><span>Open recos</span>
+        </div>
+        {[
+          { s: "sub-prod-eastus", sc: "76%", r: 18 },
+          { s: "sub-dev-westus", sc: "61%", r: 27 },
+          { s: "sub-shared-services", sc: "82%", r: 23 },
+        ].map((x) => (
+          <div key={x.s} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_120px] border-t border-border">
+            <span>{x.s}</span><span className="text-primary">{x.sc}</span><span>{x.r}</span>
+          </div>
+        ))}
       </Card>
     ),
     "attack-simulator": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Defender for Office 365 · Attack simulation training</h3>
-        <p className="text-xs text-muted-foreground">Run safe phishing simulations to measure user resilience.</p>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border">
+          <h3 className="text-sm font-semibold">Attack simulation training</h3>
+          <p className="text-[11px] text-muted-foreground">Run safe phishing simulations to measure user resilience.</p>
+        </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_100px_100px]">
+          <span>Template</span><span>Technique</span><span>Targeted</span><span>Predicted CR</span>
+        </div>
+        {[
+          { n: "Microsoft 365 password expiry", t: "Credential harvest", u: 540, p: "11%" },
+          { n: "DocuSign — please review", t: "Link in attachment", u: 420, p: "8%" },
+          { n: "HR — annual benefits", t: "Drive-by URL", u: 847, p: "14%" },
+          { n: "DHL package failed delivery", t: "Malware attachment", u: 320, p: "6%" },
+        ].map((s) => (
+          <div key={s.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_100px_100px] border-t border-border">
+            <span className="truncate">{s.n}</span>
+            <span className="text-muted-foreground">{s.t}</span>
+            <span>{s.u}</span>
+            <span className="text-warning">{s.p}</span>
+          </div>
+        ))}
       </Card>
     ),
     simulations: () => (
       <Card className="overflow-hidden">
-        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_100px_120px]">
-          <span>Simulation</span><span>Compromise</span><span>Date</span>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_100px_100px_120px]">
+          <span>Simulation</span><span>Compromise</span><span>Reported</span><span>Date</span>
         </div>
-        {[{ n: "Q1 phish — credential harvest", c: "12%", d: "Mar 14" }, { n: "Payroll lure", c: "27%", d: "Feb 03" }].map((s) => (
-          <div key={s.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_120px] border-t border-border">
-            <span>{s.n}</span><span className="text-warning">{s.c}</span><span className="text-muted-foreground">{s.d}</span>
+        {[
+          { n: "Q1 phish — credential harvest", c: "12%", r: "38%", d: "Mar 14" },
+          { n: "Payroll lure", c: "27%", r: "18%", d: "Feb 03" },
+          { n: "OneDrive shared file", c: "9%", r: "44%", d: "Jan 17" },
+          { n: "Voicemail link", c: "15%", r: "22%", d: "Dec 04" },
+        ].map((s) => (
+          <div key={s.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_100px_120px] border-t border-border">
+            <span>{s.n}</span><span className="text-warning">{s.c}</span><span className="text-success">{s.r}</span><span className="text-muted-foreground">{s.d}</span>
           </div>
         ))}
       </Card>
@@ -761,53 +815,117 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
       </Card>
     ),
     "sensitivity-labels": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Sensitivity labels</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-          {["Public", "Internal", "Confidential", "Highly Confidential — M&A"].map((l) => (
-            <Badge key={l} variant="outline" className="justify-center py-1.5">{l}</Badge>
-          ))}
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[160px_1fr_120px_100px]">
+          <span>Label</span><span>Protection</span><span>Scope</span><span>Files tagged</span>
         </div>
-        <p className="text-[10px] text-muted-foreground mt-2">Encryption + watermark + access scope per label.</p>
+        {[
+          { l: "Public", p: "None", s: "All users", n: 12480 },
+          { l: "Internal", p: "Watermark", s: "All employees", n: 38122 },
+          { l: "Confidential", p: "Encrypt + watermark", s: "Employees only", n: 7841 },
+          { l: "Confidential / Finance", p: "Encrypt + DRM (Edit)", s: "fin-team@", n: 2104 },
+          { l: "Highly Confidential — M&A", p: "Encrypt + DRM (View) + DNF", s: "ma-deal@", n: 312 },
+          { l: "Customer PII", p: "Encrypt + DLP block", s: "All employees", n: 9402 },
+        ].map((x) => (
+          <div key={x.l} className="px-3 py-2 text-xs grid grid-cols-[160px_1fr_120px_100px] border-t border-border">
+            <span className="font-medium">{x.l}</span>
+            <span className="text-muted-foreground">{x.p}</span>
+            <span>{x.s}</span>
+            <span>{x.n.toLocaleString()}</span>
+          </div>
+        ))}
       </Card>
     ),
     "dlp-policies": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Data loss prevention · policies</h3>
-        <ul className="text-xs space-y-1">
-          <li>• PCI — credit card numbers (Exchange + OneDrive)</li>
-          <li>• PII India (Aadhaar / PAN) — DPDP Act 2023</li>
-          <li>• Source code exfiltration — Endpoint DLP</li>
-        </ul>
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_140px_100px_100px_80px]">
+          <span>Policy</span><span>Locations</span><span>Mode</span><span>Matches 7d</span><span>Status</span>
+        </div>
+        {[
+          { n: "PCI — credit card numbers", loc: "Exchange + OneDrive", m: "Block", h: 14, s: "On" },
+          { n: "PII India (Aadhaar / PAN) · DPDP", loc: "Exchange + Teams + SP", m: "Block + override", h: 47, s: "On" },
+          { n: "Source code exfiltration", loc: "Endpoint DLP", m: "Audit + warn", h: 8, s: "On" },
+          { n: "GDPR — EU resident PII", loc: "All M365", m: "Block + notify", h: 22, s: "On" },
+          { n: "Patient health (HIPAA)", loc: "Exchange + SharePoint", m: "Block", h: 3, s: "On" },
+          { n: "M&A keywords", loc: "Exchange + Teams", m: "Audit", h: 0, s: "Test" },
+        ].map((p) => (
+          <div key={p.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_140px_100px_100px_80px] border-t border-border">
+            <span className="truncate">{p.n}</span>
+            <span className="text-muted-foreground">{p.loc}</span>
+            <span>{p.m}</span>
+            <span className={p.h > 20 ? "text-warning" : ""}>{p.h}</span>
+            <span><Badge variant={p.s === "On" ? "default" : "secondary"}>{p.s}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
     audit: () => (
-      <Card className="p-3 font-mono text-xs">
-        <div className="text-muted-foreground mb-1">// Audit search results · last 7 days</div>
-        <div>2026-04-22 09:14 · alice@contoso.com · FileDownloaded · sales-roadmap.xlsx</div>
-        <div>2026-04-22 11:02 · bob@contoso.com · MailItemsAccessed · 14 items</div>
-        <div>2026-04-23 03:47 · admin@contoso.com · UserLoginFailed (×6)</div>
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[150px_1fr_140px_1fr]">
+          <span>Time</span><span>User</span><span>Activity</span><span>Item</span>
+        </div>
+        {[
+          { t: "2026-04-22 09:14", u: "alice@contoso.com", a: "FileDownloaded", i: "sales-roadmap.xlsx" },
+          { t: "2026-04-22 11:02", u: "bob@contoso.com", a: "MailItemsAccessed", i: "14 items" },
+          { t: "2026-04-23 03:47", u: "admin@contoso.com", a: "UserLoginFailed (×6)", i: "203.0.113.7" },
+          { t: "2026-04-23 09:21", u: "priya@contoso.com", a: "FileSharedExternally", i: "client-list.xlsx" },
+          { t: "2026-04-23 14:08", u: "raj@contoso.com", a: "TeamsChannelDeleted", i: "Project Atlas / General" },
+          { t: "2026-04-24 02:11", u: "svc-backup@contoso.com", a: "MailboxLogin", i: "ExchangeOnline" },
+        ].map((r) => (
+          <div key={r.t + r.u} className="px-3 py-2 text-xs grid grid-cols-[150px_1fr_140px_1fr] border-t border-border font-mono">
+            <span className="text-muted-foreground">{r.t}</span>
+            <span className="truncate">{r.u}</span>
+            <span>{r.a}</span>
+            <span className="text-muted-foreground truncate">{r.i}</span>
+          </div>
+        ))}
       </Card>
     ),
     ediscovery: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">eDiscovery (Premium) · cases</h3>
-        <div className="text-xs">
-          <div className="border border-border rounded p-2 mb-2">
-            <div className="font-medium">Bob Smith — termination review</div>
-            <div className="text-muted-foreground">Custodians: 3 · Hold: active · Searches: 4</div>
-          </div>
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_100px_100px_80px]">
+          <span>Case</span><span>Custodians</span><span>Hold</span><span>Searches</span><span>Status</span>
         </div>
+        {[
+          { n: "Bob Smith — termination review", c: 3, h: "Active", s: 4, st: "Open" },
+          { n: "Project Atlas IP litigation", c: 12, h: "Active", s: 18, st: "Open" },
+          { n: "GDPR DSR — A. Müller", c: 1, h: "—", s: 2, st: "Closed" },
+          { n: "FINRA inquiry — trading desk", c: 7, h: "Active", s: 11, st: "Open" },
+        ].map((c) => (
+          <div key={c.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_100px_100px_80px] border-t border-border">
+            <span className="truncate font-medium">{c.n}</span>
+            <span>{c.c}</span>
+            <span>{c.h}</span>
+            <span>{c.s}</span>
+            <span><Badge variant={c.st === "Open" ? "default" : "outline"}>{c.st}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
     "insider-risk": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Insider risk · alerts (last 30d)</h3>
-        <div className="grid grid-cols-3 gap-2 text-xs">
+      <Card className="overflow-hidden">
+        <div className="p-3 grid grid-cols-3 gap-2 text-xs border-b border-border">
           <Stat label="High" value="2" tone="text-destructive" />
           <Stat label="Medium" value="9" tone="text-warning" />
           <Stat label="Low" value="34" />
         </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_140px_100px_120px]">
+          <span>Alert</span><span>User</span><span>Severity</span><span>Trigger</span>
+        </div>
+        {[
+          { a: "Departing employee · downloads spike", u: "bob.smith@contoso", s: "High", t: "Data theft policy" },
+          { a: "Unusual file deletion", u: "raj.k@contoso", s: "Medium", t: "Data leaks policy" },
+          { a: "Email forwarded to personal", u: "alice.w@contoso", s: "Medium", t: "Data leaks policy" },
+          { a: "USB transfer at off-hours", u: "mike.l@contoso", s: "Low", t: "General data leaks" },
+          { a: "Cloud sync to non-corp account", u: "diana.r@contoso", s: "Medium", t: "Data leaks policy" },
+        ].map((x) => (
+          <div key={x.a + x.u} className="px-3 py-2 text-xs grid grid-cols-[1fr_140px_100px_120px] border-t border-border">
+            <span className="truncate">{x.a}</span>
+            <span className="text-muted-foreground truncate">{x.u}</span>
+            <span><Badge variant={x.s === "High" ? "destructive" : x.s === "Medium" ? "secondary" : "outline"}>{x.s}</Badge></span>
+            <span className="text-muted-foreground">{x.t}</span>
+          </div>
+        ))}
       </Card>
     ),
   },
@@ -825,47 +943,150 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
       </Card>
     ),
     incidents: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Sentinel incidents</h3>
-        <div className="text-xs text-muted-foreground">5 high · 12 medium · 31 low (open)</div>
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[80px_1fr_90px_100px_100px_100px]">
+          <span>ID</span><span>Title</span><span>Severity</span><span>Status</span><span>Owner</span><span>Created</span>
+        </div>
+        {[
+          { id: "INC-9412", t: "Possible AiTM phishing — priya@", s: "High", st: "New", o: "soc-tier1", c: "12m ago" },
+          { id: "INC-9411", t: "Anomalous AAD sign-in from Tor", s: "High", st: "Active", o: "soc-tier2", c: "37m ago" },
+          { id: "INC-9408", t: "Mass mailbox download", s: "Medium", st: "Active", o: "soc-tier2", c: "1h ago" },
+          { id: "INC-9402", t: "Suspicious PowerShell on FIN-WS-04", s: "High", st: "New", o: "—", c: "2h ago" },
+          { id: "INC-9397", t: "Brute force against /owa", s: "Medium", st: "Active", o: "soc-tier1", c: "3h ago" },
+          { id: "INC-9389", t: "DLP — PCI exfil to Gmail", s: "Medium", st: "Closed", o: "compliance", c: "5h ago" },
+          { id: "INC-9381", t: "Defender for Cloud — public storage", s: "Low", st: "Active", o: "cloud-eng", c: "8h ago" },
+        ].map((i) => (
+          <div key={i.id} className="px-3 py-2 text-xs grid grid-cols-[80px_1fr_90px_100px_100px_100px] border-t border-border hover:bg-muted/30">
+            <span className="font-mono text-primary">{i.id}</span>
+            <span className="truncate">{i.t}</span>
+            <span><Badge variant={i.s === "High" ? "destructive" : i.s === "Medium" ? "secondary" : "outline"}>{i.s}</Badge></span>
+            <span>{i.st}</span>
+            <span className="text-muted-foreground">{i.o}</span>
+            <span className="text-muted-foreground">{i.c}</span>
+          </div>
+        ))}
       </Card>
     ),
     hunting: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Hunting library</h3>
-        <div className="text-xs text-muted-foreground">214 built-in queries · MITRE ATT&CK aligned · 12 custom</div>
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_140px_120px_80px]">
+          <span>Query</span><span>Tactic</span><span>Data source</span><span>Hits</span>
+        </div>
+        {[
+          { q: "Suspicious mass-download from SharePoint", t: "Exfiltration", d: "OfficeActivity", h: 3 },
+          { q: "Anomalous Azure RoleAssignment", t: "Privilege Escalation", d: "AuditLogs", h: 1 },
+          { q: "PowerShell EncodedCommand executions", t: "Execution", d: "DeviceProcessEvents", h: 12 },
+          { q: "AAD impossible travel", t: "Initial Access", d: "SigninLogs", h: 4 },
+          { q: "DNS to known DGA domains", t: "Command & Control", d: "DnsEvents", h: 0 },
+          { q: "Service principal added to high-priv role", t: "Persistence", d: "AuditLogs", h: 2 },
+        ].map((q) => (
+          <div key={q.q} className="px-3 py-2 text-xs grid grid-cols-[1fr_140px_120px_80px] border-t border-border">
+            <span className="truncate">{q.q}</span>
+            <span className="text-muted-foreground">{q.t}</span>
+            <span className="font-mono text-[10px]">{q.d}</span>
+            <span className={q.h > 0 ? "text-warning font-medium" : "text-muted-foreground"}>{q.h}</span>
+          </div>
+        ))}
       </Card>
     ),
     logs: () => (
-      <Card className="p-3 font-mono text-[11px] leading-relaxed">
-        <div className="text-muted-foreground">// KQL editor — paste your query below</div>
-        <div className="mt-1">SigninLogs</div>
-        <div>| where ResultType != 0</div>
-        <div>| where TimeGenerated &gt; ago(1h)</div>
-        <div>| summarize FailedAttempts=count() by UserPrincipalName, IPAddress</div>
-        <div>| where FailedAttempts &gt; 10</div>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border text-xs font-mono bg-muted/40">
+          <div className="text-muted-foreground">// KQL editor — contoso-soc workspace</div>
+          <div className="mt-1">SigninLogs</div>
+          <div>| where ResultType != 0 and TimeGenerated &gt; ago(1h)</div>
+          <div>| summarize FailedAttempts=count() by UserPrincipalName, IPAddress</div>
+          <div>| where FailedAttempts &gt; 10</div>
+        </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_140px_80px]">
+          <span>UserPrincipalName</span><span>IPAddress</span><span>FailedAttempts</span>
+        </div>
+        {[
+          { u: "priya@contosobank.in", ip: "203.0.113.42", n: 87 },
+          { u: "alex@contosobank.in", ip: "198.51.100.7", n: 41 },
+          { u: "svc-jenkins@contosobank.in", ip: "10.20.30.40", n: 28 },
+          { u: "raj@contosobank.in", ip: "203.0.113.99", n: 14 },
+        ].map((r) => (
+          <div key={r.u} className="px-3 py-2 text-xs grid grid-cols-[1fr_140px_80px] border-t border-border font-mono">
+            <span>{r.u}</span><span>{r.ip}</span><span className="text-warning">{r.n}</span>
+          </div>
+        ))}
       </Card>
     ),
     analytics: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Analytics rules</h3>
-        <div className="text-xs text-muted-foreground">187 active · 142 Microsoft · 45 custom · 5/5/m default cadence</div>
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_100px_80px_80px]">
+          <span>Rule</span><span>Tactic</span><span>Severity</span><span>Status</span><span>Cadence</span>
+        </div>
+        {[
+          { n: "AAD — Sign-in from blocked country", t: "Initial Access", s: "High", st: "Enabled", c: "5m" },
+          { n: "MDE — Process injection detected", t: "Defense Evasion", s: "High", st: "Enabled", c: "5m" },
+          { n: "Mass Exchange mailbox download", t: "Exfiltration", s: "Medium", st: "Enabled", c: "10m" },
+          { n: "ADFS account lockout spike", t: "Credential Access", s: "Medium", st: "Enabled", c: "15m" },
+          { n: "Azure — public IP added to NSG", t: "Persistence", s: "Low", st: "Disabled", c: "1h" },
+          { n: "Defender for Cloud — high-sev recommendation", t: "Discovery", s: "Medium", st: "Enabled", c: "1h" },
+        ].map((r) => (
+          <div key={r.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_100px_80px_80px] border-t border-border">
+            <span className="truncate">{r.n}</span>
+            <span className="text-muted-foreground">{r.t}</span>
+            <span><Badge variant={r.s === "High" ? "destructive" : r.s === "Medium" ? "secondary" : "outline"}>{r.s}</Badge></span>
+            <span>{r.st}</span>
+            <span className="font-mono text-[10px]">{r.c}</span>
+          </div>
+        ))}
       </Card>
     ),
     playbooks: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Playbooks (Logic Apps)</h3>
-        <ul className="text-xs space-y-1">
-          <li>• Isolate-Device-MDE</li>
-          <li>• Disable-User-Entra</li>
-          <li>• Notify-SOC-Teams</li>
-        </ul>
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_100px_80px]">
+          <span>Playbook</span><span>Trigger</span><span>Runs 7d</span><span>State</span>
+        </div>
+        {[
+          { n: "Isolate-Device-MDE", t: "Incident · High", r: 14, s: "On" },
+          { n: "Disable-User-Entra", t: "Alert · risky user", r: 9, s: "On" },
+          { n: "Notify-SOC-Teams", t: "Any incident", r: 142, s: "On" },
+          { n: "Enrich-IP-VirusTotal", t: "Alert · external IP", r: 311, s: "On" },
+          { n: "Block-IP-FortiGate", t: "Manual / SOAR", r: 6, s: "On" },
+          { n: "Open-ServiceNow-Incident", t: "Incident · any", r: 87, s: "On" },
+        ].map((p) => (
+          <div key={p.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_100px_80px] border-t border-border">
+            <span className="font-medium">{p.n}</span>
+            <span className="text-muted-foreground">{p.t}</span>
+            <span>{p.r}</span>
+            <span><Badge>{p.s}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
     workbook: () => (
       <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Workbook · SOC overview</h3>
-        <div className="text-xs text-muted-foreground">12 visualizations · pinned 3 to dashboard</div>
+        <h3 className="text-sm font-semibold mb-3">Workbook · SOC overview</h3>
+        <div className="grid grid-cols-3 gap-2 mb-3 text-xs">
+          <Stat label="MTTA" value="11m" tone="text-primary" />
+          <Stat label="MTTR" value="2h 14m" />
+          <Stat label="Closed 7d" value="142" tone="text-success" />
+        </div>
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="border border-border rounded p-2">
+            <div className="text-[10px] uppercase text-muted-foreground mb-1">Incidents by severity (7d)</div>
+            <div className="flex items-end gap-1 h-16">
+              <div className="flex-1 bg-destructive/70 rounded-t" style={{ height: "70%" }} />
+              <div className="flex-1 bg-warning/70 rounded-t" style={{ height: "45%" }} />
+              <div className="flex-1 bg-primary/60 rounded-t" style={{ height: "85%" }} />
+              <div className="flex-1 bg-muted rounded-t" style={{ height: "30%" }} />
+            </div>
+            <div className="flex justify-between text-[9px] text-muted-foreground mt-1"><span>High</span><span>Med</span><span>Low</span><span>Info</span></div>
+          </div>
+          <div className="border border-border rounded p-2">
+            <div className="text-[10px] uppercase text-muted-foreground mb-1">Top data sources</div>
+            <ul className="text-xs space-y-1">
+              <li>• SigninLogs — 41%</li>
+              <li>• SecurityEvent — 22%</li>
+              <li>• DeviceEvents — 17%</li>
+              <li>• OfficeActivity — 12%</li>
+            </ul>
+          </div>
+        </div>
       </Card>
     ),
   },
@@ -898,38 +1119,120 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
       </Card>
     ),
     users: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Users · 847</h3>
-        <div className="text-xs text-muted-foreground">Filter, bulk operations, license assignment, MFA registration status.</div>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border flex items-center justify-between">
+          <h3 className="text-sm font-semibold">Users · 847</h3>
+          <Button size="sm" variant="outline"><Plus className="h-3 w-3 mr-1" />New user</Button>
+        </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_180px_120px_100px_80px]">
+          <span>Display name</span><span>UPN</span><span>Job title</span><span>MFA</span><span>Status</span>
+        </div>
+        {USERS.map((u) => (
+          <div key={u.upn} className="px-3 py-2 text-xs grid grid-cols-[1fr_180px_120px_100px_80px] border-t border-border hover:bg-muted/30">
+            <span className="truncate">{u.name}</span>
+            <span className="font-mono text-[10px] text-muted-foreground truncate">{u.upn}</span>
+            <span className="truncate">{u.title}</span>
+            <span>{u.mfa ? <Badge variant="default">Registered</Badge> : <Badge variant="outline">No</Badge>}</span>
+            <span><Badge variant={u.enabled ? "secondary" : "destructive"}>{u.enabled ? "Enabled" : "Blocked"}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
     groups: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Groups · 312 security + M365 groups</h3>
-        <div className="text-xs text-muted-foreground">Use "+ New group" below to create a security group.</div>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border flex items-center justify-between">
+          <h3 className="text-sm font-semibold">Groups · 312</h3>
+          <Button size="sm" variant="outline"><Plus className="h-3 w-3 mr-1" />New group</Button>
+        </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_100px_100px]">
+          <span>Group name</span><span>Type</span><span>Members</span><span>Membership</span>
+        </div>
+        {[
+          { n: "sg-Admins-Global", t: "Security", m: 4, ms: "Assigned" },
+          { n: "sg-Helpdesk", t: "Security", m: 22, ms: "Assigned" },
+          { n: "sg-Finance-RW", t: "Security", m: 47, ms: "Dynamic" },
+          { n: "sg-CA-Exclude-BreakGlass", t: "Security", m: 2, ms: "Assigned" },
+          { n: "M365 — Project Atlas", t: "Microsoft 365", m: 31, ms: "Assigned" },
+          { n: "M365 — All Employees", t: "Microsoft 365", m: 847, ms: "Dynamic" },
+          { n: "sg-MFA-Exempt-Service", t: "Security", m: 6, ms: "Assigned" },
+        ].map((g) => (
+          <div key={g.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_100px_100px] border-t border-border">
+            <span className="font-medium truncate">{g.n}</span>
+            <span className="text-muted-foreground">{g.t}</span>
+            <span>{g.m}</span>
+            <span><Badge variant="outline">{g.ms}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
     "auth-methods": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Authentication methods policy</h3>
-        <ul className="text-xs space-y-1">
-          <li>• Microsoft Authenticator — push + passwordless</li>
-          <li>• FIDO2 security keys</li>
-          <li>• SMS / Voice (legacy — discouraged)</li>
-        </ul>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border text-sm font-semibold">Authentication methods policy</div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_100px_120px]">
+          <span>Method</span><span>State</span><span>Target</span><span>Registered</span>
+        </div>
+        {[
+          { n: "Microsoft Authenticator (push + passwordless)", s: "Enabled", t: "All users", r: "812 / 847" },
+          { n: "FIDO2 security key", s: "Enabled", t: "Admins", r: "11 / 14" },
+          { n: "Windows Hello for Business", s: "Enabled", t: "All users", r: "623 / 847" },
+          { n: "Temporary Access Pass (TAP)", s: "Enabled", t: "Helpdesk-issued", r: "—" },
+          { n: "SMS", s: "Enabled", t: "All users", r: "201 / 847" },
+          { n: "Voice call", s: "Disabled", t: "—", r: "—" },
+          { n: "Email OTP", s: "Disabled", t: "Guests", r: "—" },
+        ].map((m) => (
+          <div key={m.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_100px_120px] border-t border-border">
+            <span className="truncate">{m.n}</span>
+            <span><Badge variant={m.s === "Enabled" ? "default" : "outline"}>{m.s}</Badge></span>
+            <span className="text-muted-foreground">{m.t}</span>
+            <span>{m.r}</span>
+          </div>
+        ))}
       </Card>
     ),
     "per-user-mfa": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Per-user MFA (legacy)</h3>
-        <div className="text-xs text-muted-foreground">Use Conditional Access for tenant-wide MFA. This view is for legacy individual exceptions only.</div>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border">
+          <h3 className="text-sm font-semibold">Per-user MFA (legacy)</h3>
+          <p className="text-[10px] text-muted-foreground">Use Conditional Access for tenant-wide MFA. This view is for legacy individual exceptions only.</p>
+        </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_180px_120px]">
+          <span>User</span><span>UPN</span><span>MFA Status</span>
+        </div>
+        {USERS.slice(0, 6).map((u) => (
+          <div key={u.upn} className="px-3 py-2 text-xs grid grid-cols-[1fr_180px_120px] border-t border-border">
+            <span>{u.name}</span>
+            <span className="font-mono text-[10px] text-muted-foreground">{u.upn}</span>
+            <span><Badge variant={u.mfa ? "default" : "outline"}>{u.mfa ? "Enforced" : "Disabled"}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
     "conditional-access": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Conditional Access · Policies</h3>
-        <div className="text-xs text-muted-foreground mb-2">14 active policies · 2 report-only · last modified 2d ago</div>
-        <div className="text-xs">Use the action panel below to create a new policy.</div>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border flex items-center justify-between">
+          <h3 className="text-sm font-semibold">Conditional Access · Policies</h3>
+          <Button size="sm"><Plus className="h-3 w-3 mr-1" />New policy</Button>
+        </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_100px_100px]">
+          <span>Policy</span><span>State</span><span>Users</span><span>Modified</span>
+        </div>
+        {[
+          { n: "CA001 — Require MFA for admins", s: "On", u: "14 admins", m: "2d ago" },
+          { n: "CA002 — Block legacy auth (all)", s: "On", u: "All users", m: "12d ago" },
+          { n: "CA003 — Require compliant device", s: "On", u: "All employees", m: "21d ago" },
+          { n: "CA004 — Block sign-in from countries", s: "On", u: "All users", m: "1mo ago" },
+          { n: "CA005 — Require MFA from external networks", s: "On", u: "All users", m: "3w ago" },
+          { n: "CA006 — Session controls for SharePoint", s: "Report-only", u: "All users", m: "8d ago" },
+          { n: "CA007 — Risky sign-in → require MFA + change pwd", s: "On", u: "All users", m: "5d ago" },
+          { n: "CA008 — Guest access — restricted apps", s: "On", u: "All guests", m: "1mo ago" },
+        ].map((p) => (
+          <div key={p.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_100px_100px] border-t border-border hover:bg-muted/30">
+            <span className="truncate">{p.n}</span>
+            <span><Badge variant={p.s === "On" ? "default" : "secondary"}>{p.s}</Badge></span>
+            <span className="text-muted-foreground">{p.u}</span>
+            <span className="text-muted-foreground">{p.m}</span>
+          </div>
+        ))}
       </Card>
     ),
     "identity-protection": () => (
@@ -943,34 +1246,71 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
       </Card>
     ),
     "user-risk-policy": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">User-risk policy</h3>
-        <div className="text-xs text-muted-foreground">Configure thresholds and remediation actions (block / require password change).</div>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border text-sm font-semibold">User-risk & sign-in-risk policies</div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_140px_120px_80px]">
+          <span>Policy</span><span>Risk level</span><span>Action</span><span>Users</span><span>State</span>
+        </div>
+        {[
+          { n: "User risk policy", r: "High", a: "Require password change", u: "All users", s: "On" },
+          { n: "Sign-in risk policy", r: "Medium and above", a: "Require MFA", u: "All users", s: "On" },
+          { n: "MFA registration policy", r: "—", a: "Require registration (14d)", u: "All users", s: "On" },
+        ].map((p) => (
+          <div key={p.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_140px_120px_80px] border-t border-border">
+            <span className="font-medium">{p.n}</span>
+            <span><Badge variant={p.r === "High" ? "destructive" : "secondary"}>{p.r}</Badge></span>
+            <span>{p.a}</span>
+            <span className="text-muted-foreground">{p.u}</span>
+            <span><Badge>{p.s}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
     "risky-signins": () => (
       <Card className="overflow-hidden">
-        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_100px_120px_100px]">
-          <span>User</span><span>Risk</span><span>Detection</span><span>Action</span>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_100px_140px_120px_80px]">
+          <span>User</span><span>Risk</span><span>Detection</span><span>Location</span><span>Action</span>
         </div>
         {[
-          { u: "priya@contosobank.in", r: "High", d: "Anonymous IP (Tor)" },
-          { u: "alex@contosobank.in", r: "Medium", d: "Atypical travel" },
-          { u: "raj@contosobank.in", r: "Low", d: "Unfamiliar properties" },
+          { u: "priya@contosobank.in", r: "High", d: "Anonymous IP (Tor)", l: "Unknown" },
+          { u: "alex@contosobank.in", r: "Medium", d: "Atypical travel", l: "Mumbai → Lagos" },
+          { u: "raj@contosobank.in", r: "Low", d: "Unfamiliar properties", l: "Bengaluru" },
+          { u: "diana.r@contosobank.in", r: "High", d: "Leaked credentials", l: "Bengaluru" },
+          { u: "svc-jenkins@contosobank.in", r: "Medium", d: "Unusual sign-in", l: "AWS us-east-1" },
         ].map((s) => (
-          <div key={s.u} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_120px_100px] border-t border-border">
-            <span>{s.u}</span>
+          <div key={s.u} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_140px_120px_80px] border-t border-border">
+            <span className="truncate">{s.u}</span>
             <span><Badge variant={s.r === "High" ? "destructive" : "secondary"}>{s.r}</Badge></span>
             <span className="text-muted-foreground">{s.d}</span>
+            <span className="text-muted-foreground">{s.l}</span>
             <span><Button size="sm" variant="ghost">View</Button></span>
           </div>
         ))}
       </Card>
     ),
     "hybrid-management": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Hybrid identity management</h3>
-        <div className="text-xs text-muted-foreground">Connect on-prem AD to Entra ID via Entra Connect, Cloud Sync, or PHS / PTA / Federation.</div>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border text-sm font-semibold">Hybrid identity management</div>
+        <div className="p-3 grid grid-cols-3 gap-2 text-xs border-b border-border">
+          <Stat label="Synced objects" value="847" />
+          <Stat label="Last sync" value="3 min ago" tone="text-success" />
+          <Stat label="Sync errors" value="0" tone="text-success" />
+        </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_120px_100px]">
+          <span>Connector</span><span>Type</span><span>Last run</span><span>Status</span>
+        </div>
+        {[
+          { n: "contoso.local", t: "AD DS", l: "3 min ago", s: "Healthy" },
+          { n: "contosobank.onmicrosoft.com", t: "Entra ID", l: "3 min ago", s: "Healthy" },
+          { n: "contoso-ad-export", t: "OU filtering", l: "3 min ago", s: "Healthy" },
+        ].map((c) => (
+          <div key={c.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_120px_100px] border-t border-border">
+            <span className="font-medium">{c.n}</span>
+            <span>{c.t}</span>
+            <span className="text-muted-foreground">{c.l}</span>
+            <span><Badge variant="default">{c.s}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
     "entra-connect": () => (
@@ -1008,13 +1348,56 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
       </Card>
     ),
     iam: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Access control (IAM)</h3>
-        <div className="text-xs text-muted-foreground">Add or remove role assignments at this scope.</div>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border flex items-center justify-between">
+          <h3 className="text-sm font-semibold">Access control (IAM) · sub-prod-eastus</h3>
+          <Button size="sm" variant="outline"><Plus className="h-3 w-3 mr-1" />Add role assignment</Button>
+        </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_180px_140px_100px]">
+          <span>Principal</span><span>Role</span><span>Scope</span><span>Type</span>
+        </div>
+        {[
+          { p: "Aarti Patel", r: "Owner", s: "Subscription", t: "User" },
+          { p: "sg-Admins-Global", r: "Contributor", s: "Subscription", t: "Group" },
+          { p: "Bob Smith", r: "Reader", s: "rg-finance-prod", t: "User" },
+          { p: "sp-deploy-cicd", r: "Contributor", s: "rg-finance-prod", t: "Service Principal" },
+          { p: "sg-Helpdesk", r: "Reader", s: "Subscription", t: "Group" },
+          { p: "diana.r@contosobank.in", r: "User Access Administrator", s: "rg-shared-network", t: "User" },
+        ].map((a) => (
+          <div key={a.p + a.r} className="px-3 py-2 text-xs grid grid-cols-[1fr_180px_140px_100px] border-t border-border">
+            <span className="font-medium truncate">{a.p}</span>
+            <span>{a.r}</span>
+            <span className="text-muted-foreground">{a.s}</span>
+            <span><Badge variant="outline">{a.t}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
   },
 };
+
+const USERS = [
+  { name: "Aarti Patel", upn: "aarti.patel@contosobank.in", title: "CISO", mfa: true, enabled: true },
+  { name: "Priya Sharma", upn: "priya@contosobank.in", title: "SOC Analyst", mfa: true, enabled: true },
+  { name: "Raj Kumar", upn: "raj@contosobank.in", title: "Network Admin", mfa: true, enabled: true },
+  { name: "Alex Tan", upn: "alex@contosobank.in", title: "Cloud Engineer", mfa: true, enabled: true },
+  { name: "Diana Roy", upn: "diana.r@contosobank.in", title: "IAM Lead", mfa: true, enabled: true },
+  { name: "Bob Smith", upn: "bob.smith@contosobank.in", title: "Contractor", mfa: false, enabled: false },
+  { name: "Mike Lee", upn: "mike.l@contosobank.in", title: "Helpdesk", mfa: true, enabled: true },
+  { name: "Alice Wong", upn: "alice.w@contosobank.in", title: "Finance Mgr", mfa: true, enabled: true },
+  { name: "svc-jenkins", upn: "svc-jenkins@contosobank.in", title: "Service account", mfa: false, enabled: true },
+  { name: "svc-backup", upn: "svc-backup@contosobank.in", title: "Service account", mfa: false, enabled: true },
+];
+
+const DEVICES = [
+  { name: "FIN-WS-04", os: "Windows 11 Pro", risk: "High", seen: "2 min ago", exp: 78 },
+  { name: "HR-DC-01", os: "Win Server 2022", risk: "High", seen: "1 min ago", exp: 64 },
+  { name: "MKT-LAP-22", os: "macOS 14.4", risk: "Medium", seen: "12 min ago", exp: 41 },
+  { name: "DEV-CONTAINER-7", os: "Ubuntu 22.04", risk: "Medium", seen: "5 min ago", exp: 38 },
+  { name: "CFO-IPHONE", os: "iOS 17.4", risk: "Low", seen: "1 h ago", exp: 12 },
+  { name: "BR-KIOSK-09", os: "Windows 10 LTSC", risk: "Low", seen: "32 min ago", exp: 22 },
+  { name: "OT-PLC-GATEWAY", os: "Linux 5.4", risk: "Medium", seen: "3 min ago", exp: 47 },
+];
 
 const INCIDENTS = [
   { id: "top", name: "Multi-stage attack on FIN-WS-04", sev: "High", status: "New", assets: 12 },

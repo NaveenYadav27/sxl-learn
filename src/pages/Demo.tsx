@@ -12,7 +12,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Eye, Shield, Users, Gavel, Network, Terminal, Workflow, Building2 } from "lucide-react";
-import { EntraSimulator } from "@/components/simulators/EntraSimulator";
 import { PortalSimulator } from "@/components/simulators/PortalSimulator";
 import { ServiceNowSimulator } from "@/components/simulators/ServiceNowSimulator";
 import { KaliTerminalSimulator } from "@/components/simulators/KaliTerminalSimulator";
@@ -38,7 +37,7 @@ const tools: Tool[] = [
     icon: Users,
     blurb: "Identity & access — users, groups, Conditional Access, MFA. Fully clickable with seeded tenant directory.",
     courses: ["sc-900"],
-    render: () => <EntraSimulator expectedAction={{ type: "any" } as any} onValidate={noop} />,
+    render: () => <PortalSimulator simulator="entra" expectedAction={{ type: "any" } as any} onValidate={noop} demoMode />,
   },
   {
     id: "defender",
