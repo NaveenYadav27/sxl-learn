@@ -86,6 +86,26 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     ],
     licensingFocus: "What you need to spin up your own pentest lab environment for PEN-200 / OSCP+ practice.",
   },
+  "csa": {
+    code: "csa",
+    shortName: "CSA",
+    longName: "Certified SOC Analyst — Defender XDR & Sentinel",
+    vendor: "EC-Council / Microsoft",
+    certCode: "CSA",
+    tagline: "Certified SOC Analyst — hybrid EC-Council CSA + Microsoft SC-200 track.",
+    icon: Radar,
+    accentClass: "text-domain-security",
+    modules: csaModuleNotes,
+    plans: { fiveDay: csaFiveDayPlan, twoDay: csaTwoDayPlan, oneDay: csaOneDayPlan, oneHour: csaOneHourPlan },
+    examTitle: "CSA Practice Exam",
+    examIntroBullets: [
+      "Scenario-based questions across SOC ops, SIEM, KQL, Defender XDR and IR playbooks.",
+      "You can flag questions and revisit before submitting.",
+      "Auto-submits when the timer reaches zero.",
+      "Detailed review with per-module score and rationale on submit.",
+    ],
+    licensingFocus: "What you need to access Microsoft Sentinel, Defender XDR and Entra for CSA hands-on practice.",
+  },
 };
 
 export const COURSE_LIST: CourseDefinition[] = Object.values(COURSES);
