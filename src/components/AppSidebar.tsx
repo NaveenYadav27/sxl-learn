@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/sidebar";
 import {
   Home, LayoutDashboard, BookOpen, Users, Shield, Lock, Gavel, Trophy,
-  Settings, GraduationCap, Network, ClipboardCheck, Flame, Zap, Wallet, Building2, CalendarDays, Award, Crosshair,
+  Settings, GraduationCap, Network, ClipboardCheck, Flame, Zap, Wallet, Building2, CalendarDays, Award, Crosshair, Eye,
 } from "lucide-react";
 import { getXpStats, type XpStats } from "@/lib/xp";
 import { useAuth } from "@/hooks/useAuth";
@@ -28,6 +28,7 @@ const baseLearnerNav = [
   { title: "Practice Exam", url: "/exam", icon: ClipboardCheck },
   { title: "My Progress", url: "/progress", icon: Trophy },
   { title: "License Guide", url: "/licensing", icon: Wallet },
+  { title: "Tool Demo", url: "/demo", icon: Eye },
 ];
 
 const sc900PortalNav = [
