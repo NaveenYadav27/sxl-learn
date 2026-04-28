@@ -1090,7 +1090,6 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
       </Card>
     ),
   },
-  },
 
   generic: {
     home: () => (
