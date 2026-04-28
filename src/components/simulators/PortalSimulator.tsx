@@ -1119,38 +1119,120 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
       </Card>
     ),
     users: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Users · 847</h3>
-        <div className="text-xs text-muted-foreground">Filter, bulk operations, license assignment, MFA registration status.</div>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border flex items-center justify-between">
+          <h3 className="text-sm font-semibold">Users · 847</h3>
+          <Button size="sm" variant="outline"><Plus className="h-3 w-3 mr-1" />New user</Button>
+        </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_180px_120px_100px_80px]">
+          <span>Display name</span><span>UPN</span><span>Job title</span><span>MFA</span><span>Status</span>
+        </div>
+        {USERS.map((u) => (
+          <div key={u.upn} className="px-3 py-2 text-xs grid grid-cols-[1fr_180px_120px_100px_80px] border-t border-border hover:bg-muted/30">
+            <span className="truncate">{u.name}</span>
+            <span className="font-mono text-[10px] text-muted-foreground truncate">{u.upn}</span>
+            <span className="truncate">{u.title}</span>
+            <span>{u.mfa ? <Badge variant="default">Registered</Badge> : <Badge variant="outline">No</Badge>}</span>
+            <span><Badge variant={u.enabled ? "secondary" : "destructive"}>{u.enabled ? "Enabled" : "Blocked"}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
     groups: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Groups · 312 security + M365 groups</h3>
-        <div className="text-xs text-muted-foreground">Use "+ New group" below to create a security group.</div>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border flex items-center justify-between">
+          <h3 className="text-sm font-semibold">Groups · 312</h3>
+          <Button size="sm" variant="outline"><Plus className="h-3 w-3 mr-1" />New group</Button>
+        </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_100px_100px]">
+          <span>Group name</span><span>Type</span><span>Members</span><span>Membership</span>
+        </div>
+        {[
+          { n: "sg-Admins-Global", t: "Security", m: 4, ms: "Assigned" },
+          { n: "sg-Helpdesk", t: "Security", m: 22, ms: "Assigned" },
+          { n: "sg-Finance-RW", t: "Security", m: 47, ms: "Dynamic" },
+          { n: "sg-CA-Exclude-BreakGlass", t: "Security", m: 2, ms: "Assigned" },
+          { n: "M365 — Project Atlas", t: "Microsoft 365", m: 31, ms: "Assigned" },
+          { n: "M365 — All Employees", t: "Microsoft 365", m: 847, ms: "Dynamic" },
+          { n: "sg-MFA-Exempt-Service", t: "Security", m: 6, ms: "Assigned" },
+        ].map((g) => (
+          <div key={g.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_100px_100px] border-t border-border">
+            <span className="font-medium truncate">{g.n}</span>
+            <span className="text-muted-foreground">{g.t}</span>
+            <span>{g.m}</span>
+            <span><Badge variant="outline">{g.ms}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
     "auth-methods": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Authentication methods policy</h3>
-        <ul className="text-xs space-y-1">
-          <li>• Microsoft Authenticator — push + passwordless</li>
-          <li>• FIDO2 security keys</li>
-          <li>• SMS / Voice (legacy — discouraged)</li>
-        </ul>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border text-sm font-semibold">Authentication methods policy</div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_100px_120px]">
+          <span>Method</span><span>State</span><span>Target</span><span>Registered</span>
+        </div>
+        {[
+          { n: "Microsoft Authenticator (push + passwordless)", s: "Enabled", t: "All users", r: "812 / 847" },
+          { n: "FIDO2 security key", s: "Enabled", t: "Admins", r: "11 / 14" },
+          { n: "Windows Hello for Business", s: "Enabled", t: "All users", r: "623 / 847" },
+          { n: "Temporary Access Pass (TAP)", s: "Enabled", t: "Helpdesk-issued", r: "—" },
+          { n: "SMS", s: "Enabled", t: "All users", r: "201 / 847" },
+          { n: "Voice call", s: "Disabled", t: "—", r: "—" },
+          { n: "Email OTP", s: "Disabled", t: "Guests", r: "—" },
+        ].map((m) => (
+          <div key={m.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_100px_120px] border-t border-border">
+            <span className="truncate">{m.n}</span>
+            <span><Badge variant={m.s === "Enabled" ? "default" : "outline"}>{m.s}</Badge></span>
+            <span className="text-muted-foreground">{m.t}</span>
+            <span>{m.r}</span>
+          </div>
+        ))}
       </Card>
     ),
     "per-user-mfa": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Per-user MFA (legacy)</h3>
-        <div className="text-xs text-muted-foreground">Use Conditional Access for tenant-wide MFA. This view is for legacy individual exceptions only.</div>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border">
+          <h3 className="text-sm font-semibold">Per-user MFA (legacy)</h3>
+          <p className="text-[10px] text-muted-foreground">Use Conditional Access for tenant-wide MFA. This view is for legacy individual exceptions only.</p>
+        </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_180px_120px]">
+          <span>User</span><span>UPN</span><span>MFA Status</span>
+        </div>
+        {USERS.slice(0, 6).map((u) => (
+          <div key={u.upn} className="px-3 py-2 text-xs grid grid-cols-[1fr_180px_120px] border-t border-border">
+            <span>{u.name}</span>
+            <span className="font-mono text-[10px] text-muted-foreground">{u.upn}</span>
+            <span><Badge variant={u.mfa ? "default" : "outline"}>{u.mfa ? "Enforced" : "Disabled"}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
     "conditional-access": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Conditional Access · Policies</h3>
-        <div className="text-xs text-muted-foreground mb-2">14 active policies · 2 report-only · last modified 2d ago</div>
-        <div className="text-xs">Use the action panel below to create a new policy.</div>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border flex items-center justify-between">
+          <h3 className="text-sm font-semibold">Conditional Access · Policies</h3>
+          <Button size="sm"><Plus className="h-3 w-3 mr-1" />New policy</Button>
+        </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_100px_100px]">
+          <span>Policy</span><span>State</span><span>Users</span><span>Modified</span>
+        </div>
+        {[
+          { n: "CA001 — Require MFA for admins", s: "On", u: "14 admins", m: "2d ago" },
+          { n: "CA002 — Block legacy auth (all)", s: "On", u: "All users", m: "12d ago" },
+          { n: "CA003 — Require compliant device", s: "On", u: "All employees", m: "21d ago" },
+          { n: "CA004 — Block sign-in from countries", s: "On", u: "All users", m: "1mo ago" },
+          { n: "CA005 — Require MFA from external networks", s: "On", u: "All users", m: "3w ago" },
+          { n: "CA006 — Session controls for SharePoint", s: "Report-only", u: "All users", m: "8d ago" },
+          { n: "CA007 — Risky sign-in → require MFA + change pwd", s: "On", u: "All users", m: "5d ago" },
+          { n: "CA008 — Guest access — restricted apps", s: "On", u: "All guests", m: "1mo ago" },
+        ].map((p) => (
+          <div key={p.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_100px_100px] border-t border-border hover:bg-muted/30">
+            <span className="truncate">{p.n}</span>
+            <span><Badge variant={p.s === "On" ? "default" : "secondary"}>{p.s}</Badge></span>
+            <span className="text-muted-foreground">{p.u}</span>
+            <span className="text-muted-foreground">{p.m}</span>
+          </div>
+        ))}
       </Card>
     ),
     "identity-protection": () => (
