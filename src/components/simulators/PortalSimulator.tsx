@@ -52,6 +52,8 @@ interface Props {
   simulator: SimKind;
   expectedAction: Action;
   onValidate: (ok: boolean) => void;
+  /** When true, hides lab-validation hints/checkmarks — pure showcase mode. */
+  demoMode?: boolean;
 }
 
 interface NavItem { id: string; label: string; icon: any; aliases?: string[] }
@@ -206,7 +208,7 @@ function resolveNavTarget(cfg: NavConfig, raw: string): string | null {
 // -----------------------------------------------------------------------------
 // Component
 // -----------------------------------------------------------------------------
-export function PortalSimulator({ simulator, expectedAction, onValidate }: Props) {
+export function PortalSimulator({ simulator, expectedAction, onValidate, demoMode }: Props) {
   const cfg = NAV_CONFIGS[simulator];
   const [navState, setNavState] = useState(cfg.defaultNav);
   const [fields, setFields] = useState<Record<string, any>>({});
@@ -342,20 +344,24 @@ export function PortalSimulator({ simulator, expectedAction, onValidate }: Props
         {/* Main blade */}
         <div className="bg-background p-4 text-sm overflow-auto">
           <Crumb cfg={cfg} navState={navState} />
-          <div className="mb-3 text-[11px] text-muted-foreground border-l-2 border-primary/40 pl-2">
-            {helperHint}
-          </div>
+          {!demoMode && (
+            <div className="mb-3 text-[11px] text-muted-foreground border-l-2 border-primary/40 pl-2">
+              {helperHint}
+            </div>
+          )}
 
           <BladeVisual simulator={simulator} navState={navState} onAction={fireAction} actions={actions} />
-          <ActionPanel
-            expectedAction={expectedAction}
-            fields={fields}
-            actions={actions}
-            setField={setField}
-            fireAction={fireAction}
-          />
+          {!demoMode && (
+            <ActionPanel
+              expectedAction={expectedAction}
+              fields={fields}
+              actions={actions}
+              setField={setField}
+              fireAction={fireAction}
+            />
+          )}
 
-          {validated && (
+          {!demoMode && validated && (
             <div className="mt-4 flex items-center gap-2 text-success bg-success/10 border border-success/30 rounded px-3 py-2 text-xs">
               <CheckCircle2 className="h-4 w-4" /> Step complete — well done.
             </div>
