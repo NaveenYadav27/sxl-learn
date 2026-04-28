@@ -36,7 +36,7 @@ const tools: Tool[] = [
     id: "entra",
     name: "Microsoft Entra",
     icon: Users,
-    blurb: "Identity & access — users, groups, Conditional Access, MFA.",
+    blurb: "Identity & access — users, groups, Conditional Access, MFA. Fully clickable with seeded tenant directory.",
     courses: ["sc-900"],
     render: () => <EntraSimulator expectedAction={{ type: "any" } as any} onValidate={noop} />,
   },
@@ -44,47 +44,47 @@ const tools: Tool[] = [
     id: "defender",
     name: "Defender XDR",
     icon: Shield,
-    blurb: "Incidents, alerts, secure score, attack simulation.",
+    blurb: "Browse incidents, alerts, secure score & attack simulation — sample SOC data preloaded.",
     courses: ["sc-900"],
-    render: () => <PortalSimulator simulator="defender" expectedAction={{ type: "read" } as any} onValidate={noop} />,
+    render: () => <PortalSimulator simulator="defender" expectedAction={{ type: "any" } as any} onValidate={noop} />,
   },
   {
     id: "purview",
     name: "Microsoft Purview",
     icon: Gavel,
-    blurb: "Sensitivity labels, DLP policies, classified files.",
+    blurb: "Sensitivity labels, DLP policies, classified files — explore the full compliance portal.",
     courses: ["sc-900"],
-    render: () => <PortalSimulator simulator="purview" expectedAction={{ type: "read" } as any} onValidate={noop} />,
+    render: () => <PortalSimulator simulator="purview" expectedAction={{ type: "any" } as any} onValidate={noop} />,
   },
   {
     id: "sentinel",
     name: "Microsoft Sentinel",
     icon: Network,
-    blurb: "SIEM dashboards & analytic rules.",
+    blurb: "SIEM dashboards, KQL hunts & analytic rules — sample workspace ready.",
     courses: ["sc-900"],
-    render: () => <PortalSimulator simulator="sentinel" expectedAction={{ type: "read" } as any} onValidate={noop} />,
+    render: () => <PortalSimulator simulator="sentinel" expectedAction={{ type: "any" } as any} onValidate={noop} />,
   },
   {
     id: "tenant",
     name: "Live Tenant",
     icon: Building2,
-    blurb: "Per-learner sandbox tenant powering the SC-900 live labs.",
+    blurb: "Per-learner sandbox tenant powering the SC-900 live labs (10 users, 4 groups, 3 incidents seeded).",
     courses: ["sc-900"],
-    render: () => <PortalSimulator simulator="entra" expectedAction={{ type: "read" } as any} onValidate={noop} />,
+    render: () => <PortalSimulator simulator="entra" expectedAction={{ type: "any" } as any} onValidate={noop} />,
   },
   {
     id: "servicenow",
     name: "ServiceNow",
     icon: Workflow,
-    blurb: "Incident, Problem, Change, Catalog, CMDB & Flow Designer.",
+    blurb: "Incident, Problem, Change, Catalog, CMDB & Flow Designer — full instance with sample tickets.",
     courses: ["cis-itsm"],
-    render: () => <ServiceNowSimulator expectedAction={{ type: "read" } as any} onValidate={noop} />,
+    render: () => <ServiceNowSimulator expectedAction={{ type: "any" } as any} onValidate={noop} />,
   },
   {
     id: "kali",
     name: "Kali Terminal",
     icon: Terminal,
-    blurb: "Offensive-security shell — recon, exploitation, AD attacks.",
+    blurb: "Offensive-security shell — recon, exploitation, AD attacks. Try `nmap`, `whoami`, `ls`, `mimikatz`…",
     courses: ["pen-200"],
     render: () => <KaliTerminalSimulator expectedAction={{ type: "any" } as any} onValidate={noop} />,
   },
@@ -131,10 +131,11 @@ export default function Demo() {
           </CardHeader>
           <CardContent>
             <Alert>
-              <AlertTitle className="text-sm">Demo mode</AlertTitle>
+              <AlertTitle className="text-sm">Live sandbox — sample data preloaded</AlertTitle>
               <AlertDescription className="text-xs text-muted-foreground">
-                Validators are disabled. To run a real, scored lab, open the <strong>Course Catalog</strong> and pick a
-                module from your enrolled program.
+                Every simulator below is fully interactive. Click, type, navigate, create records — the seeded sample
+                tenant, tickets, alerts and labs are all there. Nothing here is scored or persisted to your real
+                progress; for graded labs use the <strong>Course Catalog</strong>.
               </AlertDescription>
             </Alert>
           </CardContent>
