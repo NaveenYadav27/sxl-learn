@@ -39,6 +39,8 @@ interface Action {
 interface Props {
   expectedAction: Action;
   onValidate: (ok: boolean) => void;
+  /** When true, hides lab-validation hints — pure showcase mode. */
+  demoMode?: boolean;
 }
 
 interface NavItem { id: string; label: string; icon: any; aliases?: string[] }
@@ -261,7 +263,7 @@ function valuesMatch(actual: string, expected: any): boolean {
 // -----------------------------------------------------------------------------
 // Component
 // -----------------------------------------------------------------------------
-export function ServiceNowSimulator({ expectedAction, onValidate }: Props) {
+export function ServiceNowSimulator({ expectedAction, onValidate, demoMode }: Props) {
   const initialNav = useMemo(() => {
     const t = resolveNav(expectedAction?.target);
     if (t) return t;
