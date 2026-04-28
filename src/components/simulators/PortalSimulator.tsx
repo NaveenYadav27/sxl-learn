@@ -1376,6 +1376,29 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
   },
 };
 
+const USERS = [
+  { name: "Aarti Patel", upn: "aarti.patel@contosobank.in", title: "CISO", mfa: true, enabled: true },
+  { name: "Priya Sharma", upn: "priya@contosobank.in", title: "SOC Analyst", mfa: true, enabled: true },
+  { name: "Raj Kumar", upn: "raj@contosobank.in", title: "Network Admin", mfa: true, enabled: true },
+  { name: "Alex Tan", upn: "alex@contosobank.in", title: "Cloud Engineer", mfa: true, enabled: true },
+  { name: "Diana Roy", upn: "diana.r@contosobank.in", title: "IAM Lead", mfa: true, enabled: true },
+  { name: "Bob Smith", upn: "bob.smith@contosobank.in", title: "Contractor", mfa: false, enabled: false },
+  { name: "Mike Lee", upn: "mike.l@contosobank.in", title: "Helpdesk", mfa: true, enabled: true },
+  { name: "Alice Wong", upn: "alice.w@contosobank.in", title: "Finance Mgr", mfa: true, enabled: true },
+  { name: "svc-jenkins", upn: "svc-jenkins@contosobank.in", title: "Service account", mfa: false, enabled: true },
+  { name: "svc-backup", upn: "svc-backup@contosobank.in", title: "Service account", mfa: false, enabled: true },
+];
+
+const DEVICES = [
+  { name: "FIN-WS-04", os: "Windows 11 Pro", risk: "High", seen: "2 min ago", exp: 78 },
+  { name: "HR-DC-01", os: "Win Server 2022", risk: "High", seen: "1 min ago", exp: 64 },
+  { name: "MKT-LAP-22", os: "macOS 14.4", risk: "Medium", seen: "12 min ago", exp: 41 },
+  { name: "DEV-CONTAINER-7", os: "Ubuntu 22.04", risk: "Medium", seen: "5 min ago", exp: 38 },
+  { name: "CFO-IPHONE", os: "iOS 17.4", risk: "Low", seen: "1 h ago", exp: 12 },
+  { name: "BR-KIOSK-09", os: "Windows 10 LTSC", risk: "Low", seen: "32 min ago", exp: 22 },
+  { name: "OT-PLC-GATEWAY", os: "Linux 5.4", risk: "Medium", seen: "3 min ago", exp: 47 },
+];
+
 const INCIDENTS = [
   { id: "top", name: "Multi-stage attack on FIN-WS-04", sev: "High", status: "New", assets: 12 },
   { id: "lateral", name: "Lateral movement on HR-DC", sev: "High", status: "New", assets: 8 },
