@@ -199,6 +199,41 @@ export const twoDayPlan: DayPlan[] = [
   },
 ];
 
+/* ---------- 1-hour tool tour ---------- */
+const sc900ToolTourModule: ModuleNote = {
+  moduleSlug: "sc900-tool-tour",
+  domain: "concepts",
+  title: "Microsoft security tool tour — 5 essentials in 60 minutes",
+  code: "SC900-T1",
+  theoryMinutes: 10,
+  labBudgetMinutes: 50,
+  topics: [
+    "1. Microsoft Entra — users, groups & sign-in logs",
+    "2. Defender portal — incidents & alerts overview",
+    "3. Microsoft Sentinel — workspace & dashboards",
+    "4. Microsoft Purview — sensitivity labels in action",
+    "5. Microsoft Secure Score — posture at a glance",
+  ],
+  labSlugs: [
+    "create-users-groups",
+    "defender-portal-explore",
+    "sentinel-dashboards",
+    "create-sensitivity-label",
+    "secure-score-explore",
+  ],
+};
+
+export const oneHourPlan: DayPlan[] = [
+  {
+    id: "session1",
+    label: "Session",
+    subtitle: "Microsoft security tool tour — 5 essentials in 1h",
+    description:
+      "Express 60-minute walkthrough of the five Microsoft security & compliance portals every SC-900 learner should recognise: Entra, Defender, Sentinel, Purview and Secure Score.",
+    modules: [sc900ToolTourModule],
+  },
+];
+
 export function findDayForModule(plan: DayPlan[], moduleSlug: string | null): DayPlan | undefined {
   return plan.find((d) => d.modules.some((x) => x.moduleSlug === moduleSlug));
 }
