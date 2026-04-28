@@ -815,53 +815,117 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
       </Card>
     ),
     "sensitivity-labels": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Sensitivity labels</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-          {["Public", "Internal", "Confidential", "Highly Confidential — M&A"].map((l) => (
-            <Badge key={l} variant="outline" className="justify-center py-1.5">{l}</Badge>
-          ))}
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[160px_1fr_120px_100px]">
+          <span>Label</span><span>Protection</span><span>Scope</span><span>Files tagged</span>
         </div>
-        <p className="text-[10px] text-muted-foreground mt-2">Encryption + watermark + access scope per label.</p>
+        {[
+          { l: "Public", p: "None", s: "All users", n: 12480 },
+          { l: "Internal", p: "Watermark", s: "All employees", n: 38122 },
+          { l: "Confidential", p: "Encrypt + watermark", s: "Employees only", n: 7841 },
+          { l: "Confidential / Finance", p: "Encrypt + DRM (Edit)", s: "fin-team@", n: 2104 },
+          { l: "Highly Confidential — M&A", p: "Encrypt + DRM (View) + DNF", s: "ma-deal@", n: 312 },
+          { l: "Customer PII", p: "Encrypt + DLP block", s: "All employees", n: 9402 },
+        ].map((x) => (
+          <div key={x.l} className="px-3 py-2 text-xs grid grid-cols-[160px_1fr_120px_100px] border-t border-border">
+            <span className="font-medium">{x.l}</span>
+            <span className="text-muted-foreground">{x.p}</span>
+            <span>{x.s}</span>
+            <span>{x.n.toLocaleString()}</span>
+          </div>
+        ))}
       </Card>
     ),
     "dlp-policies": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Data loss prevention · policies</h3>
-        <ul className="text-xs space-y-1">
-          <li>• PCI — credit card numbers (Exchange + OneDrive)</li>
-          <li>• PII India (Aadhaar / PAN) — DPDP Act 2023</li>
-          <li>• Source code exfiltration — Endpoint DLP</li>
-        </ul>
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_140px_100px_100px_80px]">
+          <span>Policy</span><span>Locations</span><span>Mode</span><span>Matches 7d</span><span>Status</span>
+        </div>
+        {[
+          { n: "PCI — credit card numbers", loc: "Exchange + OneDrive", m: "Block", h: 14, s: "On" },
+          { n: "PII India (Aadhaar / PAN) · DPDP", loc: "Exchange + Teams + SP", m: "Block + override", h: 47, s: "On" },
+          { n: "Source code exfiltration", loc: "Endpoint DLP", m: "Audit + warn", h: 8, s: "On" },
+          { n: "GDPR — EU resident PII", loc: "All M365", m: "Block + notify", h: 22, s: "On" },
+          { n: "Patient health (HIPAA)", loc: "Exchange + SharePoint", m: "Block", h: 3, s: "On" },
+          { n: "M&A keywords", loc: "Exchange + Teams", m: "Audit", h: 0, s: "Test" },
+        ].map((p) => (
+          <div key={p.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_140px_100px_100px_80px] border-t border-border">
+            <span className="truncate">{p.n}</span>
+            <span className="text-muted-foreground">{p.loc}</span>
+            <span>{p.m}</span>
+            <span className={p.h > 20 ? "text-warning" : ""}>{p.h}</span>
+            <span><Badge variant={p.s === "On" ? "default" : "secondary"}>{p.s}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
     audit: () => (
-      <Card className="p-3 font-mono text-xs">
-        <div className="text-muted-foreground mb-1">// Audit search results · last 7 days</div>
-        <div>2026-04-22 09:14 · alice@contoso.com · FileDownloaded · sales-roadmap.xlsx</div>
-        <div>2026-04-22 11:02 · bob@contoso.com · MailItemsAccessed · 14 items</div>
-        <div>2026-04-23 03:47 · admin@contoso.com · UserLoginFailed (×6)</div>
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[150px_1fr_140px_1fr]">
+          <span>Time</span><span>User</span><span>Activity</span><span>Item</span>
+        </div>
+        {[
+          { t: "2026-04-22 09:14", u: "alice@contoso.com", a: "FileDownloaded", i: "sales-roadmap.xlsx" },
+          { t: "2026-04-22 11:02", u: "bob@contoso.com", a: "MailItemsAccessed", i: "14 items" },
+          { t: "2026-04-23 03:47", u: "admin@contoso.com", a: "UserLoginFailed (×6)", i: "203.0.113.7" },
+          { t: "2026-04-23 09:21", u: "priya@contoso.com", a: "FileSharedExternally", i: "client-list.xlsx" },
+          { t: "2026-04-23 14:08", u: "raj@contoso.com", a: "TeamsChannelDeleted", i: "Project Atlas / General" },
+          { t: "2026-04-24 02:11", u: "svc-backup@contoso.com", a: "MailboxLogin", i: "ExchangeOnline" },
+        ].map((r) => (
+          <div key={r.t + r.u} className="px-3 py-2 text-xs grid grid-cols-[150px_1fr_140px_1fr] border-t border-border font-mono">
+            <span className="text-muted-foreground">{r.t}</span>
+            <span className="truncate">{r.u}</span>
+            <span>{r.a}</span>
+            <span className="text-muted-foreground truncate">{r.i}</span>
+          </div>
+        ))}
       </Card>
     ),
     ediscovery: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">eDiscovery (Premium) · cases</h3>
-        <div className="text-xs">
-          <div className="border border-border rounded p-2 mb-2">
-            <div className="font-medium">Bob Smith — termination review</div>
-            <div className="text-muted-foreground">Custodians: 3 · Hold: active · Searches: 4</div>
-          </div>
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_100px_100px_80px]">
+          <span>Case</span><span>Custodians</span><span>Hold</span><span>Searches</span><span>Status</span>
         </div>
+        {[
+          { n: "Bob Smith — termination review", c: 3, h: "Active", s: 4, st: "Open" },
+          { n: "Project Atlas IP litigation", c: 12, h: "Active", s: 18, st: "Open" },
+          { n: "GDPR DSR — A. Müller", c: 1, h: "—", s: 2, st: "Closed" },
+          { n: "FINRA inquiry — trading desk", c: 7, h: "Active", s: 11, st: "Open" },
+        ].map((c) => (
+          <div key={c.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_100px_100px_80px] border-t border-border">
+            <span className="truncate font-medium">{c.n}</span>
+            <span>{c.c}</span>
+            <span>{c.h}</span>
+            <span>{c.s}</span>
+            <span><Badge variant={c.st === "Open" ? "default" : "outline"}>{c.st}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
     "insider-risk": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Insider risk · alerts (last 30d)</h3>
-        <div className="grid grid-cols-3 gap-2 text-xs">
+      <Card className="overflow-hidden">
+        <div className="p-3 grid grid-cols-3 gap-2 text-xs border-b border-border">
           <Stat label="High" value="2" tone="text-destructive" />
           <Stat label="Medium" value="9" tone="text-warning" />
           <Stat label="Low" value="34" />
         </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_140px_100px_120px]">
+          <span>Alert</span><span>User</span><span>Severity</span><span>Trigger</span>
+        </div>
+        {[
+          { a: "Departing employee · downloads spike", u: "bob.smith@contoso", s: "High", t: "Data theft policy" },
+          { a: "Unusual file deletion", u: "raj.k@contoso", s: "Medium", t: "Data leaks policy" },
+          { a: "Email forwarded to personal", u: "alice.w@contoso", s: "Medium", t: "Data leaks policy" },
+          { a: "USB transfer at off-hours", u: "mike.l@contoso", s: "Low", t: "General data leaks" },
+          { a: "Cloud sync to non-corp account", u: "diana.r@contoso", s: "Medium", t: "Data leaks policy" },
+        ].map((x) => (
+          <div key={x.a + x.u} className="px-3 py-2 text-xs grid grid-cols-[1fr_140px_100px_120px] border-t border-border">
+            <span className="truncate">{x.a}</span>
+            <span className="text-muted-foreground truncate">{x.u}</span>
+            <span><Badge variant={x.s === "High" ? "destructive" : x.s === "Medium" ? "secondary" : "outline"}>{x.s}</Badge></span>
+            <span className="text-muted-foreground">{x.t}</span>
+          </div>
+        ))}
       </Card>
     ),
   },
