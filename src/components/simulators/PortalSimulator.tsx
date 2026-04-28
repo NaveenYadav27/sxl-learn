@@ -943,49 +943,153 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
       </Card>
     ),
     incidents: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Sentinel incidents</h3>
-        <div className="text-xs text-muted-foreground">5 high · 12 medium · 31 low (open)</div>
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[80px_1fr_90px_100px_100px_100px]">
+          <span>ID</span><span>Title</span><span>Severity</span><span>Status</span><span>Owner</span><span>Created</span>
+        </div>
+        {[
+          { id: "INC-9412", t: "Possible AiTM phishing — priya@", s: "High", st: "New", o: "soc-tier1", c: "12m ago" },
+          { id: "INC-9411", t: "Anomalous AAD sign-in from Tor", s: "High", st: "Active", o: "soc-tier2", c: "37m ago" },
+          { id: "INC-9408", t: "Mass mailbox download", s: "Medium", st: "Active", o: "soc-tier2", c: "1h ago" },
+          { id: "INC-9402", t: "Suspicious PowerShell on FIN-WS-04", s: "High", st: "New", o: "—", c: "2h ago" },
+          { id: "INC-9397", t: "Brute force against /owa", s: "Medium", st: "Active", o: "soc-tier1", c: "3h ago" },
+          { id: "INC-9389", t: "DLP — PCI exfil to Gmail", s: "Medium", st: "Closed", o: "compliance", c: "5h ago" },
+          { id: "INC-9381", t: "Defender for Cloud — public storage", s: "Low", st: "Active", o: "cloud-eng", c: "8h ago" },
+        ].map((i) => (
+          <div key={i.id} className="px-3 py-2 text-xs grid grid-cols-[80px_1fr_90px_100px_100px_100px] border-t border-border hover:bg-muted/30">
+            <span className="font-mono text-primary">{i.id}</span>
+            <span className="truncate">{i.t}</span>
+            <span><Badge variant={i.s === "High" ? "destructive" : i.s === "Medium" ? "secondary" : "outline"}>{i.s}</Badge></span>
+            <span>{i.st}</span>
+            <span className="text-muted-foreground">{i.o}</span>
+            <span className="text-muted-foreground">{i.c}</span>
+          </div>
+        ))}
       </Card>
     ),
     hunting: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Hunting library</h3>
-        <div className="text-xs text-muted-foreground">214 built-in queries · MITRE ATT&CK aligned · 12 custom</div>
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_140px_120px_80px]">
+          <span>Query</span><span>Tactic</span><span>Data source</span><span>Hits</span>
+        </div>
+        {[
+          { q: "Suspicious mass-download from SharePoint", t: "Exfiltration", d: "OfficeActivity", h: 3 },
+          { q: "Anomalous Azure RoleAssignment", t: "Privilege Escalation", d: "AuditLogs", h: 1 },
+          { q: "PowerShell EncodedCommand executions", t: "Execution", d: "DeviceProcessEvents", h: 12 },
+          { q: "AAD impossible travel", t: "Initial Access", d: "SigninLogs", h: 4 },
+          { q: "DNS to known DGA domains", t: "Command & Control", d: "DnsEvents", h: 0 },
+          { q: "Service principal added to high-priv role", t: "Persistence", d: "AuditLogs", h: 2 },
+        ].map((q) => (
+          <div key={q.q} className="px-3 py-2 text-xs grid grid-cols-[1fr_140px_120px_80px] border-t border-border">
+            <span className="truncate">{q.q}</span>
+            <span className="text-muted-foreground">{q.t}</span>
+            <span className="font-mono text-[10px]">{q.d}</span>
+            <span className={q.h > 0 ? "text-warning font-medium" : "text-muted-foreground"}>{q.h}</span>
+          </div>
+        ))}
       </Card>
     ),
     logs: () => (
-      <Card className="p-3 font-mono text-[11px] leading-relaxed">
-        <div className="text-muted-foreground">// KQL editor — paste your query below</div>
-        <div className="mt-1">SigninLogs</div>
-        <div>| where ResultType != 0</div>
-        <div>| where TimeGenerated &gt; ago(1h)</div>
-        <div>| summarize FailedAttempts=count() by UserPrincipalName, IPAddress</div>
-        <div>| where FailedAttempts &gt; 10</div>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border text-xs font-mono bg-muted/40">
+          <div className="text-muted-foreground">// KQL editor — contoso-soc workspace</div>
+          <div className="mt-1">SigninLogs</div>
+          <div>| where ResultType != 0 and TimeGenerated &gt; ago(1h)</div>
+          <div>| summarize FailedAttempts=count() by UserPrincipalName, IPAddress</div>
+          <div>| where FailedAttempts &gt; 10</div>
+        </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_140px_80px]">
+          <span>UserPrincipalName</span><span>IPAddress</span><span>FailedAttempts</span>
+        </div>
+        {[
+          { u: "priya@contosobank.in", ip: "203.0.113.42", n: 87 },
+          { u: "alex@contosobank.in", ip: "198.51.100.7", n: 41 },
+          { u: "svc-jenkins@contosobank.in", ip: "10.20.30.40", n: 28 },
+          { u: "raj@contosobank.in", ip: "203.0.113.99", n: 14 },
+        ].map((r) => (
+          <div key={r.u} className="px-3 py-2 text-xs grid grid-cols-[1fr_140px_80px] border-t border-border font-mono">
+            <span>{r.u}</span><span>{r.ip}</span><span className="text-warning">{r.n}</span>
+          </div>
+        ))}
       </Card>
     ),
     analytics: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Analytics rules</h3>
-        <div className="text-xs text-muted-foreground">187 active · 142 Microsoft · 45 custom · 5/5/m default cadence</div>
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_100px_80px_80px]">
+          <span>Rule</span><span>Tactic</span><span>Severity</span><span>Status</span><span>Cadence</span>
+        </div>
+        {[
+          { n: "AAD — Sign-in from blocked country", t: "Initial Access", s: "High", st: "Enabled", c: "5m" },
+          { n: "MDE — Process injection detected", t: "Defense Evasion", s: "High", st: "Enabled", c: "5m" },
+          { n: "Mass Exchange mailbox download", t: "Exfiltration", s: "Medium", st: "Enabled", c: "10m" },
+          { n: "ADFS account lockout spike", t: "Credential Access", s: "Medium", st: "Enabled", c: "15m" },
+          { n: "Azure — public IP added to NSG", t: "Persistence", s: "Low", st: "Disabled", c: "1h" },
+          { n: "Defender for Cloud — high-sev recommendation", t: "Discovery", s: "Medium", st: "Enabled", c: "1h" },
+        ].map((r) => (
+          <div key={r.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_100px_80px_80px] border-t border-border">
+            <span className="truncate">{r.n}</span>
+            <span className="text-muted-foreground">{r.t}</span>
+            <span><Badge variant={r.s === "High" ? "destructive" : r.s === "Medium" ? "secondary" : "outline"}>{r.s}</Badge></span>
+            <span>{r.st}</span>
+            <span className="font-mono text-[10px]">{r.c}</span>
+          </div>
+        ))}
       </Card>
     ),
     playbooks: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Playbooks (Logic Apps)</h3>
-        <ul className="text-xs space-y-1">
-          <li>• Isolate-Device-MDE</li>
-          <li>• Disable-User-Entra</li>
-          <li>• Notify-SOC-Teams</li>
-        </ul>
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_100px_80px]">
+          <span>Playbook</span><span>Trigger</span><span>Runs 7d</span><span>State</span>
+        </div>
+        {[
+          { n: "Isolate-Device-MDE", t: "Incident · High", r: 14, s: "On" },
+          { n: "Disable-User-Entra", t: "Alert · risky user", r: 9, s: "On" },
+          { n: "Notify-SOC-Teams", t: "Any incident", r: 142, s: "On" },
+          { n: "Enrich-IP-VirusTotal", t: "Alert · external IP", r: 311, s: "On" },
+          { n: "Block-IP-FortiGate", t: "Manual / SOAR", r: 6, s: "On" },
+          { n: "Open-ServiceNow-Incident", t: "Incident · any", r: 87, s: "On" },
+        ].map((p) => (
+          <div key={p.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_100px_80px] border-t border-border">
+            <span className="font-medium">{p.n}</span>
+            <span className="text-muted-foreground">{p.t}</span>
+            <span>{p.r}</span>
+            <span><Badge>{p.s}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
     workbook: () => (
       <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Workbook · SOC overview</h3>
-        <div className="text-xs text-muted-foreground">12 visualizations · pinned 3 to dashboard</div>
+        <h3 className="text-sm font-semibold mb-3">Workbook · SOC overview</h3>
+        <div className="grid grid-cols-3 gap-2 mb-3 text-xs">
+          <Stat label="MTTA" value="11m" tone="text-primary" />
+          <Stat label="MTTR" value="2h 14m" />
+          <Stat label="Closed 7d" value="142" tone="text-success" />
+        </div>
+        <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="border border-border rounded p-2">
+            <div className="text-[10px] uppercase text-muted-foreground mb-1">Incidents by severity (7d)</div>
+            <div className="flex items-end gap-1 h-16">
+              <div className="flex-1 bg-destructive/70 rounded-t" style={{ height: "70%" }} />
+              <div className="flex-1 bg-warning/70 rounded-t" style={{ height: "45%" }} />
+              <div className="flex-1 bg-primary/60 rounded-t" style={{ height: "85%" }} />
+              <div className="flex-1 bg-muted rounded-t" style={{ height: "30%" }} />
+            </div>
+            <div className="flex justify-between text-[9px] text-muted-foreground mt-1"><span>High</span><span>Med</span><span>Low</span><span>Info</span></div>
+          </div>
+          <div className="border border-border rounded p-2">
+            <div className="text-[10px] uppercase text-muted-foreground mb-1">Top data sources</div>
+            <ul className="text-xs space-y-1">
+              <li>• SigninLogs — 41%</li>
+              <li>• SecurityEvent — 22%</li>
+              <li>• DeviceEvents — 17%</li>
+              <li>• OfficeActivity — 12%</li>
+            </ul>
+          </div>
+        </div>
       </Card>
     ),
+  },
   },
 
   generic: {
