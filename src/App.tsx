@@ -34,6 +34,7 @@ import AdminLearnerDetail from "./pages/AdminLearnerDetail.tsx";
 import Terms from "./pages/Terms.tsx";
 import InstructorCohort from "./pages/InstructorCohort.tsx";
 import AdminContent from "./pages/AdminContent.tsx";
+import Demo from "./pages/Demo.tsx";
 
 const queryClient = new QueryClient();
 
@@ -73,6 +74,7 @@ const App = () => (
             <Route path="/servicenow-journey" element={<ServiceNowJourney />} />
             <Route path="/instructor/cohort" element={<InstructorCohort />} />
             <Route path="/admin/content" element={<AdminContent />} />
+            <Route path="/demo" element={<Demo />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           </CourseProvider>
