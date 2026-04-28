@@ -36,6 +36,7 @@ interface Props {
 export function AppLayout({ children, title, breadcrumb, actions, skipAccessGate }: Props) {
   const { user, loading, isAdmin } = useAuth();
   const { hasAny, loading: accessLoading } = useProgramAccess();
+  const [sidebarOpen, setSidebarOpen] = useAutoSidebarOpen();
 
   if (loading || (user && !skipAccessGate && accessLoading)) {
     return (
