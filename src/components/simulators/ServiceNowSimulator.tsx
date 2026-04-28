@@ -441,7 +441,11 @@ export function ServiceNowSimulator({ expectedAction, onValidate, demoMode }: Pr
           {/* Body */}
           <div className="p-4 flex-1 overflow-auto">
             {fields.length === 0 ? (
-              <EmptyScreen activeItem={activeItem} expected={expectedAction} />
+              demoMode ? (
+                <DemoListView navId={activeNav} activeItem={activeItem} />
+              ) : (
+                <EmptyScreen activeItem={activeItem} expected={expectedAction} />
+              )
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-3xl">
                 {fields.map((f) => (
@@ -477,7 +481,7 @@ export function ServiceNowSimulator({ expectedAction, onValidate, demoMode }: Pr
             )}
 
             {/* Status banner */}
-            {statusMsg && (
+            {statusMsg && !demoMode && (
               <div
                 className={`mt-4 flex items-center gap-2 rounded border px-3 py-2 text-xs ${
                   statusMsg.ok
@@ -491,7 +495,7 @@ export function ServiceNowSimulator({ expectedAction, onValidate, demoMode }: Pr
             )}
 
             {/* Hint chip */}
-            <ExpectedHint expected={expectedAction} activeNav={activeNav} />
+            {!demoMode && <ExpectedHint expected={expectedAction} activeNav={activeNav} />}
           </div>
         </main>
       </div>
