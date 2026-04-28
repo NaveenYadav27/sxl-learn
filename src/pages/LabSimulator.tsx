@@ -40,6 +40,7 @@ export default function LabSimulator() {
 
   useEffect(() => {
     if (!slug || !user) return;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
     (async () => {
       const { data: l } = await supabase.from("labs").select("*").eq("slug", slug).maybeSingle();
       if (!l) { toast.error("Lab not found"); return; }
@@ -63,7 +64,22 @@ export default function LabSimulator() {
       (sp ?? []).forEach((p: any) => { m[p.step_id] = p.completed; });
       setDone(m);
       setLoading(false);
+
+      // Realtime: keep this tab in sync if the user marks steps in the other tab.
+      channel = supabase
+        .channel(`step_progress:${att!.id}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "step_progress", filter: `attempt_id=eq.${att!.id}` },
+          (payload: any) => {
+            const row = payload.new ?? payload.old;
+            if (!row) return;
+            setDone((prev) => ({ ...prev, [row.step_id]: !!row.completed }));
+          },
+        )
+        .subscribe();
     })();
+    return () => { if (channel) supabase.removeChannel(channel); };
   }, [slug, user]);
 
   const currentStep = steps[idx];
