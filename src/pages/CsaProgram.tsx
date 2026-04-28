@@ -115,7 +115,7 @@ const CsaProgram = () => (
           </div>
 
           <div id="enroll" className="lg:sticky lg:top-24">
-            <EnrollForm program="csa" programName="Certified SOC Analyst (CSA) Program" />
+            <EnrollForm program="soc" programName="Certified SOC Analyst (CSA) Program" />
           </div>
         </div>
       </div>
