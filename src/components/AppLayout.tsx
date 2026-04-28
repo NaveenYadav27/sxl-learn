@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
+import { NotificationBanner } from "@/components/NotificationBanner";
 import { useAuth } from "@/hooks/useAuth";
 import { useProgramAccess } from "@/hooks/useProgramAccess";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -43,6 +44,7 @@ export function AppLayout({ children, title, breadcrumb, actions, skipAccessGate
             </div>
             {actions}
           </header>
+          <NotificationBanner />
           <main className="flex-1 overflow-auto">{children}</main>
         </div>
       </div>
