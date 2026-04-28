@@ -267,8 +267,9 @@ export function ServiceNowSimulator({ expectedAction, onValidate, demoMode }: Pr
   const initialNav = useMemo(() => {
     const t = resolveNav(expectedAction?.target);
     if (t) return t;
-    return "sn-home";
-  }, [expectedAction]);
+    // Demo mode lands on a populated list view, not the empty home.
+    return demoMode ? "incident-open" : "sn-home";
+  }, [expectedAction, demoMode]);
 
   const [activeNav, setActiveNav] = useState<string>(initialNav);
   const [navFilter, setNavFilter] = useState("");

@@ -46,7 +46,7 @@ const tools: Tool[] = [
     icon: Shield,
     blurb: "Browse incidents, alerts, secure score & attack simulation — sample SOC data preloaded.",
     courses: ["sc-900"],
-    render: () => <PortalSimulator simulator="defender" expectedAction={{ type: "any" } as any} onValidate={noop} />,
+    render: () => <PortalSimulator simulator="defender" expectedAction={{ type: "any" } as any} onValidate={noop} demoMode />,
   },
   {
     id: "purview",
@@ -54,7 +54,7 @@ const tools: Tool[] = [
     icon: Gavel,
     blurb: "Sensitivity labels, DLP policies, classified files — explore the full compliance portal.",
     courses: ["sc-900"],
-    render: () => <PortalSimulator simulator="purview" expectedAction={{ type: "any" } as any} onValidate={noop} />,
+    render: () => <PortalSimulator simulator="purview" expectedAction={{ type: "any" } as any} onValidate={noop} demoMode />,
   },
   {
     id: "sentinel",
@@ -62,7 +62,7 @@ const tools: Tool[] = [
     icon: Network,
     blurb: "SIEM dashboards, KQL hunts & analytic rules — sample workspace ready.",
     courses: ["sc-900"],
-    render: () => <PortalSimulator simulator="sentinel" expectedAction={{ type: "any" } as any} onValidate={noop} />,
+    render: () => <PortalSimulator simulator="sentinel" expectedAction={{ type: "any" } as any} onValidate={noop} demoMode />,
   },
   {
     id: "tenant",
@@ -70,7 +70,7 @@ const tools: Tool[] = [
     icon: Building2,
     blurb: "Per-learner sandbox tenant powering the SC-900 live labs (10 users, 4 groups, 3 incidents seeded).",
     courses: ["sc-900"],
-    render: () => <PortalSimulator simulator="entra" expectedAction={{ type: "any" } as any} onValidate={noop} />,
+    render: () => <PortalSimulator simulator="entra" expectedAction={{ type: "any" } as any} onValidate={noop} demoMode />,
   },
   {
     id: "servicenow",
@@ -78,7 +78,7 @@ const tools: Tool[] = [
     icon: Workflow,
     blurb: "Incident, Problem, Change, Catalog, CMDB & Flow Designer — full instance with sample tickets.",
     courses: ["cis-itsm"],
-    render: () => <ServiceNowSimulator expectedAction={{ type: "any" } as any} onValidate={noop} />,
+    render: () => <ServiceNowSimulator expectedAction={{ type: "any" } as any} onValidate={noop} demoMode />,
   },
   {
     id: "kali",
