@@ -50,7 +50,7 @@ export function AppLayout({ children, title, breadcrumb, actions, skipAccessGate
   if (!skipAccessGate && !isAdmin && !hasAny) return <Navigate to="/pending" replace />;
 
   return (
-    <SidebarProvider>
+    <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
       <div className="flex min-h-screen w-full bg-background">
         <AppSidebar />
         <div className="flex flex-1 flex-col">
