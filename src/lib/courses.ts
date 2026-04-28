@@ -38,7 +38,7 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     icon: Shield,
     accentClass: "text-domain-security",
     modules: sc900Modules,
-    plans: { fiveDay: sc900FiveDay, twoDay: sc900TwoDay, oneDay: sc900OneDay },
+    plans: { fiveDay: sc900FiveDay, twoDay: sc900TwoDay, oneDay: sc900OneDay, oneHour: sc900OneHour },
     examTitle: "SC-900 Practice Exam",
     examIntroBullets: [
       "Questions drawn randomly from across all SC-900 modules.",
