@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
@@ -6,6 +6,23 @@ import { NotificationBanner } from "@/components/NotificationBanner";
 import { useAuth } from "@/hooks/useAuth";
 import { useProgramAccess } from "@/hooks/useProgramAccess";
 import { Skeleton } from "@/components/ui/skeleton";
+
+/** Auto collapse sidebar below this CSS-pixel width. */
+const AUTO_COLLAPSE_BREAKPOINT = 1280;
+
+function useAutoSidebarOpen() {
+  const [open, setOpen] = useState<boolean>(() =>
+    typeof window === "undefined" ? true : window.innerWidth >= AUTO_COLLAPSE_BREAKPOINT,
+  );
+  useEffect(() => {
+    const mql = window.matchMedia(`(min-width: ${AUTO_COLLAPSE_BREAKPOINT}px)`);
+    const onChange = (e: MediaQueryListEvent | MediaQueryList) => setOpen(e.matches);
+    onChange(mql);
+    mql.addEventListener("change", onChange as (e: MediaQueryListEvent) => void);
+    return () => mql.removeEventListener("change", onChange as (e: MediaQueryListEvent) => void);
+  }, []);
+  return [open, setOpen] as const;
+}
 
 interface Props {
   children: ReactNode;
@@ -19,6 +36,7 @@ interface Props {
 export function AppLayout({ children, title, breadcrumb, actions, skipAccessGate }: Props) {
   const { user, loading, isAdmin } = useAuth();
   const { hasAny, loading: accessLoading } = useProgramAccess();
+  const [sidebarOpen, setSidebarOpen] = useAutoSidebarOpen();
 
   if (loading || (user && !skipAccessGate && accessLoading)) {
     return (
@@ -32,7 +50,7 @@ export function AppLayout({ children, title, breadcrumb, actions, skipAccessGate
   if (!skipAccessGate && !isAdmin && !hasAny) return <Navigate to="/pending" replace />;
 
   return (
-    <SidebarProvider>
+    <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
       <div className="flex min-h-screen w-full bg-background">
         <AppSidebar />
         <div className="flex flex-1 flex-col">
