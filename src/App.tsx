@@ -11,6 +11,7 @@ import Auth from "./pages/Auth.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Catalog from "./pages/Catalog.tsx";
 import Lab from "./pages/Lab.tsx";
+import LabSimulator from "./pages/LabSimulator.tsx";
 import Placeholder from "./pages/Placeholder.tsx";
 import ProgressPage from "./pages/Progress.tsx";
 import Exam from "./pages/Exam.tsx";
@@ -58,6 +59,7 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/catalog" element={<Catalog />} />
             <Route path="/lab/:slug" element={<Lab />} />
+            <Route path="/lab/:slug/sim" element={<LabSimulator />} />
             <Route path="/progress" element={<ProgressPage />} />
             <Route path="/exam" element={<Exam />} />
             <Route path="/session-plan" element={<SessionPlan />} />
