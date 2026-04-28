@@ -543,3 +543,322 @@ function ExpectedHint({ expected, activeNav }: { expected: Action; activeNav: st
     </div>
   );
 }
+
+// -----------------------------------------------------------------------------
+// Demo data — realistic seeded records for the read-only "Tool Demo" page.
+// -----------------------------------------------------------------------------
+const DEMO_INCIDENTS = [
+  { num: "INC0010234", short: "Outlook crashes when opening calendar", caller: "Alice Anderson", priority: "1 - Critical", state: "In Progress", group: "Service Desk", updated: "2m ago" },
+  { num: "INC0010231", short: "VPN disconnects every 10 minutes", caller: "Dave Davis", priority: "2 - High", state: "On Hold", group: "Network", updated: "12m ago" },
+  { num: "INC0010228", short: "Printer offline — 3rd floor MFP-03", caller: "Eve Edwards", priority: "3 - Moderate", state: "New", group: "Service Desk", updated: "34m ago" },
+  { num: "INC0010222", short: "SAP login error 401 after password reset", caller: "Carol Chen", priority: "2 - High", state: "In Progress", group: "Application Support", updated: "1h ago" },
+  { num: "INC0010219", short: "Slack webhook missing in #ops channel", caller: "Bob Brown", priority: "4 - Low", state: "New", group: "Service Desk", updated: "2h ago" },
+  { num: "INC0010214", short: "DB latency spike on prod-01", caller: "Frank Foster", priority: "1 - Critical", state: "In Progress", group: "Database", updated: "3h ago" },
+];
+
+const DEMO_PROBLEMS = [
+  { num: "PRB0040052", short: "Recurring VPN disconnects across EMEA users", state: "Root Cause Analysis", priority: "2 - High", assigned: "Network Eng", related: 14 },
+  { num: "PRB0040048", short: "SAP SSO token expires before TTL", state: "Fix in Progress", priority: "2 - High", assigned: "App Support", related: 8 },
+  { num: "PRB0040041", short: "Outlook calendar add-in memory leak", state: "Known Error", priority: "3 - Moderate", assigned: "Endpoint Team", related: 22 },
+];
+
+const DEMO_KNOWN_ERRORS = [
+  { num: "KB0001045", short: "VPN client v9.2 — disconnect every 600s", workaround: "Roll back to v9.1.4 until vendor fix lands.", views: 412 },
+  { num: "KB0001031", short: "Outlook calendar add-in 0x80004005", workaround: "Disable Microsoft Search add-in via GPO.", views: 287 },
+];
+
+const DEMO_CHANGES = [
+  { num: "CHG0030145", short: "Patch Windows Server fleet — Oct 2025", type: "Standard", risk: "Low", state: "Scheduled", window: "Sat 02:00–04:00", approver: "Bob Brown" },
+  { num: "CHG0030142", short: "Migrate prod-db-02 to new SAN array", type: "Normal", risk: "High", state: "CAB Approval", window: "Sun 22:00–02:00", approver: "CAB" },
+  { num: "CHG0030139", short: "Hotfix payment gateway TLS handshake", type: "Emergency", risk: "Moderate", state: "Implement", window: "Now", approver: "ECAB" },
+  { num: "CHG0030131", short: "Quarterly firewall ruleset audit", type: "Standard", risk: "Low", state: "Closed", window: "Last Sat", approver: "Auto" },
+];
+
+const DEMO_RITM = [
+  { num: "RITM0023401", item: "MacBook Pro 16\" — Dev kit", requested_for: "Jack Jones", stage: "Approval", state: "Open" },
+  { num: "RITM0023398", item: "Adobe Creative Cloud license", requested_for: "Eve Edwards", stage: "Fulfilment", state: "Work In Progress" },
+  { num: "RITM0023391", item: "Access to GitHub Enterprise org", requested_for: "Ivy Ingram", stage: "Delivery", state: "Work In Progress" },
+  { num: "RITM0023385", item: "Standard Windows laptop refresh", requested_for: "Henry Hill", stage: "Completed", state: "Closed Complete" },
+];
+
+const DEMO_CATALOG_TASKS = [
+  { num: "SCTASK0010012", parent: "RITM0023401", short: "Image and ship MacBook Pro", assigned: "Hardware Ops", state: "Work In Progress" },
+  { num: "SCTASK0010009", parent: "RITM0023398", short: "Assign Adobe license seat", assigned: "License Mgmt", state: "Open" },
+  { num: "SCTASK0010005", parent: "RITM0023391", short: "Add user to GH org & team", assigned: "DevEx", state: "Open" },
+];
+
+const DEMO_CIS = [
+  { name: "prod-web-01", class: "cmdb_ci_server", env: "Production", status: "Operational", owner: "Web Platform" },
+  { name: "prod-web-02", class: "cmdb_ci_server", env: "Production", status: "Operational", owner: "Web Platform" },
+  { name: "prod-db-01", class: "cmdb_ci_database", env: "Production", status: "Operational", owner: "DBA" },
+  { name: "checkout-svc", class: "cmdb_ci_service", env: "Production", status: "Operational", owner: "Payments" },
+  { name: "ldap-app-04", class: "cmdb_ci_appl", env: "Test", status: "Non-Operational", owner: "Identity" },
+];
+
+const DEMO_KB = [
+  { num: "KB0010202", title: "How to reset your Windows password", base: "IT", views: 5421, state: "Published" },
+  { num: "KB0010198", title: "Connect to corporate VPN on macOS", base: "IT", views: 3891, state: "Published" },
+  { num: "KB0010191", title: "Request a new software license", base: "IT", views: 2104, state: "Published" },
+  { num: "KB0010187", title: "Onboarding checklist for new hires", base: "HR", views: 1740, state: "Review" },
+];
+
+function DemoTable({ headers, rows }: { headers: string[]; rows: (string | number)[][] }) {
+  return (
+    <div className="overflow-x-auto rounded border border-border">
+      <table className="w-full text-xs">
+        <thead className="bg-muted/60 text-foreground/80">
+          <tr>
+            {headers.map((h) => (
+              <th key={h} className="text-left font-medium px-3 py-2 border-b border-border">{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r, i) => (
+            <tr key={i} className="border-b border-border/60 hover:bg-muted/30 cursor-pointer">
+              {r.map((c, j) => (
+                <td key={j} className="px-3 py-2 align-top">{c}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function DemoListView({ navId, activeItem }: { navId: string; activeItem?: NavItem }) {
+  const title = activeItem?.label ?? "Records";
+
+  switch (navId) {
+    case "incident-open":
+      return (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-semibold">{title}</h2>
+            <Badge variant="secondary" className="text-[10px]">{DEMO_INCIDENTS.length} records</Badge>
+          </div>
+          <DemoTable
+            headers={["Number", "Short description", "Caller", "Priority", "State", "Assignment group", "Updated"]}
+            rows={DEMO_INCIDENTS.map((i) => [i.num, i.short, i.caller, i.priority, i.state, i.group, i.updated])}
+          />
+        </div>
+      );
+    case "major-incident":
+      return (
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold">{title}</h2>
+          <DemoTable
+            headers={["Number", "Short description", "Caller", "Priority", "State"]}
+            rows={DEMO_INCIDENTS.filter((i) => i.priority.startsWith("1")).map((i) => [i.num, i.short, i.caller, i.priority, i.state])}
+          />
+        </div>
+      );
+    case "problem-open":
+      return (
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold">{title}</h2>
+          <DemoTable
+            headers={["Number", "Short description", "State", "Priority", "Assigned to", "Related INCs"]}
+            rows={DEMO_PROBLEMS.map((p) => [p.num, p.short, p.state, p.priority, p.assigned, p.related])}
+          />
+        </div>
+      );
+    case "known-error":
+      return (
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold">{title}</h2>
+          <DemoTable
+            headers={["Article", "Title", "Workaround", "Views"]}
+            rows={DEMO_KNOWN_ERRORS.map((k) => [k.num, k.short, k.workaround, k.views])}
+          />
+        </div>
+      );
+    case "change-open":
+    case "change-schedule":
+      return (
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold">{title}</h2>
+          <DemoTable
+            headers={["Number", "Short description", "Type", "Risk", "State", "Window", "Approver"]}
+            rows={DEMO_CHANGES.map((c) => [c.num, c.short, c.type, c.risk, c.state, c.window, c.approver])}
+          />
+        </div>
+      );
+    case "release":
+      return (
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold">Releases</h2>
+          <DemoTable
+            headers={["Release", "Environment", "State", "Lead"]}
+            rows={[
+              ["REL0024-OCT", "Production", "In Progress", "Jack Jones"],
+              ["REL0023-SEP", "Production", "Released", "Eve Edwards"],
+              ["REL0022-AUG", "Production", "Closed", "Bob Brown"],
+            ]}
+          />
+        </div>
+      );
+    case "ritm":
+      return (
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold">{title}</h2>
+          <DemoTable
+            headers={["Number", "Item", "Requested for", "Stage", "State"]}
+            rows={DEMO_RITM.map((r) => [r.num, r.item, r.requested_for, r.stage, r.state])}
+          />
+        </div>
+      );
+    case "catalog-task":
+      return (
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold">{title}</h2>
+          <DemoTable
+            headers={["Number", "Parent RITM", "Short description", "Assigned to", "State"]}
+            rows={DEMO_CATALOG_TASKS.map((t) => [t.num, t.parent, t.short, t.assigned, t.state])}
+          />
+        </div>
+      );
+    case "service-catalog":
+      return (
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold">Service Catalog</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+            {[
+              { name: "Standard Laptop", desc: "Windows 11 corporate image" },
+              { name: "MacBook Pro 16\"", desc: "For developers & designers" },
+              { name: "Adobe Creative Cloud", desc: "Annual license seat" },
+              { name: "GitHub Enterprise access", desc: "Add to org + team" },
+              { name: "VPN access request", desc: "For new hires & contractors" },
+              { name: "Office 365 mailbox", desc: "Standard 50 GB mailbox" },
+            ].map((c) => (
+              <Card key={c.name} className="p-3 hover:border-primary/40 cursor-pointer">
+                <div className="text-xs font-semibold">{c.name}</div>
+                <div className="text-[11px] text-muted-foreground mt-0.5">{c.desc}</div>
+                <Button size="sm" variant="outline" className="mt-2 h-6 text-[10px]">Order now</Button>
+              </Card>
+            ))}
+          </div>
+        </div>
+      );
+    case "cmdb":
+    case "csdm":
+      return (
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold">CMDB · Configuration Items</h2>
+          <DemoTable
+            headers={["Name", "Class", "Environment", "Status", "Owner group"]}
+            rows={DEMO_CIS.map((c) => [c.name, c.class, c.env, c.status, c.owner])}
+          />
+        </div>
+      );
+    case "knowledge":
+      return (
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold">Knowledge Base</h2>
+          <DemoTable
+            headers={["Article", "Title", "Knowledge base", "Views", "State"]}
+            rows={DEMO_KB.map((k) => [k.num, k.title, k.base, k.views, k.state])}
+          />
+        </div>
+      );
+    case "dashboards":
+      return (
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold">Performance Analytics · ITSM scorecard</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[
+              { kpi: "MTTR", value: "4h 12m", trend: "↓ 8%" },
+              { kpi: "First Call Resolution", value: "71%", trend: "↑ 3%" },
+              { kpi: "Change Success Rate", value: "94%", trend: "↑ 1%" },
+              { kpi: "Reopen Rate", value: "5.4%", trend: "↓ 0.6%" },
+            ].map((s) => (
+              <Card key={s.kpi} className="p-3">
+                <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{s.kpi}</div>
+                <div className="text-xl font-bold mt-1">{s.value}</div>
+                <div className="text-[11px] text-success mt-0.5">{s.trend} vs last quarter</div>
+              </Card>
+            ))}
+          </div>
+        </div>
+      );
+    case "reports":
+      return (
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold">Saved Reports</h2>
+          <DemoTable
+            headers={["Title", "Type", "Run by", "Last run"]}
+            rows={[
+              ["Open incidents by group", "Bar chart", "Bob Brown", "5m ago"],
+              ["Change failures by week", "Line", "Alice Anderson", "1h ago"],
+              ["Top requested catalog items", "Pie", "Eve Edwards", "Yesterday"],
+              ["SLA breaches — last 30 days", "Bar chart", "Frank Foster", "Yesterday"],
+            ]}
+          />
+        </div>
+      );
+    case "sn-home":
+      return (
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold">Now Platform · Today</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            <Card className="p-3"><div className="text-[10px] uppercase text-muted-foreground">Open Incidents</div><div className="text-2xl font-bold mt-1">142</div></Card>
+            <Card className="p-3"><div className="text-[10px] uppercase text-muted-foreground">Open Problems</div><div className="text-2xl font-bold mt-1">17</div></Card>
+            <Card className="p-3"><div className="text-[10px] uppercase text-muted-foreground">Changes this week</div><div className="text-2xl font-bold mt-1">23</div></Card>
+            <Card className="p-3"><div className="text-[10px] uppercase text-muted-foreground">Open RITMs</div><div className="text-2xl font-bold mt-1">61</div></Card>
+          </div>
+          <Card className="p-3">
+            <div className="text-xs font-semibold mb-2">My recent work</div>
+            <DemoTable
+              headers={["Number", "Short description", "Updated"]}
+              rows={DEMO_INCIDENTS.slice(0, 4).map((i) => [i.num, i.short, i.updated])}
+            />
+          </Card>
+        </div>
+      );
+    case "users-roles":
+      return (
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold">Users & Roles</h2>
+          <DemoTable
+            headers={["User", "Email", "Role", "Group", "MFA"]}
+            rows={[
+              ["Alice Anderson", "alice@contoso.com", "admin", "CAB Approvers", "✓"],
+              ["Bob Brown", "bob@contoso.com", "itil_admin", "Service Desk", "✓"],
+              ["Carol Chen", "carol@contoso.com", "approver_user", "CAB Approvers", "✓"],
+              ["Dave Davis", "dave@contoso.com", "itil", "Service Desk", "—"],
+              ["Frank Foster", "frank@contoso.com", "knowledge_admin", "Knowledge", "✓"],
+            ]}
+          />
+        </div>
+      );
+    case "process-map":
+      return (
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold">ITIL Process Map</h2>
+          <Card className="p-4">
+            <div className="flex flex-wrap items-center gap-2 text-xs">
+              {["Request", "Incident", "Problem", "Change", "Release"].map((s, i, arr) => (
+                <span key={s} className="flex items-center gap-2">
+                  <span className="px-3 py-1.5 rounded border border-primary/30 bg-primary/10 font-medium">{s}</span>
+                  {i < arr.length - 1 && <ChevronRight className="h-3 w-3 text-muted-foreground" />}
+                </span>
+              ))}
+            </div>
+          </Card>
+        </div>
+      );
+    default:
+      return (
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold">{title}</h2>
+          <Card className="p-6 text-center text-xs text-muted-foreground">
+            <div className="mx-auto h-10 w-10 rounded bg-muted grid place-items-center mb-2">
+              {activeItem?.icon ? <activeItem.icon className="h-4 w-4" /> : <LayoutDashboard className="h-4 w-4" />}
+            </div>
+            Browse the Application Navigator on the left to explore other modules.
+          </Card>
+        </div>
+      );
+  }
+}
