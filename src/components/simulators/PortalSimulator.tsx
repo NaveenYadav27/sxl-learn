@@ -655,13 +655,19 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
       </Card>
     ),
     assets: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Devices & Identities</h3>
-        <div className="grid grid-cols-3 gap-2 text-xs">
-          <Stat label="Onboarded devices" value="847" />
-          <Stat label="At risk" value="12" tone="text-destructive" />
-          <Stat label="Compromised users" value="3" tone="text-warning" />
+      <Card className="overflow-hidden">
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_100px_120px_80px]">
+          <span>Device / User</span><span>OS / Type</span><span>Risk</span><span>Last seen</span><span>Exposure</span>
         </div>
+        {DEVICES.map((d) => (
+          <div key={d.name} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_100px_120px_80px] border-t border-border hover:bg-muted/30">
+            <span className="truncate font-medium">{d.name}</span>
+            <span className="text-muted-foreground">{d.os}</span>
+            <span><Badge variant={d.risk === "High" ? "destructive" : d.risk === "Medium" ? "secondary" : "outline"}>{d.risk}</Badge></span>
+            <span className="text-muted-foreground">{d.seen}</span>
+            <span className={d.exp > 60 ? "text-destructive" : d.exp > 30 ? "text-warning" : ""}>{d.exp}</span>
+          </div>
+        ))}
       </Card>
     ),
     "secure-score": () => (
@@ -683,52 +689,100 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
     ),
     recommendations: () => (
       <Card className="overflow-hidden">
-        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_100px_100px]">
-          <span>Recommendation</span><span>Severity</span><span>Score impact</span>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_100px_100px_120px]">
+          <span>Recommendation</span><span>Severity</span><span>Score impact</span><span>Status</span>
         </div>
         {RECOS.map((r) => (
-          <div key={r.name} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_100px] border-t border-border">
+          <div key={r.name} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_100px_120px] border-t border-border hover:bg-muted/30">
             <span className="truncate">{r.name}</span>
             <span><Badge variant={r.sev === "High" ? "destructive" : "secondary"}>{r.sev}</Badge></span>
             <span>+{r.impact}</span>
+            <span className="text-muted-foreground">To address</span>
           </div>
         ))}
       </Card>
     ),
     "recommended-actions": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Improvement actions · top by impact</h3>
-        <ul className="text-xs space-y-1.5">
-          <li>• Enable MFA for all users (+12 pts)</li>
-          <li>• Block legacy authentication (+8 pts)</li>
-          <li>• Enable Conditional Access for admins (+6 pts)</li>
-        </ul>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border text-sm font-semibold">Improvement actions · top by impact</div>
+        {[
+          { n: "Enable MFA for all users", pts: 12, cat: "Identity" },
+          { n: "Block legacy authentication", pts: 8, cat: "Identity" },
+          { n: "Enable Conditional Access for admins", pts: 6, cat: "Identity" },
+          { n: "Turn on tamper protection (Defender for Endpoint)", pts: 5, cat: "Devices" },
+          { n: "Restrict guest invitations to admins", pts: 4, cat: "Apps" },
+          { n: "Enable ASR rule: Block Office macros from Internet", pts: 3, cat: "Devices" },
+        ].map((r) => (
+          <div key={r.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_60px] border-t border-border">
+            <span>{r.n}</span>
+            <span className="text-muted-foreground">{r.cat}</span>
+            <span className="text-success font-medium">+{r.pts}</span>
+          </div>
+        ))}
       </Card>
     ),
     "defender-cloud": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Defender for Cloud · CSPM</h3>
-        <div className="grid grid-cols-3 gap-2 text-xs">
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border flex items-center justify-between">
+          <h3 className="text-sm font-semibold">Defender for Cloud · CSPM</h3>
+          <Badge variant="outline">3 subscriptions</Badge>
+        </div>
+        <div className="p-3 grid grid-cols-3 gap-2 text-xs">
           <Stat label="Subscriptions" value="3" />
           <Stat label="Recommendations" value="68" tone="text-warning" />
           <Stat label="Regulatory %" value="71%" />
         </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_100px_120px]">
+          <span>Subscription</span><span>Score</span><span>Open recos</span>
+        </div>
+        {[
+          { s: "sub-prod-eastus", sc: "76%", r: 18 },
+          { s: "sub-dev-westus", sc: "61%", r: 27 },
+          { s: "sub-shared-services", sc: "82%", r: 23 },
+        ].map((x) => (
+          <div key={x.s} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_120px] border-t border-border">
+            <span>{x.s}</span><span className="text-primary">{x.sc}</span><span>{x.r}</span>
+          </div>
+        ))}
       </Card>
     ),
     "attack-simulator": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Defender for Office 365 · Attack simulation training</h3>
-        <p className="text-xs text-muted-foreground">Run safe phishing simulations to measure user resilience.</p>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border">
+          <h3 className="text-sm font-semibold">Attack simulation training</h3>
+          <p className="text-[11px] text-muted-foreground">Run safe phishing simulations to measure user resilience.</p>
+        </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_100px_100px]">
+          <span>Template</span><span>Technique</span><span>Targeted</span><span>Predicted CR</span>
+        </div>
+        {[
+          { n: "Microsoft 365 password expiry", t: "Credential harvest", u: 540, p: "11%" },
+          { n: "DocuSign — please review", t: "Link in attachment", u: 420, p: "8%" },
+          { n: "HR — annual benefits", t: "Drive-by URL", u: 847, p: "14%" },
+          { n: "DHL package failed delivery", t: "Malware attachment", u: 320, p: "6%" },
+        ].map((s) => (
+          <div key={s.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_100px_100px] border-t border-border">
+            <span className="truncate">{s.n}</span>
+            <span className="text-muted-foreground">{s.t}</span>
+            <span>{s.u}</span>
+            <span className="text-warning">{s.p}</span>
+          </div>
+        ))}
       </Card>
     ),
     simulations: () => (
       <Card className="overflow-hidden">
-        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_100px_120px]">
-          <span>Simulation</span><span>Compromise</span><span>Date</span>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_100px_100px_120px]">
+          <span>Simulation</span><span>Compromise</span><span>Reported</span><span>Date</span>
         </div>
-        {[{ n: "Q1 phish — credential harvest", c: "12%", d: "Mar 14" }, { n: "Payroll lure", c: "27%", d: "Feb 03" }].map((s) => (
-          <div key={s.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_120px] border-t border-border">
-            <span>{s.n}</span><span className="text-warning">{s.c}</span><span className="text-muted-foreground">{s.d}</span>
+        {[
+          { n: "Q1 phish — credential harvest", c: "12%", r: "38%", d: "Mar 14" },
+          { n: "Payroll lure", c: "27%", r: "18%", d: "Feb 03" },
+          { n: "OneDrive shared file", c: "9%", r: "44%", d: "Jan 17" },
+          { n: "Voicemail link", c: "15%", r: "22%", d: "Dec 04" },
+        ].map((s) => (
+          <div key={s.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_100px_120px] border-t border-border">
+            <span>{s.n}</span><span className="text-warning">{s.c}</span><span className="text-success">{s.r}</span><span className="text-muted-foreground">{s.d}</span>
           </div>
         ))}
       </Card>
