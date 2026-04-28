@@ -1246,34 +1246,71 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
       </Card>
     ),
     "user-risk-policy": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">User-risk policy</h3>
-        <div className="text-xs text-muted-foreground">Configure thresholds and remediation actions (block / require password change).</div>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border text-sm font-semibold">User-risk & sign-in-risk policies</div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_140px_120px_80px]">
+          <span>Policy</span><span>Risk level</span><span>Action</span><span>Users</span><span>State</span>
+        </div>
+        {[
+          { n: "User risk policy", r: "High", a: "Require password change", u: "All users", s: "On" },
+          { n: "Sign-in risk policy", r: "Medium and above", a: "Require MFA", u: "All users", s: "On" },
+          { n: "MFA registration policy", r: "—", a: "Require registration (14d)", u: "All users", s: "On" },
+        ].map((p) => (
+          <div key={p.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_140px_120px_80px] border-t border-border">
+            <span className="font-medium">{p.n}</span>
+            <span><Badge variant={p.r === "High" ? "destructive" : "secondary"}>{p.r}</Badge></span>
+            <span>{p.a}</span>
+            <span className="text-muted-foreground">{p.u}</span>
+            <span><Badge>{p.s}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
     "risky-signins": () => (
       <Card className="overflow-hidden">
-        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_100px_120px_100px]">
-          <span>User</span><span>Risk</span><span>Detection</span><span>Action</span>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_100px_140px_120px_80px]">
+          <span>User</span><span>Risk</span><span>Detection</span><span>Location</span><span>Action</span>
         </div>
         {[
-          { u: "priya@contosobank.in", r: "High", d: "Anonymous IP (Tor)" },
-          { u: "alex@contosobank.in", r: "Medium", d: "Atypical travel" },
-          { u: "raj@contosobank.in", r: "Low", d: "Unfamiliar properties" },
+          { u: "priya@contosobank.in", r: "High", d: "Anonymous IP (Tor)", l: "Unknown" },
+          { u: "alex@contosobank.in", r: "Medium", d: "Atypical travel", l: "Mumbai → Lagos" },
+          { u: "raj@contosobank.in", r: "Low", d: "Unfamiliar properties", l: "Bengaluru" },
+          { u: "diana.r@contosobank.in", r: "High", d: "Leaked credentials", l: "Bengaluru" },
+          { u: "svc-jenkins@contosobank.in", r: "Medium", d: "Unusual sign-in", l: "AWS us-east-1" },
         ].map((s) => (
-          <div key={s.u} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_120px_100px] border-t border-border">
-            <span>{s.u}</span>
+          <div key={s.u} className="px-3 py-2 text-xs grid grid-cols-[1fr_100px_140px_120px_80px] border-t border-border">
+            <span className="truncate">{s.u}</span>
             <span><Badge variant={s.r === "High" ? "destructive" : "secondary"}>{s.r}</Badge></span>
             <span className="text-muted-foreground">{s.d}</span>
+            <span className="text-muted-foreground">{s.l}</span>
             <span><Button size="sm" variant="ghost">View</Button></span>
           </div>
         ))}
       </Card>
     ),
     "hybrid-management": () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Hybrid identity management</h3>
-        <div className="text-xs text-muted-foreground">Connect on-prem AD to Entra ID via Entra Connect, Cloud Sync, or PHS / PTA / Federation.</div>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border text-sm font-semibold">Hybrid identity management</div>
+        <div className="p-3 grid grid-cols-3 gap-2 text-xs border-b border-border">
+          <Stat label="Synced objects" value="847" />
+          <Stat label="Last sync" value="3 min ago" tone="text-success" />
+          <Stat label="Sync errors" value="0" tone="text-success" />
+        </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_120px_120px_100px]">
+          <span>Connector</span><span>Type</span><span>Last run</span><span>Status</span>
+        </div>
+        {[
+          { n: "contoso.local", t: "AD DS", l: "3 min ago", s: "Healthy" },
+          { n: "contosobank.onmicrosoft.com", t: "Entra ID", l: "3 min ago", s: "Healthy" },
+          { n: "contoso-ad-export", t: "OU filtering", l: "3 min ago", s: "Healthy" },
+        ].map((c) => (
+          <div key={c.n} className="px-3 py-2 text-xs grid grid-cols-[1fr_120px_120px_100px] border-t border-border">
+            <span className="font-medium">{c.n}</span>
+            <span>{c.t}</span>
+            <span className="text-muted-foreground">{c.l}</span>
+            <span><Badge variant="default">{c.s}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
     "entra-connect": () => (
