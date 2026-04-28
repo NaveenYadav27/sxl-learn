@@ -88,6 +88,36 @@ export default function LabSimulator() {
     setTimeout(() => { if (idx < steps.length - 1) goto(idx + 1); }, 700);
   }
 
+  // IMPORTANT: hooks must run on every render — keep useMemo above any early return.
+  const simulator = useMemo(() => {
+    if (!currentStep || !lab) return null;
+    const ea = currentStep.expected_action ?? {};
+    if (ea?.type === "tenant_check") {
+      return <TenantCheckPanel check={ea.check} params={ea.params ?? {}} onValidate={(ok) => { if (ok) markStepDone(); }} />;
+    }
+    if (lab.simulator === "entra" && lab.slug === "mfa-conditional-access") {
+      return <EntraSimulator expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
+    }
+    if (lab.simulator === "kali-terminal" || lab.simulator === "kali") {
+      return <KaliTerminalSimulator expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
+    }
+    if (lab.simulator === "servicenow") {
+      return <ServiceNowSimulator expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
+    }
+    if (["defender", "purview", "sentinel", "entra", "generic"].includes(lab?.simulator)) {
+      return <PortalSimulator simulator={lab.simulator} expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
+    }
+    return (
+      <div className="rounded-lg border border-dashed border-border p-8 text-center text-muted-foreground">
+        No simulator registered for this lab type.
+        <div className="mt-4">
+          <Button onClick={markStepDone}>Mark step done</Button>
+        </div>
+      </div>
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentStep?.id, lab?.simulator, lab?.slug]);
+
   if (authLoading) {
     return <div className="min-h-screen p-8"><Skeleton className="h-12 w-1/3" /></div>;
   }
@@ -102,35 +132,6 @@ export default function LabSimulator() {
   }
 
   const completedCount = Object.values(done).filter(Boolean).length;
-
-  const simulator = useMemo(() => {
-    if (!currentStep) return null;
-    const ea = currentStep.expected_action ?? {};
-    if (ea?.type === "tenant_check") {
-      return <TenantCheckPanel check={ea.check} params={ea.params ?? {}} onValidate={(ok) => { if (ok) markStepDone(); }} />;
-    }
-    if (lab.simulator === "entra" && lab.slug === "mfa-conditional-access") {
-      return <EntraSimulator expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
-    }
-    if (lab.simulator === "kali-terminal" || lab.simulator === "kali") {
-      return <KaliTerminalSimulator expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
-    }
-    if (lab.simulator === "servicenow") {
-      return <ServiceNowSimulator expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
-    }
-    if (["defender", "purview", "sentinel", "entra", "generic"].includes(lab.simulator)) {
-      return <PortalSimulator simulator={lab.simulator} expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
-    }
-    return (
-      <div className="rounded-lg border border-dashed border-border p-8 text-center text-muted-foreground">
-        No simulator registered for this lab type.
-        <div className="mt-4">
-          <Button onClick={markStepDone}>Mark step done</Button>
-        </div>
-      </div>
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentStep?.id, lab.simulator, lab.slug]);
 
   return (
     <div className="flex h-screen w-full flex-col bg-background">
