@@ -42,6 +42,7 @@ export default function Lab() {
 
   useEffect(() => {
     if (!slug || !user) return;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
     (async () => {
       // 1. Lab + steps
       const { data: l } = await supabase.from("labs").select("*").eq("slug", slug).maybeSingle();
@@ -77,7 +78,29 @@ export default function Lab() {
       const firstIncomplete = (s ?? []).findIndex((st: any) => !map[st.id]);
       setCurrentIdx(firstIncomplete >= 0 ? firstIncomplete : 0);
       setLoading(false);
+
+      // 5. Realtime: pick up step completions from the full-screen tab.
+      channel = supabase
+        .channel(`step_progress_lab:${att!.id}`)
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "step_progress", filter: `attempt_id=eq.${att!.id}` },
+          (payload: any) => {
+            const row = payload.new ?? payload.old;
+            if (!row) return;
+            setStepProgress((prev) => ({ ...prev, [row.step_id]: !!row.completed }));
+          },
+        )
+        .on(
+          "postgres_changes",
+          { event: "UPDATE", schema: "public", table: "lab_attempts", filter: `id=eq.${att!.id}` },
+          (payload: any) => {
+            if (payload.new) setAttempt((a: any) => ({ ...a, ...payload.new }));
+          },
+        )
+        .subscribe();
     })();
+    return () => { if (channel) supabase.removeChannel(channel); };
   }, [slug, user, navigate]);
 
   const currentStep = steps[currentIdx];
