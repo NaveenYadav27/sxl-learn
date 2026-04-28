@@ -1348,9 +1348,29 @@ const VISUALS: Record<SimKind, Record<string, (p: VisualProps) => JSX.Element>> 
       </Card>
     ),
     iam: () => (
-      <Card className="p-3">
-        <h3 className="text-sm font-semibold mb-2">Access control (IAM)</h3>
-        <div className="text-xs text-muted-foreground">Add or remove role assignments at this scope.</div>
+      <Card className="overflow-hidden">
+        <div className="px-3 py-2 border-b border-border flex items-center justify-between">
+          <h3 className="text-sm font-semibold">Access control (IAM) · sub-prod-eastus</h3>
+          <Button size="sm" variant="outline"><Plus className="h-3 w-3 mr-1" />Add role assignment</Button>
+        </div>
+        <div className="bg-muted/50 px-3 py-2 text-xs font-medium grid grid-cols-[1fr_180px_140px_100px]">
+          <span>Principal</span><span>Role</span><span>Scope</span><span>Type</span>
+        </div>
+        {[
+          { p: "Aarti Patel", r: "Owner", s: "Subscription", t: "User" },
+          { p: "sg-Admins-Global", r: "Contributor", s: "Subscription", t: "Group" },
+          { p: "Bob Smith", r: "Reader", s: "rg-finance-prod", t: "User" },
+          { p: "sp-deploy-cicd", r: "Contributor", s: "rg-finance-prod", t: "Service Principal" },
+          { p: "sg-Helpdesk", r: "Reader", s: "Subscription", t: "Group" },
+          { p: "diana.r@contosobank.in", r: "User Access Administrator", s: "rg-shared-network", t: "User" },
+        ].map((a) => (
+          <div key={a.p + a.r} className="px-3 py-2 text-xs grid grid-cols-[1fr_180px_140px_100px] border-t border-border">
+            <span className="font-medium truncate">{a.p}</span>
+            <span>{a.r}</span>
+            <span className="text-muted-foreground">{a.s}</span>
+            <span><Badge variant="outline">{a.t}</Badge></span>
+          </div>
+        ))}
       </Card>
     ),
   },
