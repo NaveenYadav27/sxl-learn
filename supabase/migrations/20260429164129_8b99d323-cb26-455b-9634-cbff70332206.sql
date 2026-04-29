@@ -1,0 +1,2 @@
+ALTER TYPE program_code ADD VALUE IF NOT EXISTS 'csa';
+ALTER TYPE program_code ADD VALUE IF NOT EXISTS 'k8s';
