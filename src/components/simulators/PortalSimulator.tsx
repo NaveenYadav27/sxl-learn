@@ -133,15 +133,15 @@ const NAV_CONFIGS: Record<SimKind, NavConfig> = {
     defaultNav: "sentinel-workspace",
     sections: [
       { items: [
-        { id: "sentinel-workspace", label: "Workspace overview", icon: Shield, aliases: ["home"] },
+        { id: "sentinel-workspace", label: "Workspace overview", icon: Shield, aliases: ["home", "overview"] },
         { id: "incidents", label: "Incidents", icon: AlertTriangle },
         { id: "hunting", label: "Hunting", icon: Search },
         { id: "logs", label: "Logs (KQL)", icon: Database },
       ]},
       { label: "Configuration", items: [
-        { id: "analytics", label: "Analytics rules", icon: Activity },
+        { id: "analytics", label: "Analytics rules", icon: Activity, aliases: ["analytics-rules"] },
         { id: "playbooks", label: "Automation · Playbooks", icon: Zap },
-        { id: "workbook", label: "Workbooks", icon: Layers },
+        { id: "workbook", label: "Workbooks", icon: Layers, aliases: ["workbooks", "pin-workbook"] },
       ]},
     ],
   },
