@@ -98,7 +98,9 @@ export default function Module() {
             ? getPen200ModuleExplanation(slug) ?? getModuleExplanation(slug)
             : course.code === "cis-itsm"
               ? getItsmModuleExplanation(slug) ?? getModuleExplanation(slug)
-              : getModuleExplanation(slug) ?? getItsmModuleExplanation(slug) ?? getPen200ModuleExplanation(slug))
+              : course.code === "csa"
+                ? getCsaModuleExplanation(slug) ?? getModuleExplanation(slug)
+                : getModuleExplanation(slug) ?? getItsmModuleExplanation(slug) ?? getPen200ModuleExplanation(slug) ?? getCsaModuleExplanation(slug))
         : undefined,
     [slug, course.code],
   );
