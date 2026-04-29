@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Shield, Cog, Crosshair, Radar, ArrowRight, Sparkles, Users, Briefcase, GraduationCap, CheckCircle2, Star } from "lucide-react";
+import { Shield, Cog, Crosshair, Radar, Container, ArrowRight, Sparkles, Users, Briefcase, GraduationCap, CheckCircle2, Star } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { ProgramMarketingHeader } from "@/components/ProgramMarketingHeader";
 
@@ -97,7 +97,7 @@ const Index = () => (
 
     {/* Two-card chooser */}
     <section className="container -mt-12 md:-mt-16 pb-20 relative z-10">
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-7xl mx-auto">
         {/* SOC */}
         <Card className="overflow-hidden border-border shadow-elevated hover:shadow-glow transition-all hover:-translate-y-1 bg-card">
           <div className="h-1.5 bg-gradient-security" />
@@ -201,6 +201,32 @@ const Index = () => (
             <div className="mt-3 text-center text-xs text-muted-foreground">8 modules · ₹999 intro · batch starts this week</div>
           </CardContent>
         </Card>
+
+        {/* K8S */}
+        <Card className="overflow-hidden border-border shadow-elevated hover:shadow-glow transition-all hover:-translate-y-1 bg-card">
+          <div className="h-1.5 bg-gradient-entra" />
+          <CardContent className="p-8">
+            <div className="h-12 w-12 rounded-xl bg-gradient-entra text-primary-foreground grid place-items-center mb-5">
+              <Container className="h-6 w-6" />
+            </div>
+            <div className="text-xs font-mono uppercase tracking-widest text-shadowx-gold mb-1">DevOps · Cloud Native</div>
+            <h2 className="font-display text-2xl md:text-3xl font-bold">Kubernetes & Docker</h2>
+            <p className="mt-3 text-muted-foreground">
+              Containerize, deploy and operate apps on Kubernetes. 16 hours of hands-on labs in a real in-browser docker + kubectl terminal.
+            </p>
+            <ul className="mt-5 space-y-2 text-sm">
+              <Bullet>Docker images, Dockerfiles & registries</Bullet>
+              <Bullet>Pods, Deployments & Services</Bullet>
+              <Bullet>Capstone: ship a containerized app</Bullet>
+            </ul>
+            <Link to="/k8s" className="block mt-7">
+              <Button size="lg" className="w-full gap-2 font-semibold">
+                Join K8S Program <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <div className="mt-3 text-center text-xs text-muted-foreground">5 modules · 16h · ₹999 intro</div>
+          </CardContent>
+        </Card>
       </div>
     </section>
 
@@ -227,6 +253,7 @@ const Index = () => (
         <Link to="/itsm"><Button size="lg" variant="outline">Join ITSM Program</Button></Link>
         <Link to="/pen200"><Button size="lg" variant="outline">Join PEN-200 Program</Button></Link>
         <Link to="/csa"><Button size="lg" variant="outline">Join CSA Program</Button></Link>
+        <Link to="/k8s"><Button size="lg" variant="outline">Join K8S Program</Button></Link>
       </div>
     </section>
 
