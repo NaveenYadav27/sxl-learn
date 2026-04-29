@@ -83,11 +83,11 @@ const NAV_CONFIGS: Record<SimKind, NavConfig> = {
     sections: [
       { items: [
         { id: "defender-home", label: "Home", icon: Shield, aliases: ["home"] },
-        { id: "incidents", label: "Incidents & alerts", icon: AlertTriangle },
+        { id: "incidents", label: "Incidents & alerts", icon: AlertTriangle, aliases: ["defender-incidents", "incident"] },
         { id: "attack-story", label: "Attack story", icon: Network },
       ]},
       { label: "Assets", items: [
-        { id: "assets", label: "Devices & users", icon: Cpu },
+        { id: "assets", label: "Devices & users", icon: Cpu, aliases: ["devices", "events", "network"] },
       ]},
       { label: "Email & collab", items: [
         { id: "attack-simulator", label: "Attack simulator", icon: Mail },
