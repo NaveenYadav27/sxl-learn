@@ -171,7 +171,7 @@ const NAV_CONFIGS: Record<SimKind, NavConfig> = {
         { id: "entra-home", label: "Home", icon: Shield, aliases: ["home"] },
       ]},
       { label: "Identity", items: [
-        { id: "users", label: "Users", icon: Users },
+        { id: "users", label: "Users", icon: Users, aliases: ["user-profile"] },
         { id: "groups", label: "Groups", icon: Layers },
         { id: "auth-methods", label: "Authentication methods", icon: Lock },
         { id: "per-user-mfa", label: "Per-user MFA", icon: Lock },
@@ -180,7 +180,7 @@ const NAV_CONFIGS: Record<SimKind, NavConfig> = {
         { id: "conditional-access", label: "Conditional Access", icon: Shield },
         { id: "identity-protection", label: "Identity Protection", icon: Eye },
         { id: "user-risk-policy", label: "User-risk policy", icon: AlertTriangle },
-        { id: "risky-signins", label: "Risky sign-ins", icon: Activity },
+        { id: "risky-signins", label: "Risky sign-ins", icon: Activity, aliases: ["entra-signin-logs", "signin-detail", "sign-in-logs"] },
       ]},
       { label: "Hybrid & Azure", items: [
         { id: "hybrid-management", label: "Hybrid management", icon: Network },
