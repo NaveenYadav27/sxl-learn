@@ -39,11 +39,7 @@ const tools: Tool[] = [
     name: "Microsoft Entra",
     icon: Users,
     blurb: "Identity & access — users, groups, Conditional Access, MFA. Fully clickable with seeded tenant directory.",
-    courses: ["sc-900"],
-    render: () => <PortalSimulator simulator="entra" expectedAction={{ type: "any" } as any} onValidate={noop} demoMode />,
-  },
-  {
-    id: "defender",
+    courses: ["sc-900", "csa"],
     name: "Defender XDR",
     icon: Shield,
     blurb: "Browse incidents, alerts, secure score & attack simulation — sample SOC data preloaded.",
