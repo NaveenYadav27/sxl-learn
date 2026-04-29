@@ -107,6 +107,24 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     ],
     licensingFocus: "What you need to access Microsoft Sentinel, Defender XDR and Entra for CSA hands-on practice.",
   },
+  "k8s": {
+    code: "k8s",
+    shortName: "K8S",
+    longName: "Kubernetes & Docker — Containerization & Orchestration Foundation",
+    vendor: "CNCF / Docker",
+    certCode: "K8S-FDN",
+    tagline: "Kubernetes & Docker Foundation — build, ship and run containerized apps end-to-end.",
+    icon: Container,
+    accentClass: "text-domain-entra",
+    modules: k8sModuleNotes,
+    plans: { fiveDay: k8sFiveDayPlan, twoDay: k8sTwoDayPlan, oneDay: k8sOneDayPlan, oneHour: k8sOneHourPlan },
+    examTitle: "K8S Foundation Practice Exam",
+    examIntroBullets: [
+      "Hands-on Kubernetes & Docker curriculum — practice exam coming soon.",
+      "Visit the K8S program page for the full module map and capstone brief.",
+    ],
+    licensingFocus: "What you need to spin up a local Kubernetes cluster (Kind / Minikube / Docker Desktop) for hands-on practice.",
+  },
 };
 
 export const COURSE_LIST: CourseDefinition[] = Object.values(COURSES);

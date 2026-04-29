@@ -28,6 +28,7 @@ import SocProgram from "./pages/SocProgram.tsx";
 import ItsmProgram from "./pages/ItsmProgram.tsx";
 import Pen200Program from "./pages/Pen200Program.tsx";
 import CsaProgram from "./pages/CsaProgram.tsx";
+import K8sProgram from "./pages/K8sProgram.tsx";
 import Pending from "./pages/Pending.tsx";
 import AdminEnrollments from "./pages/AdminEnrollments.tsx";
 import AdminLearners from "./pages/AdminLearners.tsx";
@@ -53,6 +54,7 @@ const App = () => (
             <Route path="/itsm" element={<ItsmProgram />} />
             <Route path="/pen200" element={<Pen200Program />} />
             <Route path="/csa" element={<CsaProgram />} />
+            <Route path="/k8s" element={<K8sProgram />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/pending" element={<Pending />} />
             <Route path="/terms" element={<Terms />} />
