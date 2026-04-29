@@ -13,10 +13,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Eye, Shield, Users, Gavel, Network, Terminal, Workflow, Building2, ExternalLink, Lock } from "lucide-react";
+import { Eye, Shield, Users, Gavel, Network, Terminal, Workflow, Building2, ExternalLink, Lock, Container } from "lucide-react";
 import { PortalSimulator } from "@/components/simulators/PortalSimulator";
 import { ServiceNowSimulator } from "@/components/simulators/ServiceNowSimulator";
 import { KaliTerminalSimulator } from "@/components/simulators/KaliTerminalSimulator";
+import { K8sTerminalSimulator } from "@/components/simulators/K8sTerminalSimulator";
 import { useCourse } from "@/hooks/useCourse";
 import { useAuth } from "@/hooks/useAuth";
 import { useProgramAccess } from "@/hooks/useProgramAccess";
@@ -89,6 +90,14 @@ const tools: Tool[] = [
     blurb: "Offensive-security shell — recon, exploitation, AD attacks. Try `nmap`, `whoami`, `ls`, `mimikatz`…",
     courses: ["pen-200"],
     render: () => <KaliTerminalSimulator expectedAction={{ type: "any" } as any} onValidate={noop} />,
+  },
+  {
+    id: "k8s-terminal",
+    name: "Docker + kubectl Terminal",
+    icon: Container,
+    blurb: "DevOps workstation — try `docker ps`, `docker build`, `kubectl get pods`, `kubectl apply -f deployment.yaml`. Real command output, no install required.",
+    courses: ["k8s"],
+    render: () => <K8sTerminalSimulator expectedAction={{ type: "any" } as any} onValidate={noop} />,
   },
 ];
 

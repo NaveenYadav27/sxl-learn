@@ -3,13 +3,14 @@
 // this registry so they stay in sync.
 
 import type { LucideIcon } from "lucide-react";
-import { Shield, Wrench, Crosshair, Radar } from "lucide-react";
+import { Shield, Wrench, Crosshair, Radar, Container } from "lucide-react";
 import { fiveDayPlan as sc900FiveDay, twoDayPlan as sc900TwoDay, oneDayPlan as sc900OneDay, oneHourPlan as sc900OneHour, moduleNotes as sc900Modules, type DayPlan, type ModuleNote } from "./curriculum";
 import { itsmFiveDayPlan, itsmTwoDayPlan, itsmOneDayPlan, itsmOneHourPlan, itsmModuleNotes } from "./curriculumItsm";
 import { pen200ModuleNotes, pen200FiveDayPlan, pen200TwoDayPlan, pen200OneDayPlan, pen200OneHourPlan } from "./curriculumPen200";
 import { csaModuleNotes, csaFiveDayPlan, csaTwoDayPlan, csaOneDayPlan, csaOneHourPlan } from "./curriculumCsa";
+import { k8sModuleNotes, k8sFiveDayPlan, k8sTwoDayPlan, k8sOneDayPlan, k8sOneHourPlan } from "./curriculumK8s";
 
-export type CourseCode = "sc-900" | "cis-itsm" | "pen-200" | "csa";
+export type CourseCode = "sc-900" | "cis-itsm" | "pen-200" | "csa" | "k8s";
 
 export type CourseDefinition = {
   code: CourseCode;
@@ -105,6 +106,24 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
       "Detailed review with per-module score and rationale on submit.",
     ],
     licensingFocus: "What you need to access Microsoft Sentinel, Defender XDR and Entra for CSA hands-on practice.",
+  },
+  "k8s": {
+    code: "k8s",
+    shortName: "K8S",
+    longName: "Kubernetes & Docker — Containerization & Orchestration Foundation",
+    vendor: "CNCF / Docker",
+    certCode: "K8S-FDN",
+    tagline: "Kubernetes & Docker Foundation — build, ship and run containerized apps end-to-end.",
+    icon: Container,
+    accentClass: "text-domain-entra",
+    modules: k8sModuleNotes,
+    plans: { fiveDay: k8sFiveDayPlan, twoDay: k8sTwoDayPlan, oneDay: k8sOneDayPlan, oneHour: k8sOneHourPlan },
+    examTitle: "K8S Foundation Practice Exam",
+    examIntroBullets: [
+      "Hands-on Kubernetes & Docker curriculum — practice exam coming soon.",
+      "Visit the K8S program page for the full module map and capstone brief.",
+    ],
+    licensingFocus: "What you need to spin up a local Kubernetes cluster (Kind / Minikube / Docker Desktop) for hands-on practice.",
   },
 };
 
