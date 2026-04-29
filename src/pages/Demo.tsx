@@ -91,6 +91,14 @@ const tools: Tool[] = [
     courses: ["pen-200"],
     render: () => <KaliTerminalSimulator expectedAction={{ type: "any" } as any} onValidate={noop} />,
   },
+  {
+    id: "k8s-terminal",
+    name: "Docker + kubectl Terminal",
+    icon: Container,
+    blurb: "DevOps workstation — try `docker ps`, `docker build`, `kubectl get pods`, `kubectl apply -f deployment.yaml`. Real command output, no install required.",
+    courses: ["k8s"],
+    render: () => <K8sTerminalSimulator expectedAction={{ type: "any" } as any} onValidate={noop} />,
+  },
 ];
 
 function toolsForCourse(code: CourseCode) {
