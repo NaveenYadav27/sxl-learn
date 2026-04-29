@@ -39,7 +39,7 @@ const tools: Tool[] = [
     name: "Microsoft Entra",
     icon: Users,
     blurb: "Identity & access — users, groups, Conditional Access, MFA. Fully clickable with seeded tenant directory.",
-    courses: ["sc-900"],
+    courses: ["sc-900", "csa"],
     render: () => <PortalSimulator simulator="entra" expectedAction={{ type: "any" } as any} onValidate={noop} demoMode />,
   },
   {
@@ -47,7 +47,7 @@ const tools: Tool[] = [
     name: "Defender XDR",
     icon: Shield,
     blurb: "Browse incidents, alerts, secure score & attack simulation — sample SOC data preloaded.",
-    courses: ["sc-900"],
+    courses: ["sc-900", "csa"],
     render: () => <PortalSimulator simulator="defender" expectedAction={{ type: "any" } as any} onValidate={noop} demoMode />,
   },
   {
@@ -63,7 +63,7 @@ const tools: Tool[] = [
     name: "Microsoft Sentinel",
     icon: Network,
     blurb: "SIEM dashboards, KQL hunts & analytic rules — sample workspace ready.",
-    courses: ["sc-900"],
+    courses: ["sc-900", "csa"],
     render: () => <PortalSimulator simulator="sentinel" expectedAction={{ type: "any" } as any} onValidate={noop} demoMode />,
   },
   {
