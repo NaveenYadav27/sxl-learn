@@ -63,7 +63,7 @@ const tools: Tool[] = [
     name: "Microsoft Sentinel",
     icon: Network,
     blurb: "SIEM dashboards, KQL hunts & analytic rules — sample workspace ready.",
-    courses: ["sc-900"],
+    courses: ["sc-900", "csa"],
     render: () => <PortalSimulator simulator="sentinel" expectedAction={{ type: "any" } as any} onValidate={noop} demoMode />,
   },
   {
