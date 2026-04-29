@@ -239,6 +239,10 @@ export function PortalSimulator({ simulator, expectedAction, onValidate, demoMod
     switch (a.type) {
       case "navigate":
         return s.nav === resolveNavTarget(cfg, a.target ?? "");
+      case "query":
+        // Authored as { type:"query", target:"logs", value:"<KQL>" }.
+        // Validate by navigating to the logs blade (target defaults to "logs").
+        return s.nav === resolveNavTarget(cfg, a.target ?? "logs");
       case "action":
       case "create":
         return s.actions.has(a.target ?? "");
