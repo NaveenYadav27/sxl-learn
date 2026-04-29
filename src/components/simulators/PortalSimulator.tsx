@@ -403,6 +403,7 @@ function buildHint(a: Action, cfg: NavConfig) {
       return `Click "${item?.label ?? pretty(a.target ?? "")}" in the left navigation.`;
     }
     case "action": return `Click the "${pretty(a.target ?? "")}" action below.`;
+    case "query": return `Open "Logs (KQL)" in the left navigation${a.value ? ` and run: ${a.value}` : ""}.`;
     case "create": return `Use the "Create ${pretty(a.target ?? "")}" button below.`;
     case "select": return a.target ? `Select "${pretty(a.target)}" in the list below.` : `Pick the requested option below.`;
     case "input": return `Enter the requested value in the field below.`;
