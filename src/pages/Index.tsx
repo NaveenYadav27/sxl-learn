@@ -57,7 +57,7 @@ const Index = () => (
 
         {/* Subheadline — refined */}
         <p className="mt-7 text-lg md:text-xl text-white/70 max-w-2xl mx-auto leading-relaxed">
-          Four elite programs in <span className="text-white font-medium">Cybersecurity</span>, <span className="text-white font-medium">IT Operations</span>, <span className="text-white font-medium">Offensive Security</span> and <span className="text-white font-medium">Blue Team SOC</span>. Live training, real labs, interview-ready outcomes.
+          Five elite programs in <span className="text-white font-medium">Cybersecurity</span>, <span className="text-white font-medium">IT Operations</span>, <span className="text-white font-medium">Offensive Security</span>, <span className="text-white font-medium">Blue Team SOC</span> and <span className="text-white font-medium">Kubernetes & Docker DevOps</span>. Live training, real labs, interview-ready outcomes.
         </p>
 
         {/* Trust row */}
