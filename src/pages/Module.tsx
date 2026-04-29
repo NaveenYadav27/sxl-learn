@@ -20,6 +20,7 @@ import { type DomainKey } from "@/lib/curriculum";
 import { getModuleExplanation } from "@/lib/moduleExplanations";
 import { getItsmModuleExplanation } from "@/lib/moduleExplanationsItsm";
 import { getPen200ModuleExplanation } from "@/lib/moduleExplanationsPen200";
+import { getCsaModuleExplanation } from "@/lib/moduleExplanationsCsa";
 import { useCourse } from "@/hooks/useCourse";
 import { COURSE_LIST } from "@/lib/courses";
 import { ListChecks as ProcessIcon, Workflow, Database, GitBranch } from "lucide-react";
