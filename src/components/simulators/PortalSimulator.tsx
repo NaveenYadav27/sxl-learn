@@ -83,11 +83,11 @@ const NAV_CONFIGS: Record<SimKind, NavConfig> = {
     sections: [
       { items: [
         { id: "defender-home", label: "Home", icon: Shield, aliases: ["home"] },
-        { id: "incidents", label: "Incidents & alerts", icon: AlertTriangle },
+        { id: "incidents", label: "Incidents & alerts", icon: AlertTriangle, aliases: ["defender-incidents", "incident"] },
         { id: "attack-story", label: "Attack story", icon: Network },
       ]},
       { label: "Assets", items: [
-        { id: "assets", label: "Devices & users", icon: Cpu },
+        { id: "assets", label: "Devices & users", icon: Cpu, aliases: ["devices", "events", "network"] },
       ]},
       { label: "Email & collab", items: [
         { id: "attack-simulator", label: "Attack simulator", icon: Mail },
@@ -133,15 +133,15 @@ const NAV_CONFIGS: Record<SimKind, NavConfig> = {
     defaultNav: "sentinel-workspace",
     sections: [
       { items: [
-        { id: "sentinel-workspace", label: "Workspace overview", icon: Shield, aliases: ["home"] },
+        { id: "sentinel-workspace", label: "Workspace overview", icon: Shield, aliases: ["home", "overview"] },
         { id: "incidents", label: "Incidents", icon: AlertTriangle },
         { id: "hunting", label: "Hunting", icon: Search },
         { id: "logs", label: "Logs (KQL)", icon: Database },
       ]},
       { label: "Configuration", items: [
-        { id: "analytics", label: "Analytics rules", icon: Activity },
+        { id: "analytics", label: "Analytics rules", icon: Activity, aliases: ["analytics-rules"] },
         { id: "playbooks", label: "Automation · Playbooks", icon: Zap },
-        { id: "workbook", label: "Workbooks", icon: Layers },
+        { id: "workbook", label: "Workbooks", icon: Layers, aliases: ["workbooks", "pin-workbook"] },
       ]},
     ],
   },
@@ -171,7 +171,7 @@ const NAV_CONFIGS: Record<SimKind, NavConfig> = {
         { id: "entra-home", label: "Home", icon: Shield, aliases: ["home"] },
       ]},
       { label: "Identity", items: [
-        { id: "users", label: "Users", icon: Users },
+        { id: "users", label: "Users", icon: Users, aliases: ["user-profile"] },
         { id: "groups", label: "Groups", icon: Layers },
         { id: "auth-methods", label: "Authentication methods", icon: Lock },
         { id: "per-user-mfa", label: "Per-user MFA", icon: Lock },
@@ -180,7 +180,7 @@ const NAV_CONFIGS: Record<SimKind, NavConfig> = {
         { id: "conditional-access", label: "Conditional Access", icon: Shield },
         { id: "identity-protection", label: "Identity Protection", icon: Eye },
         { id: "user-risk-policy", label: "User-risk policy", icon: AlertTriangle },
-        { id: "risky-signins", label: "Risky sign-ins", icon: Activity },
+        { id: "risky-signins", label: "Risky sign-ins", icon: Activity, aliases: ["entra-signin-logs", "signin-detail", "sign-in-logs"] },
       ]},
       { label: "Hybrid & Azure", items: [
         { id: "hybrid-management", label: "Hybrid management", icon: Network },
@@ -239,6 +239,10 @@ export function PortalSimulator({ simulator, expectedAction, onValidate, demoMod
     switch (a.type) {
       case "navigate":
         return s.nav === resolveNavTarget(cfg, a.target ?? "");
+      case "query":
+        // Authored as { type:"query", target:"logs", value:"<KQL>" }.
+        // Validate by navigating to the logs blade (target defaults to "logs").
+        return s.nav === resolveNavTarget(cfg, a.target ?? "logs");
       case "action":
       case "create":
         return s.actions.has(a.target ?? "");
@@ -399,6 +403,7 @@ function buildHint(a: Action, cfg: NavConfig) {
       return `Click "${item?.label ?? pretty(a.target ?? "")}" in the left navigation.`;
     }
     case "action": return `Click the "${pretty(a.target ?? "")}" action below.`;
+    case "query": return `Open "Logs (KQL)" in the left navigation${a.value ? ` and run: ${a.value}` : ""}.`;
     case "create": return `Use the "Create ${pretty(a.target ?? "")}" button below.`;
     case "select": return a.target ? `Select "${pretty(a.target)}" in the list below.` : `Pick the requested option below.`;
     case "input": return `Enter the requested value in the field below.`;
