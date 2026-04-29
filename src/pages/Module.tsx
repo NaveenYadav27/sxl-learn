@@ -21,6 +21,7 @@ import { getModuleExplanation } from "@/lib/moduleExplanations";
 import { getItsmModuleExplanation } from "@/lib/moduleExplanationsItsm";
 import { getPen200ModuleExplanation } from "@/lib/moduleExplanationsPen200";
 import { getCsaModuleExplanation } from "@/lib/moduleExplanationsCsa";
+import { getK8sModuleExplanation } from "@/lib/moduleExplanationsK8s";
 import { useCourse } from "@/hooks/useCourse";
 import { COURSE_LIST } from "@/lib/courses";
 import { ListChecks as ProcessIcon, Workflow, Database, GitBranch } from "lucide-react";
@@ -100,7 +101,9 @@ export default function Module() {
               ? getItsmModuleExplanation(slug) ?? getModuleExplanation(slug)
               : course.code === "csa"
                 ? getCsaModuleExplanation(slug) ?? getModuleExplanation(slug)
-                : getModuleExplanation(slug) ?? getItsmModuleExplanation(slug) ?? getPen200ModuleExplanation(slug) ?? getCsaModuleExplanation(slug))
+                : course.code === "k8s"
+                  ? getK8sModuleExplanation(slug) ?? getModuleExplanation(slug)
+                  : getModuleExplanation(slug) ?? getItsmModuleExplanation(slug) ?? getPen200ModuleExplanation(slug) ?? getCsaModuleExplanation(slug) ?? getK8sModuleExplanation(slug))
         : undefined,
     [slug, course.code],
   );
