@@ -20,6 +20,7 @@ import { type DomainKey } from "@/lib/curriculum";
 import { getModuleExplanation } from "@/lib/moduleExplanations";
 import { getItsmModuleExplanation } from "@/lib/moduleExplanationsItsm";
 import { getPen200ModuleExplanation } from "@/lib/moduleExplanationsPen200";
+import { getCsaModuleExplanation } from "@/lib/moduleExplanationsCsa";
 import { useCourse } from "@/hooks/useCourse";
 import { COURSE_LIST } from "@/lib/courses";
 import { ListChecks as ProcessIcon, Workflow, Database, GitBranch } from "lucide-react";
@@ -97,7 +98,9 @@ export default function Module() {
             ? getPen200ModuleExplanation(slug) ?? getModuleExplanation(slug)
             : course.code === "cis-itsm"
               ? getItsmModuleExplanation(slug) ?? getModuleExplanation(slug)
-              : getModuleExplanation(slug) ?? getItsmModuleExplanation(slug) ?? getPen200ModuleExplanation(slug))
+              : course.code === "csa"
+                ? getCsaModuleExplanation(slug) ?? getModuleExplanation(slug)
+                : getModuleExplanation(slug) ?? getItsmModuleExplanation(slug) ?? getPen200ModuleExplanation(slug) ?? getCsaModuleExplanation(slug))
         : undefined,
     [slug, course.code],
   );
