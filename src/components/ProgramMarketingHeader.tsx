@@ -15,6 +15,7 @@ export function ProgramMarketingHeader() {
           <Link to="/soc" className="hidden sm:inline-flex"><Button variant="ghost" size="sm">SOC</Button></Link>
           <Link to="/itsm" className="hidden sm:inline-flex"><Button variant="ghost" size="sm">ITSM</Button></Link>
           <Link to="/pen200" className="hidden sm:inline-flex"><Button variant="ghost" size="sm">PEN-200</Button></Link>
+          <Link to="/csa" className="hidden sm:inline-flex"><Button variant="ghost" size="sm">CSA</Button></Link>
           {!loading && (
             user
               ? <Link to="/dashboard"><Button variant="ghost" size="sm">Dashboard</Button></Link>
