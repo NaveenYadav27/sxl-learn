@@ -186,8 +186,9 @@ export default function Lab() {
   }
 
   const isComplete = attempt?.status === "completed";
+  const program: ProgramCode | null = moduleSlug ? getProgramForModuleSlug(moduleSlug) : null;
 
-  return (
+  const body = (
     <AppLayout
       breadcrumb={
         <Breadcrumb items={[
@@ -449,4 +450,7 @@ export default function Lab() {
       />
     </AppLayout>
   );
+
+  if (!program) return body;
+  return <ProgramGate program={program} moduleSlug={moduleSlug ?? undefined}>{body}</ProgramGate>;
 }
