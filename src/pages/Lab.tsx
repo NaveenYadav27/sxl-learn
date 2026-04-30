@@ -15,6 +15,7 @@ import { EntraSimulator } from "@/components/simulators/EntraSimulator";
 import { PortalSimulator } from "@/components/simulators/PortalSimulator";
 import { ServiceNowSimulator } from "@/components/simulators/ServiceNowSimulator";
 import { KaliTerminalSimulator } from "@/components/simulators/KaliTerminalSimulator";
+import { K8sTerminalSimulator } from "@/components/simulators/K8sTerminalSimulator";
 import { TenantCheckPanel } from "@/components/simulators/TenantCheckPanel";
 import { QuizPanel } from "@/components/QuizPanel";
 import { LabCompletionModal } from "@/components/LabCompletionModal";
@@ -366,6 +367,15 @@ export default function Lab() {
               if (lab.simulator === "kali-terminal" || lab.simulator === "kali") {
                 return (
                   <KaliTerminalSimulator
+                    expectedAction={currentStep.expected_action}
+                    onValidate={(ok) => { if (ok) markStepDone(); }}
+                  />
+                );
+              }
+              // K8s + Docker terminal — K8S-FDN labs
+              if (lab.simulator === "k8s-terminal" || lab.simulator === "k8s") {
+                return (
+                  <K8sTerminalSimulator
                     expectedAction={currentStep.expected_action}
                     onValidate={(ok) => { if (ok) markStepDone(); }}
                   />
