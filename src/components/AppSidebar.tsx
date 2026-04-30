@@ -47,6 +47,8 @@ const instructorNav = [
 const adminNav = [
   { title: "Learners", url: "/admin/learners", icon: Users },
   { title: "Enrollments", url: "/admin/enrollments", icon: ClipboardCheck },
+  { title: "Batches", url: "/admin/batches", icon: CalendarDays },
+  { title: "Cohort", url: "/instructor/cohort", icon: GraduationCap },
   { title: "Manage Content", url: "/admin/content", icon: Settings },
 ];
 
