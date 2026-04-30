@@ -80,10 +80,10 @@ export function EnrollForm({ program, programName }: Props) {
       </div>
       <Button type="submit" size="lg" className="w-full font-semibold" disabled={submitting}>
         {submitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-        Secure My Seat for ₹999
+        Reserve seat for ₹199 (1hr Intro Batch)
       </Button>
       <p className="text-xs text-muted-foreground text-center">
-        No payment now. We'll contact you with batch + payment details.
+        ₹199 reserves your seat in the 1-hour live intro batch. Full program pricing will be announced soon.
       </p>
     </form>
   );

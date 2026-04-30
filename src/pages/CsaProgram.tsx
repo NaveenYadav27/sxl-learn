@@ -100,11 +100,11 @@ const CsaProgram = () => (
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <a href="#enroll">
                 <Button size="lg" className="gap-2 font-semibold">
-                  Secure My Seat for ₹999 <ArrowRight className="h-4 w-4" />
+                  Reserve seat for ₹199 <ArrowRight className="h-4 w-4" />
                 </Button>
               </a>
               <div className="text-sm text-muted-foreground">
-                <span className="line-through opacity-60">₹4,999</span> · <span className="text-shadowx-gold font-semibold">₹999 intro</span> · batch starts this week
+                <span className="text-shadowx-gold font-semibold">1hr Intro Batch · ₹199</span> · full program pricing TBA
               </div>
             </div>
             <div className="mt-8 grid grid-cols-3 gap-4 max-w-md">
@@ -177,14 +177,16 @@ const CsaProgram = () => (
         <h2 className="text-2xl md:text-3xl font-bold">Pricing</h2>
         <Card className="mt-8 max-w-md mx-auto border-primary/30 shadow-elevated">
           <CardContent className="p-8">
-            <div className="text-xs font-mono uppercase tracking-widest text-shadowx-azure">Intro Price</div>
+            <div className="text-xs font-mono uppercase tracking-widest text-shadowx-azure">1hr Intro Batch</div>
             <div className="mt-2 flex items-baseline justify-center gap-2">
-              <span className="font-display text-5xl font-bold text-shadowx-gradient">₹999</span>
-              <span className="text-muted-foreground line-through">₹4,999</span>
+              <span className="font-display text-5xl font-bold text-shadowx-gradient">₹199</span>
             </div>
-            <div className="mt-1 text-sm text-muted-foreground">Full program access · CSA aligned</div>
+            <div className="mt-1 text-sm text-muted-foreground">1 hour live · CSA taster · seats limited</div>
+            <div className="mt-4 text-xs text-muted-foreground border-t border-border pt-3">
+              Full multi-day program pricing will be announced soon.
+            </div>
             <a href="#enroll" className="block mt-6">
-              <Button size="lg" className="w-full font-semibold">Secure My Seat for ₹999</Button>
+              <Button size="lg" className="w-full font-semibold">Reserve seat for ₹199</Button>
             </a>
           </CardContent>
         </Card>
