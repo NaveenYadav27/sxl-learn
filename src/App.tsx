@@ -31,6 +31,7 @@ import CsaProgram from "./pages/CsaProgram.tsx";
 import K8sProgram from "./pages/K8sProgram.tsx";
 import Pending from "./pages/Pending.tsx";
 import AdminEnrollments from "./pages/AdminEnrollments.tsx";
+import AdminBatches from "./pages/AdminBatches.tsx";
 import AdminLearners from "./pages/AdminLearners.tsx";
 import AdminLearnerDetail from "./pages/AdminLearnerDetail.tsx";
 import Terms from "./pages/Terms.tsx";
@@ -59,6 +60,7 @@ const App = () => (
             <Route path="/pending" element={<Pending />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/admin/enrollments" element={<AdminEnrollments />} />
+            <Route path="/admin/batches" element={<AdminBatches />} />
             <Route path="/admin/learners" element={<AdminLearners />} />
             <Route path="/admin/learners/:userId" element={<AdminLearnerDetail />} />
             <Route path="/dashboard" element={<Dashboard />} />
