@@ -162,6 +162,8 @@ export default function Module() {
   const totalMin = note.theoryMinutes + note.labBudgetMinutes;
   const completedLabs = labs.filter((l) => progress[l.id] === "completed").length;
 
+  const program = courseCodeToProgram[course.code];
+
   return (
     <AppLayout
       breadcrumb={<Breadcrumb items={[
@@ -170,6 +172,7 @@ export default function Module() {
       ]} />}
       title={note.title}
     >
+      <ProgramGate program={program} moduleSlug={slug}>
       <div className="container py-6 space-y-6 max-w-5xl">
         {/* Hero */}
         <Card className="border-0 shadow-portal overflow-hidden">
