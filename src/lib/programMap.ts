@@ -42,7 +42,7 @@ export const programMarketingPath: Record<ProgramCode, string> = {
 export const firstModuleByProgram: Record<ProgramCode, string> = {
   soc: "concepts",
   itsm: "concepts",
-  pen200: "pen-introduction",
+  pen200: "pen200-intro-cyber",
   csa: "csa-soc-fundamentals",
   k8s: "k8s-containerization-fundamentals",
 };
@@ -50,10 +50,10 @@ export const firstModuleByProgram: Record<ProgramCode, string> = {
 export function getProgramForModuleSlug(slug: string): ProgramCode | null {
   if (slug.startsWith("k8s-")) return "k8s";
   if (slug.startsWith("csa-")) return "csa";
-  if (slug.startsWith("pen-")) return "pen200";
+  if (slug.startsWith("pen200-")) return "pen200";
   if (slug.startsWith("itsm-")) return "itsm";
   if (["concepts", "iam", "entra", "security", "compliance"].includes(slug)) {
-    // SC-900 + ITSM share these slugs; default to soc, ITSM resolves via course context.
+    // SC-900 + ITSM share these slugs; default to soc.
     return "soc";
   }
   return null;
