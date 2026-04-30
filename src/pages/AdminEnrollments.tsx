@@ -8,17 +8,21 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { Loader2, Shield, Cog, UserPlus, Trash2 } from "lucide-react";
+import { Loader2, UserPlus, Trash2, KeyRound, Mail } from "lucide-react";
+import { programLabels, type ProgramCode } from "@/lib/programMap";
+
+const PROGRAMS: ProgramCode[] = ["soc", "itsm", "pen200", "csa", "k8s"];
 
 type Enrollment = {
   id: string;
   full_name: string;
   email: string;
   phone: string | null;
-  program: "soc" | "itsm";
+  program: ProgramCode;
   notes: string | null;
   status: string;
   created_at: string;
@@ -27,7 +31,7 @@ type Enrollment = {
 type AccessRow = {
   id: string;
   user_id: string;
-  program: "soc" | "itsm";
+  program: ProgramCode;
   granted_at: string;
 };
 
@@ -36,9 +40,17 @@ const AdminEnrollments = () => {
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [access, setAccess] = useState<AccessRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [grantUserId, setGrantUserId] = useState("");
-  const [grantProgram, setGrantProgram] = useState<"soc" | "itsm">("soc");
-  const [submitting, setSubmitting] = useState(false);
+
+  // grant form
+  const [grantEmail, setGrantEmail] = useState("");
+  const [grantProgram, setGrantProgram] = useState<ProgramCode>("soc");
+  const [granting, setGranting] = useState(false);
+
+  // reset password form
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetMode, setResetMode] = useState<"link" | "set">("link");
+  const [resetPwd, setResetPwd] = useState("");
+  const [resetting, setResetting] = useState(false);
 
   async function refresh() {
     setLoading(true);
@@ -59,30 +71,58 @@ const AdminEnrollments = () => {
   if (!isAdmin) return <Navigate to="/dashboard" replace />;
 
   async function setStatus(id: string, status: string) {
+    const row = enrollments.find((r) => r.id === id);
     const { error } = await supabase.from("enrollments").update({ status }).eq("id", id);
     if (error) {
       toast({ title: "Failed", description: error.message, variant: "destructive" });
       return;
     }
     setEnrollments((prev) => prev.map((r) => (r.id === id ? { ...r, status } : r)));
+
+    // If marked enrolled, auto-grant access
+    if (status === "enrolled" && row) {
+      const { data, error: rpcErr } = await supabase.rpc("admin_grant_access_by_email", {
+        _email: row.email,
+        _program: row.program,
+      });
+      if (rpcErr) {
+        toast({ title: "Access grant failed", description: rpcErr.message, variant: "destructive" });
+      } else {
+        toast({
+          title: data === "granted" ? "Access granted" : "Pending signup",
+          description:
+            data === "granted"
+              ? `${row.email} now has ${programLabels[row.program]} access.`
+              : `${row.email} will get access automatically on signup.`,
+        });
+        refresh();
+      }
+    }
   }
 
-  async function grant() {
-    if (!grantUserId.trim()) {
-      toast({ title: "Enter a user ID", variant: "destructive" });
+  async function grantByEmail() {
+    if (!grantEmail.trim()) {
+      toast({ title: "Email required", variant: "destructive" });
       return;
     }
-    setSubmitting(true);
-    const { error } = await supabase
-      .from("program_access")
-      .insert({ user_id: grantUserId.trim(), program: grantProgram });
-    setSubmitting(false);
+    setGranting(true);
+    const { data, error } = await supabase.rpc("admin_grant_access_by_email", {
+      _email: grantEmail.trim(),
+      _program: grantProgram,
+    });
+    setGranting(false);
     if (error) {
-      toast({ title: "Failed to grant", description: error.message, variant: "destructive" });
+      toast({ title: "Failed", description: error.message, variant: "destructive" });
       return;
     }
-    toast({ title: "Access granted" });
-    setGrantUserId("");
+    toast({
+      title: data === "granted" ? "Access granted" : "Pending signup",
+      description:
+        data === "granted"
+          ? `${grantEmail} now has ${programLabels[grantProgram]} access.`
+          : `${grantEmail} will get access automatically when they sign up.`,
+    });
+    setGrantEmail("");
     refresh();
   }
 
@@ -95,6 +135,36 @@ const AdminEnrollments = () => {
     setAccess((prev) => prev.filter((r) => r.id !== id));
   }
 
+  async function resetPassword() {
+    if (!resetEmail.trim()) {
+      toast({ title: "Email required", variant: "destructive" });
+      return;
+    }
+    if (resetMode === "set" && resetPwd.length < 8) {
+      toast({ title: "Password must be 8+ chars", variant: "destructive" });
+      return;
+    }
+    setResetting(true);
+    const { data, error } = await supabase.functions.invoke("admin-reset-password", {
+      body: { email: resetEmail.trim(), mode: resetMode, new_password: resetPwd || undefined },
+    });
+    setResetting(false);
+    if (error || (data && (data as any).error)) {
+      toast({
+        title: "Reset failed",
+        description: error?.message || (data as any).error,
+        variant: "destructive",
+      });
+      return;
+    }
+    toast({
+      title: "Done",
+      description: resetMode === "link" ? "Recovery email sent." : "Password updated.",
+    });
+    setResetEmail("");
+    setResetPwd("");
+  }
+
   return (
     <AppLayout
       title="Admin · Enrollments"
@@ -104,8 +174,9 @@ const AdminEnrollments = () => {
         <Tabs defaultValue="leads">
           <TabsList>
             <TabsTrigger value="leads">Enrollment requests ({enrollments.length})</TabsTrigger>
-            <TabsTrigger value="access">Active program access ({access.length})</TabsTrigger>
+            <TabsTrigger value="access">Active access ({access.length})</TabsTrigger>
             <TabsTrigger value="grant">Grant access</TabsTrigger>
+            <TabsTrigger value="password">Reset password</TabsTrigger>
           </TabsList>
 
           <TabsContent value="leads" className="mt-4">
@@ -139,23 +210,19 @@ const AdminEnrollments = () => {
                             {r.phone && <div className="text-xs text-muted-foreground">{r.phone}</div>}
                           </TableCell>
                           <TableCell>
-                            {r.program === "soc" ? (
-                              <Badge variant="outline" className="gap-1"><Shield className="h-3 w-3" /> SOC</Badge>
-                            ) : (
-                              <Badge variant="outline" className="gap-1"><Cog className="h-3 w-3" /> ITSM</Badge>
-                            )}
+                            <Badge variant="outline">{programLabels[r.program] ?? r.program}</Badge>
                           </TableCell>
                           <TableCell className="text-xs text-muted-foreground">
                             {new Date(r.created_at).toLocaleString()}
                           </TableCell>
                           <TableCell>
-                            <Badge variant={r.status === "contacted" ? "default" : r.status === "enrolled" ? "default" : "secondary"}>
+                            <Badge variant={r.status === "enrolled" || r.status === "active" ? "default" : "secondary"}>
                               {r.status}
                             </Badge>
                           </TableCell>
                           <TableCell className="text-right space-x-1">
-                            <Button size="sm" variant="ghost" onClick={() => setStatus(r.id, "contacted")}>Mark contacted</Button>
-                            <Button size="sm" variant="ghost" onClick={() => setStatus(r.id, "enrolled")}>Mark enrolled</Button>
+                            <Button size="sm" variant="ghost" onClick={() => setStatus(r.id, "contacted")}>Contacted</Button>
+                            <Button size="sm" variant="default" onClick={() => setStatus(r.id, "enrolled")}>Mark enrolled + grant</Button>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -186,11 +253,7 @@ const AdminEnrollments = () => {
                         <TableRow key={r.id}>
                           <TableCell className="font-mono text-xs">{r.user_id}</TableCell>
                           <TableCell>
-                            {r.program === "soc" ? (
-                              <Badge variant="outline" className="gap-1"><Shield className="h-3 w-3" /> SOC</Badge>
-                            ) : (
-                              <Badge variant="outline" className="gap-1"><Cog className="h-3 w-3" /> ITSM</Badge>
-                            )}
+                            <Badge variant="outline">{programLabels[r.program] ?? r.program}</Badge>
                           </TableCell>
                           <TableCell className="text-xs text-muted-foreground">
                             {new Date(r.granted_at).toLocaleString()}
@@ -213,44 +276,90 @@ const AdminEnrollments = () => {
             <Card className="max-w-xl">
               <CardContent className="p-6 space-y-4">
                 <div>
-                  <h3 className="font-semibold flex items-center gap-2"><UserPlus className="h-4 w-4" /> Grant program access</h3>
+                  <h3 className="font-semibold flex items-center gap-2"><UserPlus className="h-4 w-4" /> Grant program access by email</h3>
                   <p className="text-sm text-muted-foreground mt-1">
-                    Paste the user's ID (from their signup confirmation or the auth backend) and pick the program.
+                    Works whether the user has signed up yet or not. If not yet signed up, access is auto-granted on signup.
                   </p>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">User ID (UUID)</label>
+                  <label className="text-sm font-medium">Email</label>
                   <Input
-                    placeholder="00000000-0000-0000-0000-000000000000"
-                    value={grantUserId}
-                    onChange={(e) => setGrantUserId(e.target.value)}
-                    className="font-mono"
+                    type="email"
+                    placeholder="learner@example.com"
+                    value={grantEmail}
+                    onChange={(e) => setGrantEmail(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Program</label>
-                  <div className="flex gap-2">
-                    <Button
-                      type="button"
-                      variant={grantProgram === "soc" ? "default" : "outline"}
-                      onClick={() => setGrantProgram("soc")}
-                      className="gap-2 flex-1"
-                    >
-                      <Shield className="h-4 w-4" /> SOC
-                    </Button>
-                    <Button
-                      type="button"
-                      variant={grantProgram === "itsm" ? "default" : "outline"}
-                      onClick={() => setGrantProgram("itsm")}
-                      className="gap-2 flex-1"
-                    >
-                      <Cog className="h-4 w-4" /> ITSM
-                    </Button>
-                  </div>
+                  <Select value={grantProgram} onValueChange={(v) => setGrantProgram(v as ProgramCode)}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {PROGRAMS.map((p) => (
+                        <SelectItem key={p} value={p}>{programLabels[p]}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
-                <Button onClick={grant} disabled={submitting} className="w-full">
-                  {submitting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                <Button onClick={grantByEmail} disabled={granting} className="w-full">
+                  {granting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
                   Grant access
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="password" className="mt-4">
+            <Card className="max-w-xl">
+              <CardContent className="p-6 space-y-4">
+                <div>
+                  <h3 className="font-semibold flex items-center gap-2"><KeyRound className="h-4 w-4" /> Reset learner password</h3>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Send a recovery link, or set a temporary password directly.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">User email</label>
+                  <Input
+                    type="email"
+                    placeholder="learner@example.com"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    variant={resetMode === "link" ? "default" : "outline"}
+                    className="flex-1 gap-2"
+                    onClick={() => setResetMode("link")}
+                  >
+                    <Mail className="h-4 w-4" /> Email recovery link
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={resetMode === "set" ? "default" : "outline"}
+                    className="flex-1 gap-2"
+                    onClick={() => setResetMode("set")}
+                  >
+                    <KeyRound className="h-4 w-4" /> Set new password
+                  </Button>
+                </div>
+                {resetMode === "set" && (
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">New password (min 8 chars)</label>
+                    <Input
+                      type="text"
+                      placeholder="TempPass#2026"
+                      value={resetPwd}
+                      onChange={(e) => setResetPwd(e.target.value)}
+                    />
+                    <p className="text-xs text-muted-foreground">Share this securely with the learner and ask them to change it.</p>
+                  </div>
+                )}
+                <Button onClick={resetPassword} disabled={resetting} className="w-full">
+                  {resetting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+                  {resetMode === "link" ? "Send recovery email" : "Set password now"}
                 </Button>
               </CardContent>
             </Card>
