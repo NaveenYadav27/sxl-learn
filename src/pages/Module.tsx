@@ -24,6 +24,8 @@ import { getCsaModuleExplanation } from "@/lib/moduleExplanationsCsa";
 import { getK8sModuleExplanation } from "@/lib/moduleExplanationsK8s";
 import { useCourse } from "@/hooks/useCourse";
 import { COURSE_LIST } from "@/lib/courses";
+import { courseCodeToProgram } from "@/lib/programMap";
+import { ProgramGate } from "@/components/ProgramGate";
 import { ListChecks as ProcessIcon, Workflow, Database, GitBranch } from "lucide-react";
 
 type DomainStyle = { icon: any; bar: string; soft: string; chip: string; label: string };
