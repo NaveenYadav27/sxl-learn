@@ -85,9 +85,9 @@ const Index = () => (
 
         {/* Price tag */}
         <div className="mt-10 inline-flex items-baseline gap-2 text-white/80">
-          <span className="text-xs uppercase tracking-widest text-white/50">Intro pricing</span>
-          <span className="font-display text-2xl font-bold text-shadowx-gold">₹999</span>
-          <span className="text-xs text-white/40 line-through">₹4,999</span>
+          <span className="text-xs uppercase tracking-widest text-white/50">1hr Intro Batch</span>
+          <span className="font-display text-2xl font-bold text-shadowx-gold">₹199</span>
+          <span className="text-xs text-white/40">· full program pricing TBA</span>
         </div>
       </div>
 
@@ -120,7 +120,7 @@ const Index = () => (
                 Join SOC Program <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
-            <div className="mt-3 text-center text-xs text-muted-foreground">7 days · ₹999 intro · batch starts this week</div>
+            <div className="mt-3 text-center text-xs text-muted-foreground">1hr intro batch · ₹199 · seats limited</div>
           </CardContent>
         </Card>
 
@@ -146,7 +146,7 @@ const Index = () => (
                 Join ITSM Program <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
-            <div className="mt-3 text-center text-xs text-muted-foreground">7 days · ₹999 intro · batch starts this week</div>
+            <div className="mt-3 text-center text-xs text-muted-foreground">1hr intro batch · ₹199 · seats limited</div>
           </CardContent>
         </Card>
 
@@ -172,7 +172,7 @@ const Index = () => (
                 Join PEN-200 Program <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
-            <div className="mt-3 text-center text-xs text-muted-foreground">OSCP+ aligned · ₹999 intro · batch starts this week</div>
+            <div className="mt-3 text-center text-xs text-muted-foreground">1hr intro batch · ₹199 · seats limited</div>
           </CardContent>
         </Card>
 
@@ -198,7 +198,7 @@ const Index = () => (
                 Join CSA Program <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
-            <div className="mt-3 text-center text-xs text-muted-foreground">8 modules · ₹999 intro · batch starts this week</div>
+            <div className="mt-3 text-center text-xs text-muted-foreground">1hr intro batch · ₹199 · seats limited</div>
           </CardContent>
         </Card>
 
@@ -224,7 +224,7 @@ const Index = () => (
                 Join K8S Program <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
-            <div className="mt-3 text-center text-xs text-muted-foreground">5 modules · 16h · ₹999 intro</div>
+            <div className="mt-3 text-center text-xs text-muted-foreground">1hr intro batch · ₹199 · seats limited</div>
           </CardContent>
         </Card>
       </div>
