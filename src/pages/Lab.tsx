@@ -26,11 +26,15 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
+import { ProgramGate } from "@/components/ProgramGate";
+import { getProgramForModuleSlug, type ProgramCode } from "@/lib/programMap";
+
 export default function Lab() {
   const { slug } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [lab, setLab] = useState<any>(null);
+  const [moduleSlug, setModuleSlug] = useState<string | null>(null);
   const [steps, setSteps] = useState<any[]>([]);
   const [attempt, setAttempt] = useState<any>(null);
   const [stepProgress, setStepProgress] = useState<Record<string, boolean>>({});
@@ -50,6 +54,12 @@ export default function Lab() {
       if (!l) { toast.error("Lab not found"); navigate("/catalog"); return; }
       const { data: s } = await supabase.from("lab_steps").select("*").eq("lab_id", l.id).order("step_number");
       setLab(l); setSteps(s ?? []);
+
+      // Resolve module slug for access gating
+      if (l.module_id) {
+        const { data: m } = await supabase.from("modules").select("slug").eq("id", l.module_id).maybeSingle();
+        setModuleSlug(m?.slug ?? null);
+      }
 
       // 2. Attempt — find existing in-progress or create
       const { data: existing } = await supabase
