@@ -549,6 +549,7 @@ export default function Module() {
           ) : <div className="flex-1" />}
         </div>
       </div>
+      </ProgramGate>
     </AppLayout>
   );
 }
