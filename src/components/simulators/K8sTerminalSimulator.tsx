@@ -524,7 +524,7 @@ export function K8sTerminalSimulator({ expectedAction, onValidate }: Props) {
       </div>
 
       {/* Input row */}
-      <div className="flex items-center gap-2 bg-[hsl(220_15%_10%)] px-3 py-2 border-t border-border">
+      <div className="flex items-center gap-2 bg-[hsl(220_20%_7%)] px-3 py-2 border-t border-border">
         <span className="font-mono text-xs text-[hsl(45_90%_70%)] shrink-0">$</span>
         <input
           autoFocus
@@ -532,7 +532,11 @@ export function K8sTerminalSimulator({ expectedAction, onValidate }: Props) {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={onKey}
           spellCheck={false}
-          className="flex-1 bg-transparent border-0 outline-none text-foreground font-mono text-sm placeholder:text-muted-foreground"
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          style={{ color: "hsl(45 95% 75%)", caretColor: "hsl(45 95% 75%)" }}
+          className="flex-1 bg-transparent border-0 outline-none font-mono text-sm placeholder:text-[hsl(210_30%_50%)]"
           placeholder={solved ? "Step solved — try another command or wait for the next step…" : "Type a command and press Enter (↑/↓ for history)"}
         />
         <Button size="sm" variant="secondary" onClick={submit} className="h-7 gap-1">
