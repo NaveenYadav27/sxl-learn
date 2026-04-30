@@ -14,6 +14,47 @@ export type Database = {
   }
   public: {
     Tables: {
+      announcements: {
+        Row: {
+          author_id: string
+          batch_id: string | null
+          body: string
+          created_at: string
+          id: string
+          pinned: boolean
+          program: Database["public"]["Enums"]["program_code"] | null
+          title: string
+        }
+        Insert: {
+          author_id: string
+          batch_id?: string | null
+          body: string
+          created_at?: string
+          id?: string
+          pinned?: boolean
+          program?: Database["public"]["Enums"]["program_code"] | null
+          title: string
+        }
+        Update: {
+          author_id?: string
+          batch_id?: string | null
+          body?: string
+          created_at?: string
+          id?: string
+          pinned?: boolean
+          program?: Database["public"]["Enums"]["program_code"] | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "announcements_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "batches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       badges: {
         Row: {
           created_at: string
@@ -38,6 +79,74 @@ export type Database = {
           id?: string
           name?: string
           slug?: string
+        }
+        Relationships: []
+      }
+      batch_enrollments: {
+        Row: {
+          batch_id: string
+          id: string
+          joined_at: string
+          user_id: string
+        }
+        Insert: {
+          batch_id: string
+          id?: string
+          joined_at?: string
+          user_id: string
+        }
+        Update: {
+          batch_id?: string
+          id?: string
+          joined_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "batch_enrollments_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "batches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      batches: {
+        Row: {
+          capacity: number
+          created_at: string
+          end_date: string | null
+          id: string
+          instructor_id: string | null
+          is_active: boolean
+          name: string
+          program: Database["public"]["Enums"]["program_code"]
+          start_date: string
+          updated_at: string
+        }
+        Insert: {
+          capacity?: number
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          instructor_id?: string | null
+          is_active?: boolean
+          name: string
+          program: Database["public"]["Enums"]["program_code"]
+          start_date: string
+          updated_at?: string
+        }
+        Update: {
+          capacity?: number
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          instructor_id?: string | null
+          is_active?: boolean
+          name?: string
+          program?: Database["public"]["Enums"]["program_code"]
+          start_date?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -77,6 +186,36 @@ export type Database = {
           status?: string
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      instructor_lab_overrides: {
+        Row: {
+          created_at: string
+          feedback: string | null
+          id: string
+          instructor_id: string
+          lab_id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          instructor_id: string
+          lab_id: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          feedback?: string | null
+          id?: string
+          instructor_id?: string
+          lab_id?: string
+          status?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1091,6 +1230,21 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_grant_access_by_email: {
+        Args: {
+          _email: string
+          _program: Database["public"]["Enums"]["program_code"]
+        }
+        Returns: string
+      }
+      get_learner_progress: {
+        Args: { _user_id: string }
+        Returns: {
+          completed_labs: number
+          last_active_at: string
+          total_labs: number
+        }[]
+      }
       has_program_access: {
         Args: {
           _program: Database["public"]["Enums"]["program_code"]

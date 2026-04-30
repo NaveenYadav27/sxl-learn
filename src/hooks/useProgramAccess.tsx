@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
+import type { ProgramCode } from "@/lib/programMap";
 
-export type Program = "soc" | "itsm";
+export type Program = ProgramCode;
 
 export function useProgramAccess() {
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, isInstructor } = useAuth();
   const [programs, setPrograms] = useState<Program[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -31,9 +32,19 @@ export function useProgramAccess() {
     };
   }, [user]);
 
-  const hasAny = isAdmin || programs.length > 0;
-  const hasSoc = isAdmin || programs.includes("soc");
-  const hasItsm = isAdmin || programs.includes("itsm");
+  // Admins + instructors see everything; learners see only what they paid for.
+  const elevated = isAdmin || isInstructor;
+  const has = (p: Program) => elevated || programs.includes(p);
 
-  return { programs, loading, hasAny, hasSoc, hasItsm };
+  return {
+    programs,
+    loading,
+    hasAny: elevated || programs.length > 0,
+    has,
+    hasSoc: has("soc"),
+    hasItsm: has("itsm"),
+    hasPen200: has("pen200"),
+    hasCsa: has("csa"),
+    hasK8s: has("k8s"),
+  };
 }

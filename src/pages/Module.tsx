@@ -24,6 +24,8 @@ import { getCsaModuleExplanation } from "@/lib/moduleExplanationsCsa";
 import { getK8sModuleExplanation } from "@/lib/moduleExplanationsK8s";
 import { useCourse } from "@/hooks/useCourse";
 import { COURSE_LIST } from "@/lib/courses";
+import { courseCodeToProgram } from "@/lib/programMap";
+import { ProgramGate } from "@/components/ProgramGate";
 import { ListChecks as ProcessIcon, Workflow, Database, GitBranch } from "lucide-react";
 
 type DomainStyle = { icon: any; bar: string; soft: string; chip: string; label: string };
@@ -160,6 +162,8 @@ export default function Module() {
   const totalMin = note.theoryMinutes + note.labBudgetMinutes;
   const completedLabs = labs.filter((l) => progress[l.id] === "completed").length;
 
+  const program = courseCodeToProgram[course.code];
+
   return (
     <AppLayout
       breadcrumb={<Breadcrumb items={[
@@ -168,6 +172,7 @@ export default function Module() {
       ]} />}
       title={note.title}
     >
+      <ProgramGate program={program} moduleSlug={slug}>
       <div className="container py-6 space-y-6 max-w-5xl">
         {/* Hero */}
         <Card className="border-0 shadow-portal overflow-hidden">
@@ -544,6 +549,7 @@ export default function Module() {
           ) : <div className="flex-1" />}
         </div>
       </div>
+      </ProgramGate>
     </AppLayout>
   );
 }
