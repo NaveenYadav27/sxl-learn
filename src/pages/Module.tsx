@@ -22,6 +22,7 @@ import { getItsmModuleExplanation } from "@/lib/moduleExplanationsItsm";
 import { getPen200ModuleExplanation } from "@/lib/moduleExplanationsPen200";
 import { getCsaModuleExplanation } from "@/lib/moduleExplanationsCsa";
 import { getK8sModuleExplanation } from "@/lib/moduleExplanationsK8s";
+import { getCdlModuleExplanation } from "@/lib/moduleExplanationsCdl";
 import { useCourse } from "@/hooks/useCourse";
 import { COURSE_LIST } from "@/lib/courses";
 import { courseCodeToProgram } from "@/lib/programMap";
@@ -105,7 +106,9 @@ export default function Module() {
                 ? getCsaModuleExplanation(slug) ?? getModuleExplanation(slug)
                 : course.code === "k8s"
                   ? getK8sModuleExplanation(slug) ?? getModuleExplanation(slug)
-                  : getModuleExplanation(slug) ?? getItsmModuleExplanation(slug) ?? getPen200ModuleExplanation(slug) ?? getCsaModuleExplanation(slug) ?? getK8sModuleExplanation(slug))
+                  : course.code === "cdl"
+                    ? getCdlModuleExplanation(slug) ?? getModuleExplanation(slug)
+                    : getModuleExplanation(slug) ?? getItsmModuleExplanation(slug) ?? getPen200ModuleExplanation(slug) ?? getCsaModuleExplanation(slug) ?? getK8sModuleExplanation(slug) ?? getCdlModuleExplanation(slug))
         : undefined,
     [slug, course.code],
   );
@@ -506,6 +509,7 @@ export default function Module() {
                     : course.code === "pen-200" ? "OffSec & Kali Docs"
                     : course.code === "k8s" ? "Kubernetes & Docker Docs"
                     : course.code === "csa" ? "Microsoft Learn & EC-Council"
+                    : course.code === "cdl" ? "Google Cloud Docs"
                     : "Microsoft Learn"
                 })</h3>
               </div>

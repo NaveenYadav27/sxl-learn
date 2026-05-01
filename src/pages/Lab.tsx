@@ -16,6 +16,7 @@ import { PortalSimulator } from "@/components/simulators/PortalSimulator";
 import { ServiceNowSimulator } from "@/components/simulators/ServiceNowSimulator";
 import { KaliTerminalSimulator } from "@/components/simulators/KaliTerminalSimulator";
 import { K8sTerminalSimulator } from "@/components/simulators/K8sTerminalSimulator";
+import { GcpConsoleSimulator } from "@/components/simulators/GcpConsoleSimulator";
 import { TenantCheckPanel } from "@/components/simulators/TenantCheckPanel";
 import { QuizPanel } from "@/components/QuizPanel";
 import { LabCompletionModal } from "@/components/LabCompletionModal";
@@ -238,6 +239,7 @@ export default function Lab() {
                     {lab.simulator === "servicenow" ? "ServiceNow Docs"
                       : (lab.simulator === "kali-terminal" || lab.simulator === "kali") ? "OffSec / Kali Docs"
                       : (lab.simulator === "k8s-terminal" || lab.simulator === "k8s") ? "Kubernetes / Docker Docs"
+                      : (lab.simulator === "gcp-console" || lab.simulator === "gcp") ? "Google Cloud Docs"
                       : "Microsoft Learn module"}
                   </span>
                   <span className="block text-[10px] text-muted-foreground">Official free reference</span>
@@ -390,6 +392,15 @@ export default function Lab() {
               if (lab.simulator === "k8s-terminal" || lab.simulator === "k8s") {
                 return (
                   <K8sTerminalSimulator
+                    expectedAction={currentStep.expected_action}
+                    onValidate={(ok) => { if (ok) markStepDone(); }}
+                  />
+                );
+              }
+              // Google Cloud Console — CDL labs
+              if (lab.simulator === "gcp-console" || lab.simulator === "gcp") {
+                return (
+                  <GcpConsoleSimulator
                     expectedAction={currentStep.expected_action}
                     onValidate={(ok) => { if (ok) markStepDone(); }}
                   />
