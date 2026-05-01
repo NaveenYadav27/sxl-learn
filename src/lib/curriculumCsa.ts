@@ -157,50 +157,51 @@ const m = (slug: string) =>
   )!;
 
 /* ---------- 5-day plan (≈ 2h / day) — recommended ---------- */
+/* ---------- 5-day plan (~2-3h / day) — recommended ---------- */
 export const csaFiveDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "SOC Foundations & Threats (2h 15m)",
+    subtitle: "SOC Foundations & Threats (≈ 2h 45m)",
     description: "Understand the SOC, the analyst workflow, and how attackers operate (kill chain + ATT&CK).",
     modules: [m("csa-soc-fundamentals"), m("csa-cyber-threats")],
   },
   {
     id: "day2",
     label: "Day 2",
-    subtitle: "Logs & SIEM Fundamentals (3h 30m)",
+    subtitle: "Logs & SIEM Fundamentals (≈ 4h)",
     description: "Read the logs that matter, then meet Microsoft Sentinel and how a SIEM stitches them together.",
     modules: [m("csa-incidents-events-logs"), m("csa-siem-fundamentals")],
   },
   {
     id: "day3",
     label: "Day 3",
-    subtitle: "KQL & Threat Hunting (2h 15m)",
+    subtitle: "KQL & Threat Hunting (≈ 2h 15m)",
     description: "Write KQL from scratch and hunt for impossible-travel and suspicious-process patterns.",
     modules: [m("csa-kql-hunting")],
   },
   {
     id: "day4",
     label: "Day 4",
-    subtitle: "Defender XDR & Incident Response (4h)",
+    subtitle: "Defender XDR & Incident Response (≈ 4h)",
     description: "Triage Defender XDR incidents end-to-end, then run real IR playbooks.",
     modules: [m("csa-defender-xdr"), m("csa-incident-response")],
   },
   {
     id: "day5",
     label: "Day 5",
-    subtitle: "Threat Intel, SOAR & Exam Prep (2h 45m)",
+    subtitle: "Threat Intel, SOAR & Exam Prep (≈ 2h 45m)",
     description: "Add intel + automation to your toolkit, then drill the CSA exam and SOC L1 interview.",
     modules: [m("csa-threat-intel-soar"), m("exam")],
   },
 ];
 
-/* ---------- 2-day intensive ---------- */
+/* ---------- 2-day intensive (≈ 7-8h / day) ---------- */
 export const csaTwoDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "SOC → Logs → SIEM → KQL (≈ 8h)",
+    subtitle: "SOC → Logs → SIEM → KQL (≈ 7h 45m)",
     description: "From SOC fundamentals to writing your first hunting query in Sentinel.",
     modules: csaModuleNotes.filter((x) =>
       [
@@ -215,7 +216,7 @@ export const csaTwoDayPlan: DayPlan[] = [
   {
     id: "day2",
     label: "Day 2",
-    subtitle: "Defender → IR → Intel → Exam (≈ 8h)",
+    subtitle: "Defender → IR → Intel → Exam (≈ 6h 45m)",
     description: "Defender XDR triage, full IR playbooks, threat intel, SOAR and CSA exam strategy.",
     modules: csaModuleNotes.filter(
       (x) =>
@@ -229,13 +230,13 @@ export const csaTwoDayPlan: DayPlan[] = [
   },
 ];
 
-/* ---------- 1-day bootcamp ---------- */
+/* ---------- 1-day bootcamp (full ~14h, condensed to ~8h with trimmed labs) ---------- */
 export const csaOneDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "Full CSA bootcamp (8h)",
-    description: "Run the entire Certified SOC Analyst curriculum in a single intensive guided day.",
+    subtitle: "Full CSA bootcamp (condensed 8h)",
+    description: "Run the entire Certified SOC Analyst curriculum in a single intensive guided day. Lab time is trimmed to fit ~8h — book the 5-day cadence for full hands-on coverage.",
     modules: csaModuleNotes,
   },
 ];
