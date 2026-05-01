@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/sidebar";
 import {
   Home, LayoutDashboard, BookOpen, Users, Shield, Lock, Gavel, Trophy,
-  Settings, GraduationCap, Network, ClipboardCheck, Flame, Zap, Wallet, Building2, CalendarDays, Award, Crosshair, Eye, Radar,
+  Settings, GraduationCap, Network, ClipboardCheck, Flame, Zap, Wallet, Building2, CalendarDays, Award, Crosshair, Eye, Radar, Cloud,
 } from "lucide-react";
 import { getXpStats, type XpStats } from "@/lib/xp";
 import { useAuth } from "@/hooks/useAuth";
@@ -26,6 +26,7 @@ const baseLearnerNav = [
   { title: "ServiceNow Journey", url: "/servicenow-journey", icon: Award, courseOnly: "cis-itsm" as const },
   { title: "PEN-200 Program", url: "/pen200", icon: Crosshair, courseOnly: "pen-200" as const },
   { title: "CSA Program", url: "/csa", icon: Radar, courseOnly: "csa" as const },
+  { title: "CDL Program", url: "/cdl", icon: Cloud, courseOnly: "cdl" as const },
   { title: "Practice Exam", url: "/exam", icon: ClipboardCheck },
   { title: "My Progress", url: "/progress", icon: Trophy },
   { title: "License Guide", url: "/licensing", icon: Wallet },

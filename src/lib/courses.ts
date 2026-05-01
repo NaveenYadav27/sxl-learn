@@ -3,14 +3,15 @@
 // this registry so they stay in sync.
 
 import type { LucideIcon } from "lucide-react";
-import { Shield, Wrench, Crosshair, Radar, Container } from "lucide-react";
+import { Shield, Wrench, Crosshair, Radar, Container, Cloud } from "lucide-react";
 import { fiveDayPlan as sc900FiveDay, twoDayPlan as sc900TwoDay, oneDayPlan as sc900OneDay, oneHourPlan as sc900OneHour, moduleNotes as sc900Modules, type DayPlan, type ModuleNote } from "./curriculum";
 import { itsmFiveDayPlan, itsmTwoDayPlan, itsmOneDayPlan, itsmOneHourPlan, itsmModuleNotes } from "./curriculumItsm";
 import { pen200ModuleNotes, pen200FiveDayPlan, pen200TwoDayPlan, pen200OneDayPlan, pen200OneHourPlan } from "./curriculumPen200";
 import { csaModuleNotes, csaFiveDayPlan, csaTwoDayPlan, csaOneDayPlan, csaOneHourPlan } from "./curriculumCsa";
 import { k8sModuleNotes, k8sFiveDayPlan, k8sTwoDayPlan, k8sOneDayPlan, k8sOneHourPlan } from "./curriculumK8s";
+import { cdlModuleNotes, cdlFiveDayPlan, cdlTwoDayPlan, cdlOneDayPlan, cdlOneHourPlan } from "./curriculumCdl";
 
-export type CourseCode = "sc-900" | "cis-itsm" | "pen-200" | "csa" | "k8s";
+export type CourseCode = "sc-900" | "cis-itsm" | "pen-200" | "csa" | "k8s" | "cdl";
 
 export type CourseDefinition = {
   code: CourseCode;
@@ -124,6 +125,26 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
       "Visit the K8S program page for the full module map and capstone brief.",
     ],
     licensingFocus: "What you need to spin up a local Kubernetes cluster (Kind / Minikube / Docker Desktop) for hands-on practice.",
+  },
+  "cdl": {
+    code: "cdl",
+    shortName: "CDL",
+    longName: "Cloud Digital Leader — Google Cloud",
+    vendor: "Google Cloud",
+    certCode: "CDL",
+    tagline: "Google Cloud Digital Leader — recommend the right Google Cloud product for any business scenario.",
+    icon: Cloud,
+    accentClass: "text-shadowx-azure",
+    modules: cdlModuleNotes,
+    plans: { fiveDay: cdlFiveDayPlan, twoDay: cdlTwoDayPlan, oneDay: cdlOneDayPlan, oneHour: cdlOneHourPlan },
+    examTitle: "CDL Practice Exam",
+    examIntroBullets: [
+      "Scenario-based questions across all six CDL exam sections.",
+      "You can flag questions and revisit before submitting.",
+      "Auto-submits when the timer reaches zero.",
+      "Detailed review with per-section score and rationale on submit.",
+    ],
+    licensingFocus: "What you need to access the Google Cloud Console (free tier + $300 credits) for hands-on Cloud Digital Leader practice.",
   },
 };
 
