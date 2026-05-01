@@ -19,6 +19,7 @@ import { PortalSimulator } from "@/components/simulators/PortalSimulator";
 import { ServiceNowSimulator } from "@/components/simulators/ServiceNowSimulator";
 import { KaliTerminalSimulator } from "@/components/simulators/KaliTerminalSimulator";
 import { K8sTerminalSimulator } from "@/components/simulators/K8sTerminalSimulator";
+import { GcpConsoleSimulator } from "@/components/simulators/GcpConsoleSimulator";
 import { TenantCheckPanel } from "@/components/simulators/TenantCheckPanel";
 import {
   ChevronLeft, ChevronRight, ArrowLeft, CheckCircle2, Target, Lightbulb, Maximize2,
@@ -120,6 +121,9 @@ export default function LabSimulator() {
     }
     if (lab.simulator === "k8s-terminal" || lab.simulator === "k8s") {
       return <K8sTerminalSimulator expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
+    }
+    if (lab.simulator === "gcp-console" || lab.simulator === "gcp") {
+      return <GcpConsoleSimulator expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
     }
     if (lab.simulator === "servicenow") {
       return <ServiceNowSimulator expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
