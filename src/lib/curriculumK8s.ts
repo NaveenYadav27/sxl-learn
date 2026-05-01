@@ -210,7 +210,7 @@ export const k8sOneDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "K8s & Docker highlights bootcamp (condensed 8h)",
+    subtitle: "K8s & Docker full bootcamp (≈ 18h — extended day)",
     description: "Compressed walkthrough of all five modules in a single 8-hour day. Lab time is heavily trimmed — book the 5-day cadence for full hands-on coverage.",
     modules: k8sModuleNotes,
   },
