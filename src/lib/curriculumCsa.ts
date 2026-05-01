@@ -201,7 +201,7 @@ export const csaTwoDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "SOC → Logs → SIEM → KQL (≈ 7h 45m)",
+    subtitle: "SOC → Logs → SIEM → KQL (≈ 9h — extended day)",
     description: "From SOC fundamentals to writing your first hunting query in Sentinel.",
     modules: csaModuleNotes.filter((x) =>
       [
