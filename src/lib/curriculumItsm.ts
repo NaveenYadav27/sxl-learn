@@ -167,70 +167,75 @@ const m = (slug: string) =>
   itsmModuleNotes.find((x) => (slug === "exam" ? x.domain === "exam" : x.moduleSlug === slug))!;
 
 /* ---------- Day plans ---------- */
+/* ---------- "5-day" cadence (≈ 2h / day across 8 days) ----------
+ * The CIS-ITSM curriculum is ~16h of content, so the 2h-per-day cadence
+ * naturally extends to 8 days. Each day is tuned to fit a single 2-hour
+ * session — easy to schedule across two working weeks. */
 export const itsmFiveDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "ITSM Foundations & Now Platform (1h 30m)",
+    subtitle: "ITSM Foundations & Now Platform (≈ 1h 30m)",
     description: "ITIL 4 service value system, Now Platform tour and core ITSM data model.",
     modules: [m("itsm-foundations")],
   },
   {
     id: "day2",
     label: "Day 2",
-    subtitle: "Incident Management (2h)",
+    subtitle: "Incident Management (≈ 2h)",
     description: "Full Incident lifecycle, priority matrix, assignment rules, SLAs and Major Incident Management.",
     modules: [m("itsm-incident")],
   },
   {
     id: "day3",
     label: "Day 3",
-    subtitle: "Problem & Knowledge Management (2h)",
+    subtitle: "Problem & Knowledge Management (≈ 2h)",
     description: "RCA, known errors, problem tasks and the Knowledge-Centered Service workflow.",
     modules: [m("itsm-problem")],
   },
   {
     id: "day4",
     label: "Day 4",
-    subtitle: "Change & Release Management (2h)",
+    subtitle: "Change & Release Management (≈ 2h 15m)",
     description: "Standard, Normal and Emergency change workflows, CAB approvals and release coordination.",
     modules: [m("itsm-change")],
   },
   {
     id: "day5",
     label: "Day 5",
-    subtitle: "Catalog, Request Fulfilment & CMDB (2h 15m)",
+    subtitle: "Catalog, Request Fulfilment & CMDB (≈ 2h 15m)",
     description: "Service Catalog, RITM/Catalog Tasks, CMDB & CSDM foundations and ITSM KPIs.",
     modules: [m("itsm-catalog-cmdb")],
   },
   {
     id: "day6",
     label: "Day 6",
-    subtitle: "SLAs, OLAs & Workflow Automation (2h)",
+    subtitle: "SLAs, OLAs & Workflow Automation (≈ 2h)",
     description: "SLA Definitions with start/pause/stop conditions, Flow Designer triggers, actions and subflows.",
     modules: [m("itsm-sla-workflow")],
   },
   {
     id: "day7",
     label: "Day 7",
-    subtitle: "Service Portal & Virtual Agent (2h)",
+    subtitle: "Service Portal & Virtual Agent (≈ 2h)",
     description: "Service Portal branding, widget instances and Virtual Agent topic authoring with live-agent handoff.",
     modules: [m("itsm-portal-va")],
   },
   {
     id: "day8",
     label: "Day 8",
-    subtitle: "Performance Analytics, CIM & Exam (2h 15m)",
+    subtitle: "Performance Analytics, CIM & Exam (≈ 2h 30m)",
     description: "PA indicators, scorecards and breakdowns, the 7-phase CIM lifecycle and CIS-ITSM exam strategy.",
     modules: [m("itsm-pa-ci"), m("exam")],
   },
 ];
 
+/* ---------- 2-day intensive (≈ 8h / day) ---------- */
 export const itsmTwoDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "Foundations, Incident, Problem & Change (6h)",
+    subtitle: "Foundations, Incident, Problem & Change (≈ 7h 45m)",
     description: "Platform tour, Incident lifecycle, Problem/Knowledge, then Change & Release.",
     modules: itsmModuleNotes.filter((x) =>
       ["itsm-foundations", "itsm-incident", "itsm-problem", "itsm-change"].includes(x.moduleSlug ?? ""),
@@ -239,7 +244,7 @@ export const itsmTwoDayPlan: DayPlan[] = [
   {
     id: "day2",
     label: "Day 2",
-    subtitle: "Catalog, SLAs, Portal, PA & Exam (6h)",
+    subtitle: "Catalog, SLAs, Portal, PA & Exam (≈ 8h 30m)",
     description: "Service Catalog & CMDB, SLAs + Flow Designer, Service Portal & VA, Performance Analytics, then exam strategy.",
     modules: itsmModuleNotes.filter((x) =>
       ["itsm-catalog-cmdb", "itsm-sla-workflow", "itsm-portal-va", "itsm-pa-ci"].includes(x.moduleSlug ?? "")
@@ -252,8 +257,8 @@ export const itsmOneDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "Full CIS-ITSM bootcamp (10h)",
-    description: "Run the entire ITSM curriculum in a single intensive guided session.",
+    subtitle: "Full CIS-ITSM bootcamp (condensed 8h)",
+    description: "Run the entire ITSM curriculum (~16h of content) in a single intensive guided day. Lab time is trimmed to fit ~8h — book the 8-day 2h cadence for full hands-on coverage.",
     modules: itsmModuleNotes,
   },
 ];
