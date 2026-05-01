@@ -176,8 +176,8 @@ export const k8sFiveDayPlan: DayPlan[] = [
   },
 ];
 
-/* ---------- 2-day intensive (≈ 9h + 12h — extended days) ----------
- * Full K8s & Docker content is ~21h, so the 2-day format runs long.
+/* ---------- 2-day intensive (≈ 9h × 2 — extended days) ----------
+ * Full K8s & Docker content is ~18h, so the 2-day format runs long.
  * Recommended only for week-long workshops; otherwise pick the 5-day
  * cadence. */
 export const k8sTwoDayPlan: DayPlan[] = [
@@ -195,7 +195,7 @@ export const k8sTwoDayPlan: DayPlan[] = [
   {
     id: "day2",
     label: "Day 2",
-    subtitle: "Deployments → Troubleshoot → Capstone (≈ 12h — extended day)",
+    subtitle: "Deployments → Troubleshoot → Capstone (≈ 9h — extended day)",
     description: "Deployments, Services, debugging and the capstone deployment.",
     modules: [
       m("k8s-deployments-services"),
@@ -210,7 +210,7 @@ export const k8sOneDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "K8s & Docker highlights bootcamp (condensed 8h)",
+    subtitle: "K8s & Docker full bootcamp (≈ 18h — extended day)",
     description: "Compressed walkthrough of all five modules in a single 8-hour day. Lab time is heavily trimmed — book the 5-day cadence for full hands-on coverage.",
     modules: k8sModuleNotes,
   },

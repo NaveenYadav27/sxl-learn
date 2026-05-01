@@ -397,28 +397,29 @@ export const pen200FiveDayPlan: DayPlan[] = [
   },
 ];
 
-/* ---------- 2-day intensive (≈ 11h × 2 — extended days) ----------
- * Full PEN-200 content is ~45h. The 4h-per-day format cannot fit it,
+/* ---------- 2-day intensive (extended days — full ~35h syllabus) ----------
+ * Full PEN-200 content is ~35h. The 4h-per-day format cannot fit it,
  * so this 2-day plan runs long. Recommended only for OSCP+ bootcamp
  * weeks; otherwise pick the 8-day "2h cadence". */
 export const pen200TwoDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "Recon → Web → SQLi → Public exploits (≈ 11h — extended day)",
-    description: "External-attacker workflow: recon, web, SQLi, locating and customising exploits.",
+    subtitle: "Foundations → Recon → Web → SQLi → Client-side → Exploits (≈ 17h 30m — extended)",
+    description: "External-attacker workflow: foundations, reporting, recon, web, SQLi, client-side, locating / customising exploits and AV evasion.",
     modules: pen200ModuleNotes.filter((x) => [
-      "pen200-intro-cyber", "pen200-info-gathering", "pen200-vuln-scanning",
-      "pen200-web-intro", "pen200-web-attacks", "pen200-sqli", "pen200-public-exploits",
+      "pen200-intro-cyber", "pen200-report-writing", "pen200-info-gathering", "pen200-vuln-scanning",
+      "pen200-web-intro", "pen200-web-attacks", "pen200-sqli", "pen200-client-side",
+      "pen200-public-exploits", "pen200-fix-exploits", "pen200-av-evasion",
     ].includes(x.moduleSlug ?? "")),
   },
   {
     id: "day2",
     label: "Day 2",
-    subtitle: "Privesc → Tunneling → AD → Exam (≈ 14h — extended day)",
-    description: "Post-exploitation, lateral movement, full AD attack path, and OSCP+ exam plan.",
+    subtitle: "Passwords → Privesc → Tunneling → AD → Exam (≈ 17h 45m — extended)",
+    description: "Password attacks, post-exploitation, lateral movement, full AD attack path, and OSCP+ exam plan.",
     modules: pen200ModuleNotes.filter((x) => [
-      "pen200-win-privesc", "pen200-linux-privesc", "pen200-tunneling",
+      "pen200-password-attacks", "pen200-win-privesc", "pen200-linux-privesc", "pen200-tunneling",
       "pen200-metasploit", "pen200-ad-enum", "pen200-ad-auth", "pen200-ad-lateral",
     ].includes(x.moduleSlug ?? "") || (x.moduleSlug === null && x.domain === "exam")),
   },
@@ -429,7 +430,7 @@ export const pen200OneDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "OSCP+ highlights bootcamp (condensed 8h)",
+    subtitle: "Full OSCP+ bootcamp (≈ 35h — multi-day extended)",
     description: "Whirlwind tour of the entire OSCP+ syllabus in a single 8-hour day. Lab time is heavily trimmed — book the 8-day 2h cadence for genuine OSCP+ preparation.",
     modules: pen200ModuleNotes,
   },

@@ -244,7 +244,7 @@ export const itsmTwoDayPlan: DayPlan[] = [
   {
     id: "day2",
     label: "Day 2",
-    subtitle: "Catalog, SLAs, Portal, PA & Exam (≈ 8h 30m)",
+    subtitle: "Catalog, SLAs, Portal, PA & Exam (≈ 8h 45m)",
     description: "Service Catalog & CMDB, SLAs + Flow Designer, Service Portal & VA, Performance Analytics, then exam strategy.",
     modules: itsmModuleNotes.filter((x) =>
       ["itsm-catalog-cmdb", "itsm-sla-workflow", "itsm-portal-va", "itsm-pa-ci"].includes(x.moduleSlug ?? "")
@@ -257,7 +257,7 @@ export const itsmOneDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "Full CIS-ITSM bootcamp (condensed 8h)",
+    subtitle: "Full CIS-ITSM bootcamp (≈ 16h 30m — extended day)",
     description: "Run the entire ITSM curriculum (~16h of content) in a single intensive guided day. Lab time is trimmed to fit ~8h — book the 8-day 2h cadence for full hands-on coverage.",
     modules: itsmModuleNotes,
   },

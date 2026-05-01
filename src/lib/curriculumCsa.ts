@@ -201,7 +201,7 @@ export const csaTwoDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "SOC → Logs → SIEM → KQL (≈ 7h 45m)",
+    subtitle: "SOC → Logs → SIEM → KQL (≈ 9h — extended day)",
     description: "From SOC fundamentals to writing your first hunting query in Sentinel.",
     modules: csaModuleNotes.filter((x) =>
       [
@@ -235,7 +235,7 @@ export const csaOneDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "Full CSA bootcamp (condensed 8h)",
+    subtitle: "Full CSA bootcamp (≈ 15h 45m — extended day)",
     description: "Run the entire Certified SOC Analyst curriculum in a single intensive guided day. Lab time is trimmed to fit ~8h — book the 5-day cadence for full hands-on coverage.",
     modules: csaModuleNotes,
   },
