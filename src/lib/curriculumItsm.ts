@@ -244,7 +244,7 @@ export const itsmTwoDayPlan: DayPlan[] = [
   {
     id: "day2",
     label: "Day 2",
-    subtitle: "Catalog, SLAs, Portal, PA & Exam (≈ 8h 30m)",
+    subtitle: "Catalog, SLAs, Portal, PA & Exam (≈ 8h 45m)",
     description: "Service Catalog & CMDB, SLAs + Flow Designer, Service Portal & VA, Performance Analytics, then exam strategy.",
     modules: itsmModuleNotes.filter((x) =>
       ["itsm-catalog-cmdb", "itsm-sla-workflow", "itsm-portal-va", "itsm-pa-ci"].includes(x.moduleSlug ?? "")
