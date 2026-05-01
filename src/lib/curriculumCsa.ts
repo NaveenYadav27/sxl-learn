@@ -37,7 +37,7 @@ export const csaModuleNotes: ModuleNote[] = [
       "Common attack vectors: phishing, credential theft, ransomware, supply chain",
       "Mapping observed activity to ATT&CK techniques",
     ],
-    labSlugs: ["csa-attck-mapping", "csa-killchain-walkthrough"],
+    labSlugs: ["csa-attck-mapping", "csa-killchain-walkthrough", "csa-suricata-alert-triage", "csa-zeek-conn-log"],
   },
   {
     moduleSlug: "csa-incidents-events-logs",
@@ -53,7 +53,7 @@ export const csaModuleNotes: ModuleNote[] = [
       "Log normalisation, parsing and enrichment",
       "Time synchronisation, retention and chain of custody",
     ],
-    labSlugs: ["csa-windows-event-tour", "csa-signin-log-triage", "csa-sysmon-process-tree"],
+    labSlugs: ["csa-windows-event-tour", "csa-signin-log-triage", "csa-sysmon-process-tree", "csa-wireshark-pcap-triage", "csa-wireshark-conversations"],
   },
   {
     moduleSlug: "csa-siem-fundamentals",
@@ -69,7 +69,7 @@ export const csaModuleNotes: ModuleNote[] = [
       "Use-case lifecycle: hypothesis → rule → tuning → retirement",
       "Other SIEMs at a glance: Splunk, QRadar, Elastic",
     ],
-    labSlugs: ["csa-sentinel-tour", "csa-create-analytics-rule", "csa-tune-noisy-rule"],
+    labSlugs: ["csa-sentinel-tour", "csa-create-analytics-rule", "csa-tune-noisy-rule", "csa-splunk-spl-basics", "csa-qradar-rule-tuning", "csa-elastic-detection-rules"],
   },
   {
     moduleSlug: "csa-kql-hunting",
@@ -85,7 +85,7 @@ export const csaModuleNotes: ModuleNote[] = [
       "Bookmarks, livestream and scheduled hunts",
       "From hunting query → analytics rule → automation",
     ],
-    labSlugs: ["csa-kql-basics", "csa-hunt-impossible-travel", "csa-hunt-suspicious-process"],
+    labSlugs: ["csa-kql-basics", "csa-hunt-impossible-travel", "csa-hunt-suspicious-process", "csa-elastic-discover-kql"],
   },
   {
     moduleSlug: "csa-defender-xdr",
@@ -101,7 +101,7 @@ export const csaModuleNotes: ModuleNote[] = [
       "Automated investigation & response (AIR)",
       "Triaging phishing, malware and identity alerts",
     ],
-    labSlugs: ["csa-defender-incident-triage", "csa-device-timeline-walk", "csa-air-review"],
+    labSlugs: ["csa-defender-incident-triage", "csa-device-timeline-walk", "csa-air-review", "csa-splunk-notable-triage", "csa-qradar-offense-triage"],
   },
   {
     moduleSlug: "csa-incident-response",
@@ -117,7 +117,7 @@ export const csaModuleNotes: ModuleNote[] = [
       "Phishing, ransomware and account compromise playbooks",
       "Post-incident review, lessons learned and reporting",
     ],
-    labSlugs: ["csa-phishing-playbook", "csa-account-compromise-ir", "csa-ransomware-tabletop"],
+    labSlugs: ["csa-phishing-playbook", "csa-account-compromise-ir", "csa-ransomware-tabletop", "csa-thehive-create-case"],
   },
   {
     moduleSlug: "csa-threat-intel-soar",
@@ -133,7 +133,7 @@ export const csaModuleNotes: ModuleNote[] = [
       "Reporting up: writing exec summaries non-tech stakeholders understand",
       "Interview prep: top 50 SOC L1 questions, resume polish, mock drills",
     ],
-    labSlugs: ["csa-ioc-enrichment", "csa-soar-auto-response", "csa-mock-interview"],
+    labSlugs: ["csa-ioc-enrichment", "csa-soar-auto-response", "csa-mock-interview", "csa-misp-event-review", "csa-misp-feed-management", "csa-thehive-cortex-enrichment"],
   },
   {
     moduleSlug: null,
