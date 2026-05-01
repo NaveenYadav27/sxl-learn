@@ -410,6 +410,15 @@ function labRefLabel(sim?: string | null): string {
     case "k8s-terminal": return "K8s Docs";
     case "kali":
     case "kali-terminal": return "OffSec Docs";
+    case "splunk": return "Splunk Docs";
+    case "qradar": return "QRadar Docs";
+    case "elastic":
+    case "kibana": return "Elastic Docs";
+    case "misp": return "MISP Book";
+    case "thehive": return "TheHive Docs";
+    case "wireshark": return "Wireshark Docs";
+    case "suricata":
+    case "zeek": return "Suricata Docs";
     default: return "MS Learn";
   }
 }
