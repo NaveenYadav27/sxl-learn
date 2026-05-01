@@ -128,7 +128,11 @@ const m = (slug: string) =>
     slug === "capstone" ? x.domain === "exam" && x.moduleSlug === null : x.moduleSlug === slug,
   )!;
 
-/* ---------- 5-day plan (~3-4h / day) — recommended ---------- */
+/* ---------- 5-day plan (≈ 3h / day, 4h on capstone day) ----------
+ * Note: full K8s & Docker content is ~21h. The 2h-cadence format
+ * cannot fit a complete module per session, so this 5-day plan keeps
+ * each module intact at ≈3h. For a strict 2h/day cadence, run each
+ * module across two consecutive 2h sessions (Theory day + Lab day). */
 export const k8sFiveDayPlan: DayPlan[] = [
   {
     id: "day1",
@@ -165,19 +169,22 @@ export const k8sFiveDayPlan: DayPlan[] = [
   {
     id: "day5",
     label: "Day 5",
-    subtitle: "Monitoring, Troubleshooting & Capstone (≈ 4h)",
+    subtitle: "Monitoring, Troubleshooting & Capstone (≈ 6h)",
     description:
       "Debug pods, read logs and events, then ship the capstone: a multi-replica containerized app exposed through a Service.",
     modules: [m("k8s-monitoring-troubleshooting"), m("capstone")],
   },
 ];
 
-/* ---------- 2-day intensive ---------- */
+/* ---------- 2-day intensive (≈ 9h + 12h — extended days) ----------
+ * Full K8s & Docker content is ~21h, so the 2-day format runs long.
+ * Recommended only for week-long workshops; otherwise pick the 5-day
+ * cadence. */
 export const k8sTwoDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "Docker → Images → Kubernetes basics (≈ 8h)",
+    subtitle: "Docker → Images → Kubernetes basics (≈ 9h — extended day)",
     description: "Containerization fundamentals, Dockerfile authoring and your first Kubernetes Pod.",
     modules: [
       m("k8s-containerization-fundamentals"),
@@ -188,7 +195,7 @@ export const k8sTwoDayPlan: DayPlan[] = [
   {
     id: "day2",
     label: "Day 2",
-    subtitle: "Deployments → Troubleshoot → Capstone (≈ 8h)",
+    subtitle: "Deployments → Troubleshoot → Capstone (≈ 12h — extended day)",
     description: "Deployments, Services, debugging and the capstone deployment.",
     modules: [
       m("k8s-deployments-services"),
@@ -198,13 +205,13 @@ export const k8sTwoDayPlan: DayPlan[] = [
   },
 ];
 
-/* ---------- 1-day bootcamp ---------- */
+/* ---------- 1-day bootcamp (condensed highlights — full curriculum is ~21h) ---------- */
 export const k8sOneDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "Full Kubernetes & Docker bootcamp (8h)",
-    description: "Run the entire 5-module Containerization & Orchestration curriculum in a single intensive day.",
+    subtitle: "K8s & Docker highlights bootcamp (condensed 8h)",
+    description: "Compressed walkthrough of all five modules in a single 8-hour day. Lab time is heavily trimmed — book the 5-day cadence for full hands-on coverage.",
     modules: k8sModuleNotes,
   },
 ];
