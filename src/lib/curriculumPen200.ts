@@ -430,7 +430,7 @@ export const pen200OneDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "OSCP+ highlights bootcamp (condensed 8h)",
+    subtitle: "Full OSCP+ bootcamp (≈ 35h — multi-day extended)",
     description: "Whirlwind tour of the entire OSCP+ syllabus in a single 8-hour day. Lab time is heavily trimmed — book the 8-day 2h cadence for genuine OSCP+ preparation.",
     modules: pen200ModuleNotes,
   },
