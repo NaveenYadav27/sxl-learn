@@ -17,6 +17,22 @@ import { ServiceNowSimulator } from "@/components/simulators/ServiceNowSimulator
 import { KaliTerminalSimulator } from "@/components/simulators/KaliTerminalSimulator";
 import { K8sTerminalSimulator } from "@/components/simulators/K8sTerminalSimulator";
 import { GcpConsoleSimulator } from "@/components/simulators/GcpConsoleSimulator";
+import { SocToolSimulator, type SocTool } from "@/components/simulators/SocToolSimulator";
+
+// Map simulator string → SOC-tool key (CSA program). Returns null if not a SOC tool.
+const SOC_TOOLS: Record<string, SocTool> = {
+  splunk: "splunk", qradar: "qradar", elastic: "elastic", kibana: "elastic",
+  misp: "misp", thehive: "thehive", wireshark: "wireshark",
+  suricata: "suricata", zeek: "suricata",
+};
+function socToolFor(sim?: string | null): SocTool | null {
+  return sim ? (SOC_TOOLS[sim] ?? null) : null;
+}
+const SOC_TOOL_DOC_LABEL: Record<SocTool, string> = {
+  splunk: "Splunk Docs", qradar: "IBM QRadar Docs", elastic: "Elastic Docs",
+  misp: "MISP Book", thehive: "TheHive Docs",
+  wireshark: "Wireshark Docs", suricata: "Suricata Docs",
+};
 import { TenantCheckPanel } from "@/components/simulators/TenantCheckPanel";
 import { QuizPanel } from "@/components/QuizPanel";
 import { LabCompletionModal } from "@/components/LabCompletionModal";
@@ -240,6 +256,7 @@ export default function Lab() {
                       : (lab.simulator === "kali-terminal" || lab.simulator === "kali") ? "OffSec / Kali Docs"
                       : (lab.simulator === "k8s-terminal" || lab.simulator === "k8s") ? "Kubernetes / Docker Docs"
                       : (lab.simulator === "gcp-console" || lab.simulator === "gcp") ? "Google Cloud Docs"
+                      : socToolFor(lab.simulator) ? SOC_TOOL_DOC_LABEL[socToolFor(lab.simulator)!]
                       : "Microsoft Learn module"}
                   </span>
                   <span className="block text-[10px] text-muted-foreground">Official free reference</span>
@@ -405,6 +422,19 @@ export default function Lab() {
                     onValidate={(ok) => { if (ok) markStepDone(); }}
                   />
                 );
+              }
+              // SOC tool simulators — CSA labs (Splunk, QRadar, Elastic, MISP, TheHive, Wireshark, Suricata)
+              {
+                const socTool = socToolFor(lab.simulator);
+                if (socTool) {
+                  return (
+                    <SocToolSimulator
+                      tool={socTool}
+                      expectedAction={currentStep.expected_action}
+                      onValidate={(ok) => { if (ok) markStepDone(); }}
+                    />
+                  );
+                }
               }
               // ServiceNow / Now Platform — CIS-ITSM labs
               if (lab.simulator === "servicenow") {
