@@ -157,7 +157,7 @@ export const cdlFiveDayPlan: DayPlan[] = [
   {
     id: "day4",
     label: "Day 4",
-    subtitle: "Modernize infrastructure & apps (≈ 2h)",
+    subtitle: "Modernize infrastructure & apps (≈ 2h 10m)",
     description:
       "Migration paths, Compute Engine, serverless (Cloud Run, App Engine, Functions), containers, GKE, Apigee and hybrid/multicloud.",
     modules: [m("cdl-modernize-infra")],
@@ -165,7 +165,7 @@ export const cdlFiveDayPlan: DayPlan[] = [
   {
     id: "day5",
     label: "Day 5",
-    subtitle: "Trust & Security with Google Cloud (≈ 2h)",
+    subtitle: "Trust & Security with Google Cloud (≈ 1h 50m)",
     description:
       "Google's defense-in-depth, IAM, Cloud Armor, DDoS protection and the cloud shared responsibility model.",
     modules: [m("cdl-trust-security")],
@@ -173,7 +173,7 @@ export const cdlFiveDayPlan: DayPlan[] = [
   {
     id: "day6",
     label: "Day 6",
-    subtitle: "Scaling with Google Cloud Operations (≈ 2h)",
+    subtitle: "Scaling with Google Cloud Operations (≈ 2h 10m)",
     description:
       "Financial governance, reliability & SRE basics, Customer Care tiers, sustainability and exam wrap.",
     modules: [m("cdl-scaling-operations")],
