@@ -443,7 +443,7 @@ function LabRow({ lab, index, status }: { lab: Lab; index: number; status?: stri
               aria-label={`Open the official reference for ${lab.title} in a new tab`}
             >
               <Button size="sm" variant="outline" className="gap-1 h-7 w-full text-[11px]">
-                {lab.simulator === "servicenow" ? "SN Docs" : "MS Learn"} <ExternalLink className="h-3 w-3" />
+                {labRefLabel(lab.simulator)} <ExternalLink className="h-3 w-3" />
               </Button>
             </a>
           )}
