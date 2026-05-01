@@ -213,7 +213,7 @@ export const cdlOneDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "Full Cloud Digital Leader bootcamp (condensed 8h)",
+    subtitle: "Full Cloud Digital Leader bootcamp (≈ 12h — extended day)",
     description:
       "All six exam sections in a single intensive day. Lab time is trimmed to fit ~8h — book the 5-day cadence for full hands-on coverage.",
     modules: cdlModuleNotes,
