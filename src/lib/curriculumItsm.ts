@@ -257,7 +257,7 @@ export const itsmOneDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "Full CIS-ITSM bootcamp (condensed 8h)",
+    subtitle: "Full CIS-ITSM bootcamp (≈ 16h 30m — extended day)",
     description: "Run the entire ITSM curriculum (~16h of content) in a single intensive guided day. Lab time is trimmed to fit ~8h — book the 8-day 2h cadence for full hands-on coverage.",
     modules: itsmModuleNotes,
   },
