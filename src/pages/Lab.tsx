@@ -235,7 +235,10 @@ export default function Lab() {
                 <BookOpen className="h-3.5 w-3.5 text-primary shrink-0" />
                 <span className="flex-1 min-w-0">
                   <span className="block font-medium text-foreground">
-                    {lab.simulator === "servicenow" ? "ServiceNow Docs" : "Microsoft Learn module"}
+                    {lab.simulator === "servicenow" ? "ServiceNow Docs"
+                      : (lab.simulator === "kali-terminal" || lab.simulator === "kali") ? "OffSec / Kali Docs"
+                      : (lab.simulator === "k8s-terminal" || lab.simulator === "k8s") ? "Kubernetes / Docker Docs"
+                      : "Microsoft Learn module"}
                   </span>
                   <span className="block text-[10px] text-muted-foreground">Official free reference</span>
                 </span>
