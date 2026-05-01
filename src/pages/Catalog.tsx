@@ -401,6 +401,19 @@ function ModuleSection({
   );
 }
 
+function labRefLabel(sim?: string | null): string {
+  switch (sim) {
+    case "servicenow": return "SN Docs";
+    case "gcp":
+    case "gcp-console": return "GCP Docs";
+    case "k8s":
+    case "k8s-terminal": return "K8s Docs";
+    case "kali":
+    case "kali-terminal": return "OffSec Docs";
+    default: return "MS Learn";
+  }
+}
+
 function LabRow({ lab, index, status }: { lab: Lab; index: number; status?: string }) {
   const Icon = simulatorIcon[lab.simulator] ?? BookOpen;
   return (
