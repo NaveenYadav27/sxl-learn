@@ -196,7 +196,7 @@ export const cdlTwoDayPlan: DayPlan[] = [
   {
     id: "day2",
     label: "Day 2",
-    subtitle: "AI, Modernization, Trust & Operations (≈ 8h — extended day)",
+    subtitle: "AI, Modernization, Trust & Operations (≈ 8h 10m — extended day)",
     description:
       "Modules 3-6: AI/ML, infrastructure modernization, security & trust, financial governance & sustainability. Run as a long second day or split into two evenings.",
     modules: [
