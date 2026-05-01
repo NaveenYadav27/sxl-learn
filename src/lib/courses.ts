@@ -126,6 +126,26 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     ],
     licensingFocus: "What you need to spin up a local Kubernetes cluster (Kind / Minikube / Docker Desktop) for hands-on practice.",
   },
+  "cdl": {
+    code: "cdl",
+    shortName: "CDL",
+    longName: "Cloud Digital Leader — Google Cloud",
+    vendor: "Google Cloud",
+    certCode: "CDL",
+    tagline: "Google Cloud Digital Leader — recommend the right Google Cloud product for any business scenario.",
+    icon: Cloud,
+    accentClass: "text-shadowx-azure",
+    modules: cdlModuleNotes,
+    plans: { fiveDay: cdlFiveDayPlan, twoDay: cdlTwoDayPlan, oneDay: cdlOneDayPlan, oneHour: cdlOneHourPlan },
+    examTitle: "CDL Practice Exam",
+    examIntroBullets: [
+      "Scenario-based questions across all six CDL exam sections.",
+      "You can flag questions and revisit before submitting.",
+      "Auto-submits when the timer reaches zero.",
+      "Detailed review with per-section score and rationale on submit.",
+    ],
+    licensingFocus: "What you need to access the Google Cloud Console (free tier + $300 credits) for hands-on Cloud Digital Leader practice.",
+  },
 };
 
 export const COURSE_LIST: CourseDefinition[] = Object.values(COURSES);
