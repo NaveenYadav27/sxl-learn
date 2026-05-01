@@ -1,0 +1,1 @@
+ALTER TYPE public.program_code ADD VALUE IF NOT EXISTS 'cdl';
