@@ -176,7 +176,7 @@ export const k8sFiveDayPlan: DayPlan[] = [
   },
 ];
 
-/* ---------- 2-day intensive (≈ 9h + 12h — extended days) ----------
+/* ---------- 2-day intensive (≈ 9h × 2 — extended days) ---------- */
  * Full K8s & Docker content is ~21h, so the 2-day format runs long.
  * Recommended only for week-long workshops; otherwise pick the 5-day
  * cadence. */
