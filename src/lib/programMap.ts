@@ -1,9 +1,9 @@
 // Map between course codes (used in UI/curriculum) and program codes (DB enum).
-// program_code enum in DB: 'soc' | 'itsm' | 'pen200' | 'csa' | 'k8s'
+// program_code enum in DB: 'soc' | 'itsm' | 'pen200' | 'csa' | 'k8s' | 'cdl'
 
 import type { CourseCode } from "./courses";
 
-export type ProgramCode = "soc" | "itsm" | "pen200" | "csa" | "k8s";
+export type ProgramCode = "soc" | "itsm" | "pen200" | "csa" | "k8s" | "cdl";
 
 export const courseCodeToProgram: Record<CourseCode, ProgramCode> = {
   "sc-900": "soc",
@@ -11,6 +11,7 @@ export const courseCodeToProgram: Record<CourseCode, ProgramCode> = {
   "pen-200": "pen200",
   "csa": "csa",
   "k8s": "k8s",
+  "cdl": "cdl",
 };
 
 export const programToCourseCode: Record<ProgramCode, CourseCode> = {
@@ -19,6 +20,7 @@ export const programToCourseCode: Record<ProgramCode, CourseCode> = {
   pen200: "pen-200",
   csa: "csa",
   k8s: "k8s",
+  cdl: "cdl",
 };
 
 export const programLabels: Record<ProgramCode, string> = {
@@ -27,6 +29,7 @@ export const programLabels: Record<ProgramCode, string> = {
   pen200: "PEN-200 / OSCP+",
   csa: "Certified SOC Analyst (CSA)",
   k8s: "Kubernetes & Docker",
+  cdl: "Cloud Digital Leader (CDL)",
 };
 
 export const programMarketingPath: Record<ProgramCode, string> = {
@@ -35,6 +38,7 @@ export const programMarketingPath: Record<ProgramCode, string> = {
   pen200: "/pen200",
   csa: "/csa",
   k8s: "/k8s",
+  cdl: "/cdl",
 };
 
 // First module slug per program — used for free-preview gating.
@@ -45,9 +49,11 @@ export const firstModuleByProgram: Record<ProgramCode, string> = {
   pen200: "pen200-intro-cyber",
   csa: "csa-soc-fundamentals",
   k8s: "k8s-containerization-fundamentals",
+  cdl: "cdl-digital-transformation",
 };
 
 export function getProgramForModuleSlug(slug: string): ProgramCode | null {
+  if (slug.startsWith("cdl-")) return "cdl";
   if (slug.startsWith("k8s-")) return "k8s";
   if (slug.startsWith("csa-")) return "csa";
   if (slug.startsWith("pen200-")) return "pen200";
