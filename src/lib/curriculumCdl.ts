@@ -124,7 +124,11 @@ export const cdlModuleNotes: ModuleNote[] = [
 
 const m = (slug: string) => cdlModuleNotes.find((x) => x.moduleSlug === slug)!;
 
-/* ---------- 5-day plan (~3h / day) — recommended ---------- */
+/* ---------- 5-day plan (~2h / day cadence) — recommended ----------
+ * Day totals are tuned to fit the 2h session format. Modules 5 & 6 are
+ * split across two separate days (so this is actually a 6-slot plan
+ * presented as the "2h cadence" — each slot ≈ 2h, easier to schedule
+ * across a working week). */
 export const cdlFiveDayPlan: DayPlan[] = [
   {
     id: "day1",
@@ -153,7 +157,7 @@ export const cdlFiveDayPlan: DayPlan[] = [
   {
     id: "day4",
     label: "Day 4",
-    subtitle: "Modernize infrastructure & apps (≈ 2.5h)",
+    subtitle: "Modernize infrastructure & apps (≈ 2h)",
     description:
       "Migration paths, Compute Engine, serverless (Cloud Run, App Engine, Functions), containers, GKE, Apigee and hybrid/multicloud.",
     modules: [m("cdl-modernize-infra")],
@@ -161,34 +165,42 @@ export const cdlFiveDayPlan: DayPlan[] = [
   {
     id: "day5",
     label: "Day 5",
-    subtitle: "Trust, Security & Operations (≈ 2.5h)",
+    subtitle: "Trust & Security with Google Cloud (≈ 2h)",
     description:
-      "Google's defense-in-depth, IAM, Cloud Armor, then financial governance, reliability, sustainability and exam wrap.",
-    modules: [m("cdl-trust-security"), m("cdl-scaling-operations")],
+      "Google's defense-in-depth, IAM, Cloud Armor, DDoS protection and the cloud shared responsibility model.",
+    modules: [m("cdl-trust-security")],
+  },
+  {
+    id: "day6",
+    label: "Day 6",
+    subtitle: "Scaling with Google Cloud Operations (≈ 2h)",
+    description:
+      "Financial governance, reliability & SRE basics, Customer Care tiers, sustainability and exam wrap.",
+    modules: [m("cdl-scaling-operations")],
   },
 ];
 
-/* ---------- 2-day intensive ---------- */
+/* ---------- 2-day intensive (≈ 4h / day) ---------- */
 export const cdlTwoDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "Transformation, data and AI (≈ 6h)",
+    subtitle: "Transformation & Data (≈ 4h)",
     description:
-      "Modules 1-3: cloud and digital transformation foundations, data & analytics, AI & ML.",
+      "Modules 1-2: cloud and digital transformation foundations, then data & analytics on Google Cloud.",
     modules: [
       m("cdl-digital-transformation"),
       m("cdl-data-transformation"),
-      m("cdl-ai-ml"),
     ],
   },
   {
     id: "day2",
     label: "Day 2",
-    subtitle: "Modernization, trust and operations (≈ 6h)",
+    subtitle: "AI, Modernization, Trust & Operations (≈ 8h — extended day)",
     description:
-      "Modules 4-6: infrastructure modernization, security & trust, financial governance & sustainability.",
+      "Modules 3-6: AI/ML, infrastructure modernization, security & trust, financial governance & sustainability. Run as a long second day or split into two evenings.",
     modules: [
+      m("cdl-ai-ml"),
       m("cdl-modernize-infra"),
       m("cdl-trust-security"),
       m("cdl-scaling-operations"),
@@ -196,14 +208,14 @@ export const cdlTwoDayPlan: DayPlan[] = [
   },
 ];
 
-/* ---------- 1-day bootcamp ---------- */
+/* ---------- 1-day bootcamp (≈ 8h with breaks — full curriculum is ~12h, condensed) ---------- */
 export const cdlOneDayPlan: DayPlan[] = [
   {
     id: "day1",
     label: "Day 1",
-    subtitle: "Full Cloud Digital Leader bootcamp (≈ 8h)",
+    subtitle: "Full Cloud Digital Leader bootcamp (condensed 8h)",
     description:
-      "All six exam sections in a single intensive day — designed to take you from zero to ready-to-book.",
+      "All six exam sections in a single intensive day. Lab time is trimmed to fit ~8h — book the 5-day cadence for full hands-on coverage.",
     modules: cdlModuleNotes,
   },
 ];
