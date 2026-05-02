@@ -147,6 +147,26 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     ],
     licensingFocus: "What you need to access the Google Cloud Console (free tier + $300 credits) for hands-on Cloud Digital Leader practice.",
   },
+  "ccna": {
+    code: "ccna",
+    shortName: "CCNA",
+    longName: "Cisco Certified Network Associate (200-301 v1.1)",
+    vendor: "Cisco",
+    certCode: "CCNA 200-301",
+    tagline: "Cisco CCNA 200-301 v1.1 — network fundamentals, access, IP connectivity, services, security and automation.",
+    icon: Network,
+    accentClass: "text-shadowx-azure",
+    modules: ccnaModuleNotes,
+    plans: { fiveDay: ccnaFiveDayPlan, twoDay: ccnaTwoDayPlan, oneDay: ccnaOneDayPlan, oneHour: ccnaOneHourPlan },
+    examTitle: "CCNA 200-301 Practice Exam",
+    examIntroBullets: [
+      "Scenario-based questions across all six CCNA exam sections.",
+      "You can flag questions and revisit before submitting.",
+      "Auto-submits when the timer reaches zero.",
+      "Detailed review with per-section score and rationale on submit.",
+    ],
+    licensingFocus: "What you need (Cisco Packet Tracer / EVE-NG / CML) to spin up CCNA hands-on labs.",
+  },
 };
 
 export const COURSE_LIST: CourseDefinition[] = Object.values(COURSES);

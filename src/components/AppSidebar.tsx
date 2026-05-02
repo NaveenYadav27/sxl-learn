@@ -27,6 +27,7 @@ const baseLearnerNav = [
   { title: "PEN-200 Program", url: "/pen200", icon: Crosshair, courseOnly: "pen-200" as const },
   { title: "CSA Program", url: "/csa", icon: Radar, courseOnly: "csa" as const },
   { title: "CDL Program", url: "/cdl", icon: Cloud, courseOnly: "cdl" as const },
+  { title: "CCNA Program", url: "/ccna", icon: Network, courseOnly: "ccna" as const },
   { title: "Practice Exam", url: "/exam", icon: ClipboardCheck },
   { title: "My Progress", url: "/progress", icon: Trophy },
   { title: "License Guide", url: "/licensing", icon: Wallet },
