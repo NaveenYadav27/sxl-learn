@@ -23,6 +23,7 @@ import { getPen200ModuleExplanation } from "@/lib/moduleExplanationsPen200";
 import { getCsaModuleExplanation } from "@/lib/moduleExplanationsCsa";
 import { getK8sModuleExplanation } from "@/lib/moduleExplanationsK8s";
 import { getCdlModuleExplanation } from "@/lib/moduleExplanationsCdl";
+import { getCcnaModuleExplanation } from "@/lib/moduleExplanationsCcna";
 import { useCourse } from "@/hooks/useCourse";
 import { COURSE_LIST } from "@/lib/courses";
 import { courseCodeToProgram } from "@/lib/programMap";
@@ -108,7 +109,9 @@ export default function Module() {
                   ? getK8sModuleExplanation(slug) ?? getModuleExplanation(slug)
                   : course.code === "cdl"
                     ? getCdlModuleExplanation(slug) ?? getModuleExplanation(slug)
-                    : getModuleExplanation(slug) ?? getItsmModuleExplanation(slug) ?? getPen200ModuleExplanation(slug) ?? getCsaModuleExplanation(slug) ?? getK8sModuleExplanation(slug) ?? getCdlModuleExplanation(slug))
+                    : course.code === "ccna"
+                      ? getCcnaModuleExplanation(slug) ?? getModuleExplanation(slug)
+                      : getModuleExplanation(slug) ?? getItsmModuleExplanation(slug) ?? getPen200ModuleExplanation(slug) ?? getCsaModuleExplanation(slug) ?? getK8sModuleExplanation(slug) ?? getCdlModuleExplanation(slug) ?? getCcnaModuleExplanation(slug))
         : undefined,
     [slug, course.code],
   );
