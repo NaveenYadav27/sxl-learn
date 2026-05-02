@@ -589,3 +589,78 @@ export function CiscoIosSimulator({ expectedAction, onValidate }: Props) {
 }
 
 export default CiscoIosSimulator;
+
+/* ------------------------------ Topology ------------------------------ */
+function TopologyPanel({ hostname, mode, currentIf }: { hostname: string; mode: Mode; currentIf: string }) {
+  const active = mode.startsWith("config");
+  return (
+    <div className="bg-[hsl(220_25%_9%)] border-b border-border px-4 py-3">
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-shadowx-azure">
+          <Network className="h-3.5 w-3.5" /> Lab topology
+        </div>
+        <div className="text-[10px] text-muted-foreground font-mono">
+          {active ? `editing ${currentIf}` : "live view"}
+        </div>
+      </div>
+      <svg viewBox="0 0 720 150" className="w-full h-[150px]" role="img" aria-label="Network lab topology">
+        <defs>
+          <linearGradient id="linkUp" x1="0" x2="1">
+            <stop offset="0%" stopColor="hsl(140 80% 60%)" />
+            <stop offset="100%" stopColor="hsl(195 80% 60%)" />
+          </linearGradient>
+          <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 z" fill="hsl(195 70% 70%)" />
+          </marker>
+        </defs>
+
+        {/* Links */}
+        <line x1="120" y1="75" x2="280" y2="75" stroke="url(#linkUp)" strokeWidth="2" markerEnd="url(#arrow)" />
+        <line x1="360" y1="75" x2="520" y2="75" stroke="url(#linkUp)" strokeWidth="2" markerEnd="url(#arrow)" />
+        <line x1="320" y1="115" x2="320" y2="135" stroke="hsl(195 50% 50%)" strokeWidth="1.5" strokeDasharray="3 3" />
+        <line x1="600" y1="115" x2="600" y2="135" stroke="hsl(195 50% 50%)" strokeWidth="1.5" strokeDasharray="3 3" />
+
+        {/* PC */}
+        <g transform="translate(40,40)">
+          <rect width="80" height="55" rx="6" fill="hsl(220 20% 14%)" stroke="hsl(195 60% 50%)" />
+          <text x="40" y="22" textAnchor="middle" fontSize="10" fill="hsl(0 0% 90%)" fontFamily="monospace">PC1</text>
+          <text x="40" y="38" textAnchor="middle" fontSize="9" fill="hsl(195 60% 70%)" fontFamily="monospace">192.168.1.10</text>
+          <text x="40" y="50" textAnchor="middle" fontSize="8" fill="hsl(0 0% 60%)" fontFamily="monospace">VLAN 10</text>
+        </g>
+
+        {/* Switch */}
+        <g transform="translate(280,45)">
+          <rect width="80" height="60" rx="6" fill="hsl(220 20% 14%)" stroke="hsl(45 90% 60%)" />
+          <text x="40" y="22" textAnchor="middle" fontSize="10" fill="hsl(0 0% 90%)" fontFamily="monospace">SW1</text>
+          <text x="40" y="36" textAnchor="middle" fontSize="9" fill="hsl(45 80% 70%)" fontFamily="monospace">L2 access</text>
+          <text x="40" y="50" textAnchor="middle" fontSize="8" fill="hsl(0 0% 60%)" fontFamily="monospace">trunk Gi0/24</text>
+        </g>
+
+        {/* Router (this device) */}
+        <g transform="translate(520,40)">
+          <rect width="100" height="70" rx="6"
+            fill={active ? "hsl(195 60% 18%)" : "hsl(220 20% 14%)"}
+            stroke={active ? "hsl(140 80% 60%)" : "hsl(195 70% 60%)"}
+            strokeWidth={active ? 2 : 1.5} />
+          <text x="50" y="22" textAnchor="middle" fontSize="10" fill="hsl(0 0% 95%)" fontFamily="monospace" fontWeight="bold">{hostname}</text>
+          <text x="50" y="38" textAnchor="middle" fontSize="9" fill="hsl(195 80% 75%)" fontFamily="monospace">Gi0/0 .1 / Gi0/1</text>
+          <text x="50" y="52" textAnchor="middle" fontSize="8" fill="hsl(45 80% 70%)" fontFamily="monospace">OSPF area 0</text>
+          <text x="50" y="64" textAnchor="middle" fontSize="8" fill="hsl(0 0% 60%)" fontFamily="monospace">{active ? `cfg ${currentIf}` : "ready"}</text>
+        </g>
+
+        {/* AP under switch */}
+        <g transform="translate(280,135)">
+          <circle cx="40" cy="6" r="6" fill="hsl(280 60% 60%)" />
+          <text x="55" y="10" fontSize="9" fill="hsl(0 0% 70%)" fontFamily="monospace">AP01 · WLAN</text>
+        </g>
+
+        {/* WAN under router */}
+        <g transform="translate(560,135)">
+          <circle cx="40" cy="6" r="6" fill="hsl(0 60% 60%)" />
+          <text x="55" y="10" fontSize="9" fill="hsl(0 0% 70%)" fontFamily="monospace">ISP / WAN</text>
+        </g>
+      </svg>
+    </div>
+  );
+}
+
