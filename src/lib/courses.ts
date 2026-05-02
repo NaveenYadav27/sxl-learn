@@ -41,7 +41,7 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     icon: Shield,
     accentClass: "text-domain-security",
     modules: sc900Modules,
-    plans: { fiveDay: sc900FiveDay, twoDay: sc900TwoDay, oneDay: sc900OneDay, oneHour: sc900OneHour },
+    plans: { fiveDay: sc900FiveDay, twoDay: sc900TwoDay, oneDay: sc900OneDay, oneHour: sc900OneHour, thirtyDay: sc900ThirtyDay },
     examTitle: "SC-900 Practice Exam",
     examIntroBullets: [
       "Questions drawn randomly from across all SC-900 modules.",
@@ -61,7 +61,7 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     icon: Wrench,
     accentClass: "text-domain-entra",
     modules: itsmModuleNotes,
-    plans: { fiveDay: itsmFiveDayPlan, twoDay: itsmTwoDayPlan, oneDay: itsmOneDayPlan, oneHour: itsmOneHourPlan },
+    plans: { fiveDay: itsmFiveDayPlan, twoDay: itsmTwoDayPlan, oneDay: itsmOneDayPlan, oneHour: itsmOneHourPlan, thirtyDay: itsmThirtyDayPlan },
     examTitle: "CIS-ITSM Practice Exam",
     examIntroBullets: [
       "Scenario-based questions across Incident, Problem, Change, Request, CMDB & Knowledge.",
@@ -81,7 +81,7 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     icon: Crosshair,
     accentClass: "text-domain-security",
     modules: pen200ModuleNotes,
-    plans: { fiveDay: pen200FiveDayPlan, twoDay: pen200TwoDayPlan, oneDay: pen200OneDayPlan, oneHour: pen200OneHourPlan },
+    plans: { fiveDay: pen200FiveDayPlan, twoDay: pen200TwoDayPlan, oneDay: pen200OneDayPlan, oneHour: pen200OneHourPlan, thirtyDay: pen200ThirtyDayPlan },
     examTitle: "OSCP+ Practice Exam",
     examIntroBullets: [
       "Hands-on offensive security curriculum — practice exam coming soon.",
@@ -99,7 +99,7 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     icon: Radar,
     accentClass: "text-domain-security",
     modules: csaModuleNotes,
-    plans: { fiveDay: csaFiveDayPlan, twoDay: csaTwoDayPlan, oneDay: csaOneDayPlan, oneHour: csaOneHourPlan },
+    plans: { fiveDay: csaFiveDayPlan, twoDay: csaTwoDayPlan, oneDay: csaOneDayPlan, oneHour: csaOneHourPlan, thirtyDay: csaThirtyDayPlan },
     examTitle: "CSA Practice Exam",
     examIntroBullets: [
       "Scenario-based questions across SOC ops, SIEM, KQL, Defender XDR and IR playbooks.",
@@ -119,7 +119,7 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     icon: Container,
     accentClass: "text-domain-entra",
     modules: k8sModuleNotes,
-    plans: { fiveDay: k8sFiveDayPlan, twoDay: k8sTwoDayPlan, oneDay: k8sOneDayPlan, oneHour: k8sOneHourPlan },
+    plans: { fiveDay: k8sFiveDayPlan, twoDay: k8sTwoDayPlan, oneDay: k8sOneDayPlan, oneHour: k8sOneHourPlan, thirtyDay: k8sThirtyDayPlan },
     examTitle: "K8S Foundation Practice Exam",
     examIntroBullets: [
       "Hands-on Kubernetes & Docker curriculum — practice exam coming soon.",
@@ -137,7 +137,7 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     icon: Cloud,
     accentClass: "text-shadowx-azure",
     modules: cdlModuleNotes,
-    plans: { fiveDay: cdlFiveDayPlan, twoDay: cdlTwoDayPlan, oneDay: cdlOneDayPlan, oneHour: cdlOneHourPlan },
+    plans: { fiveDay: cdlFiveDayPlan, twoDay: cdlTwoDayPlan, oneDay: cdlOneDayPlan, oneHour: cdlOneHourPlan, thirtyDay: cdlThirtyDayPlan },
     examTitle: "CDL Practice Exam",
     examIntroBullets: [
       "Scenario-based questions across all six CDL exam sections.",
@@ -157,7 +157,7 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     icon: Network,
     accentClass: "text-shadowx-azure",
     modules: ccnaModuleNotes,
-    plans: { fiveDay: ccnaFiveDayPlan, twoDay: ccnaTwoDayPlan, oneDay: ccnaOneDayPlan, oneHour: ccnaOneHourPlan },
+    plans: { fiveDay: ccnaFiveDayPlan, twoDay: ccnaTwoDayPlan, oneDay: ccnaOneDayPlan, oneHour: ccnaOneHourPlan, thirtyDay: ccnaThirtyDayPlan },
     examTitle: "CCNA 200-301 Practice Exam",
     examIntroBullets: [
       "Scenario-based questions across all six CCNA exam sections.",
