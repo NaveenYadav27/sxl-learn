@@ -74,7 +74,9 @@ export default function Catalog() {
   const [search, setSearch] = useState("");
   const [difficulty, setDifficulty] = useState<string>("all");
   const [status, setStatus] = useState<string>("all");
-  const [mode, setMode] = useState<"5day" | "2day" | "1day" | "1hr">("5day");
+  const [mode, setMode] = useState<"30day" | "5day" | "2day" | "1day" | "1hr">(
+    course.plans.thirtyDay && course.plans.thirtyDay.length > 0 ? "30day" : "5day",
+  );
 
   useEffect(() => {
     (async () => {
@@ -119,7 +121,8 @@ export default function Catalog() {
   const filtersActive = search.trim() !== "" || difficulty !== "all" || status !== "all";
 
   const plan =
-    mode === "5day" ? course.plans.fiveDay
+    mode === "30day" ? (course.plans.thirtyDay ?? course.plans.fiveDay)
+      : mode === "5day" ? course.plans.fiveDay
       : mode === "2day" ? course.plans.twoDay
       : mode === "1day" ? course.plans.oneDay
       : (course.plans.oneHour ?? course.plans.oneDay);
@@ -159,7 +162,10 @@ export default function Catalog() {
         <Card className="shadow-card">
           <CardContent className="pt-4 pb-4 space-y-3">
             <Tabs value={mode} onValueChange={(v) => setMode(v as any)}>
-              <TabsList>
+              <TabsList className="flex-wrap h-auto">
+                {course.plans.thirtyDay && course.plans.thirtyDay.length > 0 ? (
+                  <TabsTrigger value="30day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />30 days × 1h</TabsTrigger>
+                ) : null}
                 <TabsTrigger value="5day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />{course.plans.fiveDay.length} days × 2h</TabsTrigger>
                 <TabsTrigger value="2day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />2 days × 4h</TabsTrigger>
                 <TabsTrigger value="1day" className="gap-1.5"><Calendar className="h-3.5 w-3.5" />1-day intensive</TabsTrigger>
