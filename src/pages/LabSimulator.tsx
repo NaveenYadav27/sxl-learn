@@ -20,6 +20,7 @@ import { ServiceNowSimulator } from "@/components/simulators/ServiceNowSimulator
 import { KaliTerminalSimulator } from "@/components/simulators/KaliTerminalSimulator";
 import { K8sTerminalSimulator } from "@/components/simulators/K8sTerminalSimulator";
 import { GcpConsoleSimulator } from "@/components/simulators/GcpConsoleSimulator";
+import { CiscoIosSimulator } from "@/components/simulators/CiscoIosSimulator";
 import { SocToolSimulator, type SocTool } from "@/components/simulators/SocToolSimulator";
 
 const SOC_TOOLS: Record<string, SocTool> = {
@@ -131,6 +132,9 @@ export default function LabSimulator() {
     }
     if (lab.simulator === "gcp-console" || lab.simulator === "gcp") {
       return <GcpConsoleSimulator expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
+    }
+    if (lab.simulator === "cisco-ios" || lab.simulator === "ios" || lab.simulator === "ccna") {
+      return <CiscoIosSimulator expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
     }
     if (SOC_TOOLS[lab.simulator]) {
       return <SocToolSimulator tool={SOC_TOOLS[lab.simulator]} expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
