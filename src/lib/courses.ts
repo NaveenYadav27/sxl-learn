@@ -4,13 +4,13 @@
 
 import type { LucideIcon } from "lucide-react";
 import { Shield, Wrench, Crosshair, Radar, Container, Cloud, Network } from "lucide-react";
-import { fiveDayPlan as sc900FiveDay, twoDayPlan as sc900TwoDay, oneDayPlan as sc900OneDay, oneHourPlan as sc900OneHour, moduleNotes as sc900Modules, type DayPlan, type ModuleNote } from "./curriculum";
-import { itsmFiveDayPlan, itsmTwoDayPlan, itsmOneDayPlan, itsmOneHourPlan, itsmModuleNotes } from "./curriculumItsm";
-import { pen200ModuleNotes, pen200FiveDayPlan, pen200TwoDayPlan, pen200OneDayPlan, pen200OneHourPlan } from "./curriculumPen200";
-import { csaModuleNotes, csaFiveDayPlan, csaTwoDayPlan, csaOneDayPlan, csaOneHourPlan } from "./curriculumCsa";
-import { k8sModuleNotes, k8sFiveDayPlan, k8sTwoDayPlan, k8sOneDayPlan, k8sOneHourPlan } from "./curriculumK8s";
-import { cdlModuleNotes, cdlFiveDayPlan, cdlTwoDayPlan, cdlOneDayPlan, cdlOneHourPlan } from "./curriculumCdl";
-import { ccnaModuleNotes, ccnaFiveDayPlan, ccnaTwoDayPlan, ccnaOneDayPlan, ccnaOneHourPlan } from "./curriculumCcna";
+import { fiveDayPlan as sc900FiveDay, twoDayPlan as sc900TwoDay, oneDayPlan as sc900OneDay, oneHourPlan as sc900OneHour, thirtyDayPlan as sc900ThirtyDay, moduleNotes as sc900Modules, type DayPlan, type ModuleNote } from "./curriculum";
+import { itsmFiveDayPlan, itsmTwoDayPlan, itsmOneDayPlan, itsmOneHourPlan, itsmThirtyDayPlan, itsmModuleNotes } from "./curriculumItsm";
+import { pen200ModuleNotes, pen200FiveDayPlan, pen200TwoDayPlan, pen200OneDayPlan, pen200OneHourPlan, pen200ThirtyDayPlan } from "./curriculumPen200";
+import { csaModuleNotes, csaFiveDayPlan, csaTwoDayPlan, csaOneDayPlan, csaOneHourPlan, csaThirtyDayPlan } from "./curriculumCsa";
+import { k8sModuleNotes, k8sFiveDayPlan, k8sTwoDayPlan, k8sOneDayPlan, k8sOneHourPlan, k8sThirtyDayPlan } from "./curriculumK8s";
+import { cdlModuleNotes, cdlFiveDayPlan, cdlTwoDayPlan, cdlOneDayPlan, cdlOneHourPlan, cdlThirtyDayPlan } from "./curriculumCdl";
+import { ccnaModuleNotes, ccnaFiveDayPlan, ccnaTwoDayPlan, ccnaOneDayPlan, ccnaOneHourPlan, ccnaThirtyDayPlan } from "./curriculumCcna";
 
 export type CourseCode = "sc-900" | "cis-itsm" | "pen-200" | "csa" | "k8s" | "cdl" | "ccna";
 
@@ -24,7 +24,7 @@ export type CourseDefinition = {
   icon: LucideIcon;
   accentClass: string;        // tailwind text class for chips
   modules: ModuleNote[];
-  plans: { fiveDay: DayPlan[]; twoDay: DayPlan[]; oneDay: DayPlan[]; oneHour?: DayPlan[] };
+  plans: { fiveDay: DayPlan[]; twoDay: DayPlan[]; oneDay: DayPlan[]; oneHour?: DayPlan[]; thirtyDay?: DayPlan[] };
   examTitle: string;          // "SC-900 Practice Exam"
   examIntroBullets: string[]; // shown on the exam intro card
   licensingFocus: string;     // banner copy on /licensing
