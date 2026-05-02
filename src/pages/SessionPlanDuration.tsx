@@ -120,12 +120,13 @@ function addMinutes(start: string, minutes: number) {
 }
 
 /* ------------------------- Route entry ------------------------- */
-type DurationKey = "8h" | "4h" | "2h" | "1h";
-const DURATION_META: Record<DurationKey, { label: string; subtitle: string; planKey: "oneDay" | "twoDay" | "fiveDay" | "oneHour" }> = {
-  "8h": { label: "8-hour intensive", subtitle: "Single-day bootcamp", planKey: "oneDay" },
-  "4h": { label: "4-hour split", subtitle: "Two half-days", planKey: "twoDay" },
-  "2h": { label: "2-hour modules", subtitle: "Multi-day cadence", planKey: "fiveDay" },
-  "1h": { label: "1-hour tool tour", subtitle: "Express overview", planKey: "oneHour" },
+type DurationKey = "8h" | "4h" | "2h" | "1h" | "30d";
+const DURATION_META: Record<DurationKey, { label: string; subtitle: string; planKey: "oneDay" | "twoDay" | "fiveDay" | "oneHour" | "thirtyDay" }> = {
+  "8h":  { label: "8-hour intensive", subtitle: "Single-day bootcamp", planKey: "oneDay" },
+  "4h":  { label: "4-hour split",     subtitle: "Two half-days",        planKey: "twoDay" },
+  "2h":  { label: "2-hour modules",   subtitle: "Multi-day cadence",    planKey: "fiveDay" },
+  "1h":  { label: "1-hour tool tour", subtitle: "Express overview",     planKey: "oneHour" },
+  "30d": { label: "30-day program",   subtitle: "1 hour per day",       planKey: "thirtyDay" },
 };
 
 export default function SessionPlanDuration() {
