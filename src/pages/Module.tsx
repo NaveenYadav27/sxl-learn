@@ -109,7 +109,9 @@ export default function Module() {
                   ? getK8sModuleExplanation(slug) ?? getModuleExplanation(slug)
                   : course.code === "cdl"
                     ? getCdlModuleExplanation(slug) ?? getModuleExplanation(slug)
-                    : getModuleExplanation(slug) ?? getItsmModuleExplanation(slug) ?? getPen200ModuleExplanation(slug) ?? getCsaModuleExplanation(slug) ?? getK8sModuleExplanation(slug) ?? getCdlModuleExplanation(slug))
+                    : course.code === "ccna"
+                      ? getCcnaModuleExplanation(slug) ?? getModuleExplanation(slug)
+                      : getModuleExplanation(slug) ?? getItsmModuleExplanation(slug) ?? getPen200ModuleExplanation(slug) ?? getCsaModuleExplanation(slug) ?? getK8sModuleExplanation(slug) ?? getCdlModuleExplanation(slug) ?? getCcnaModuleExplanation(slug))
         : undefined,
     [slug, course.code],
   );
