@@ -121,7 +121,8 @@ export default function Catalog() {
   const filtersActive = search.trim() !== "" || difficulty !== "all" || status !== "all";
 
   const plan =
-    mode === "5day" ? course.plans.fiveDay
+    mode === "30day" ? (course.plans.thirtyDay ?? course.plans.fiveDay)
+      : mode === "5day" ? course.plans.fiveDay
       : mode === "2day" ? course.plans.twoDay
       : mode === "1day" ? course.plans.oneDay
       : (course.plans.oneHour ?? course.plans.oneDay);
