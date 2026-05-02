@@ -1,7 +1,7 @@
 // CIS-ITSM curriculum (ServiceNow Certified Implementation Specialist — IT Service Management).
 // Mirrors the SC-900 curriculum shape so all course-aware components work out of the box.
 
-import type { DayPlan, ModuleNote } from "./curriculum";
+import { buildThirtyDayPlan, type DayPlan, type ModuleNote } from "./curriculum";
 
 /* ---------- Per-module notes ---------- */
 export const itsmModuleNotes: ModuleNote[] = [
@@ -307,5 +307,4 @@ export const itsmOneHourPlan: DayPlan[] = [
 ];
 
 /* ---------- 30-day / 1h-per-day plan (auto-generated) ---------- */
-import { buildThirtyDayPlan } from "./curriculum";
 export const itsmThirtyDayPlan: DayPlan[] = buildThirtyDayPlan(itsmModuleNotes);
