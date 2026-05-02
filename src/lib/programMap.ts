@@ -1,9 +1,9 @@
 // Map between course codes (used in UI/curriculum) and program codes (DB enum).
-// program_code enum in DB: 'soc' | 'itsm' | 'pen200' | 'csa' | 'k8s' | 'cdl'
+// program_code enum in DB: 'soc' | 'itsm' | 'pen200' | 'csa' | 'k8s' | 'cdl' | 'ccna'
 
 import type { CourseCode } from "./courses";
 
-export type ProgramCode = "soc" | "itsm" | "pen200" | "csa" | "k8s" | "cdl";
+export type ProgramCode = "soc" | "itsm" | "pen200" | "csa" | "k8s" | "cdl" | "ccna";
 
 export const courseCodeToProgram: Record<CourseCode, ProgramCode> = {
   "sc-900": "soc",
@@ -12,6 +12,7 @@ export const courseCodeToProgram: Record<CourseCode, ProgramCode> = {
   "csa": "csa",
   "k8s": "k8s",
   "cdl": "cdl",
+  "ccna": "ccna",
 };
 
 export const programToCourseCode: Record<ProgramCode, CourseCode> = {
@@ -21,6 +22,7 @@ export const programToCourseCode: Record<ProgramCode, CourseCode> = {
   csa: "csa",
   k8s: "k8s",
   cdl: "cdl",
+  ccna: "ccna",
 };
 
 export const programLabels: Record<ProgramCode, string> = {
@@ -30,6 +32,7 @@ export const programLabels: Record<ProgramCode, string> = {
   csa: "Certified SOC Analyst (CSA)",
   k8s: "Kubernetes & Docker",
   cdl: "Cloud Digital Leader (CDL)",
+  ccna: "Cisco CCNA 200-301",
 };
 
 export const programMarketingPath: Record<ProgramCode, string> = {
@@ -39,6 +42,7 @@ export const programMarketingPath: Record<ProgramCode, string> = {
   csa: "/csa",
   k8s: "/k8s",
   cdl: "/cdl",
+  ccna: "/ccna",
 };
 
 // First module slug per program — used for free-preview gating.
@@ -50,9 +54,11 @@ export const firstModuleByProgram: Record<ProgramCode, string> = {
   csa: "csa-soc-fundamentals",
   k8s: "k8s-containerization-fundamentals",
   cdl: "cdl-digital-transformation",
+  ccna: "ccna-network-fundamentals",
 };
 
 export function getProgramForModuleSlug(slug: string): ProgramCode | null {
+  if (slug.startsWith("ccna-")) return "ccna";
   if (slug.startsWith("cdl-")) return "cdl";
   if (slug.startsWith("k8s-")) return "k8s";
   if (slug.startsWith("csa-")) return "csa";
