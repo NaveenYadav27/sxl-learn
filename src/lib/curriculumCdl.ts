@@ -254,3 +254,7 @@ export const cdlOneHourPlan: DayPlan[] = [
     modules: [cdlToolTourModule],
   },
 ];
+
+/* ---------- 30-day / 1h-per-day plan (auto-generated) ---------- */
+import { buildThirtyDayPlan } from "./curriculum";
+export const cdlThirtyDayPlan: DayPlan[] = buildThirtyDayPlan(cdlModuleNotes);

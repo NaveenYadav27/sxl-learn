@@ -471,3 +471,7 @@ export const pen200OneHourPlan: DayPlan[] = [
     modules: [pen200ToolTourModule],
   },
 ];
+
+/* ---------- 30-day / 1h-per-day plan (auto-generated) ---------- */
+import { buildThirtyDayPlan } from "./curriculum";
+export const pen200ThirtyDayPlan: DayPlan[] = buildThirtyDayPlan(pen200ModuleNotes);

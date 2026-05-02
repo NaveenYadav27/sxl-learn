@@ -275,3 +275,7 @@ export const csaOneHourPlan: DayPlan[] = [
     modules: [csaToolTourModule],
   },
 ];
+
+/* ---------- 30-day / 1h-per-day plan (auto-generated) ---------- */
+import { buildThirtyDayPlan } from "./curriculum";
+export const csaThirtyDayPlan: DayPlan[] = buildThirtyDayPlan(csaModuleNotes);

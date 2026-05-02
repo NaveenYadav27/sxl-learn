@@ -305,3 +305,7 @@ export const itsmOneHourPlan: DayPlan[] = [
     modules: [itsmToolTourModule],
   },
 ];
+
+/* ---------- 30-day / 1h-per-day plan (auto-generated) ---------- */
+import { buildThirtyDayPlan } from "./curriculum";
+export const itsmThirtyDayPlan: DayPlan[] = buildThirtyDayPlan(itsmModuleNotes);

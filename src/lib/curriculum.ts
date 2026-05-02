@@ -297,3 +297,6 @@ export function buildThirtyDayPlan(modules: ModuleNote[], totalDays = 30): DayPl
   });
   return plan;
 }
+
+/* ---------- 30-day / 1h-per-day plan (auto-generated) ---------- */
+export const thirtyDayPlan: DayPlan[] = buildThirtyDayPlan(moduleNotes);

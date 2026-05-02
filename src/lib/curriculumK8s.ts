@@ -250,3 +250,7 @@ export const k8sOneHourPlan: DayPlan[] = [
     modules: [k8sToolTourModule],
   },
 ];
+
+/* ---------- 30-day / 1h-per-day plan (auto-generated) ---------- */
+import { buildThirtyDayPlan } from "./curriculum";
+export const k8sThirtyDayPlan: DayPlan[] = buildThirtyDayPlan(k8sModuleNotes);
