@@ -515,6 +515,9 @@ export function CiscoIosSimulator({ expectedAction, onValidate }: Props) {
 
   return (
     <Card className="overflow-hidden border-0 shadow-card">
+      {/* Topology diagram */}
+      <TopologyPanel hostname={HOSTNAME} mode={mode} currentIf={CUR_IF} />
+
       {/* Title bar */}
       <div className="flex items-center justify-between bg-[hsl(220_15%_10%)] text-foreground px-3 py-2 border-b border-border">
         <div className="flex items-center gap-2 text-xs font-mono">
