@@ -2,7 +2,7 @@
 // Built from the supplied 16h / 5-module TOC for DevOps & Platform Engineers.
 // Mirrors the SC-900 / CSA shape so all course-aware UI works unchanged.
 
-import type { DayPlan, ModuleNote } from "./curriculum";
+import { buildThirtyDayPlan, type DayPlan, type ModuleNote } from "./curriculum";
 
 /* ---------- Per-module notes ---------- */
 export const k8sModuleNotes: ModuleNote[] = [
@@ -250,3 +250,6 @@ export const k8sOneHourPlan: DayPlan[] = [
     modules: [k8sToolTourModule],
   },
 ];
+
+/* ---------- 30-day / 1h-per-day plan (auto-generated) ---------- */
+export const k8sThirtyDayPlan: DayPlan[] = buildThirtyDayPlan(k8sModuleNotes);

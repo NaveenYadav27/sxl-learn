@@ -5,7 +5,7 @@
 // 19 modules grouped into Recon → Web → Exploitation → Privilege Escalation →
 // Lateral Movement → Active Directory.
 
-import type { DayPlan, ModuleNote } from "./curriculum";
+import { buildThirtyDayPlan, type DayPlan, type ModuleNote } from "./curriculum";
 
 /* ---------- Per-module notes ---------- */
 export const pen200ModuleNotes: ModuleNote[] = [
@@ -471,3 +471,6 @@ export const pen200OneHourPlan: DayPlan[] = [
     modules: [pen200ToolTourModule],
   },
 ];
+
+/* ---------- 30-day / 1h-per-day plan (auto-generated) ---------- */
+export const pen200ThirtyDayPlan: DayPlan[] = buildThirtyDayPlan(pen200ModuleNotes);

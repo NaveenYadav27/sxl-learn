@@ -20,6 +20,14 @@ export default function SessionPlan() {
 
   const cards: DurationCard[] = [
     {
+      to: "/session-plan/30d",
+      title: "30-day program",
+      subtitle: "1 hour per day",
+      description: "Daily 1-hour sessions across a full month — best for working professionals upskilling on the side.",
+      badge: "30 days × 1h",
+      available: !!course.plans.thirtyDay && course.plans.thirtyDay.length > 0,
+    },
+    {
       to: "/session-plan/8h",
       title: "8-hour intensive",
       subtitle: "Single-day bootcamp",

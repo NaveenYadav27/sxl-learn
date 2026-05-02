@@ -17,6 +17,7 @@ import { ServiceNowSimulator } from "@/components/simulators/ServiceNowSimulator
 import { KaliTerminalSimulator } from "@/components/simulators/KaliTerminalSimulator";
 import { K8sTerminalSimulator } from "@/components/simulators/K8sTerminalSimulator";
 import { GcpConsoleSimulator } from "@/components/simulators/GcpConsoleSimulator";
+import { CiscoIosSimulator } from "@/components/simulators/CiscoIosSimulator";
 import { SocToolSimulator, type SocTool } from "@/components/simulators/SocToolSimulator";
 
 // Map simulator string → SOC-tool key (CSA program). Returns null if not a SOC tool.
@@ -418,6 +419,15 @@ export default function Lab() {
               if (lab.simulator === "gcp-console" || lab.simulator === "gcp") {
                 return (
                   <GcpConsoleSimulator
+                    expectedAction={currentStep.expected_action}
+                    onValidate={(ok) => { if (ok) markStepDone(); }}
+                  />
+                );
+              }
+              // Cisco IOS console — CCNA labs
+              if (lab.simulator === "cisco-ios" || lab.simulator === "ios" || lab.simulator === "ccna") {
+                return (
+                  <CiscoIosSimulator
                     expectedAction={currentStep.expected_action}
                     onValidate={(ok) => { if (ok) markStepDone(); }}
                   />

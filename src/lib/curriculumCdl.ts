@@ -2,7 +2,7 @@
 // exam guide (6 sections). Mirrors the K8s/CSA shape so all course-aware UI
 // works unchanged.
 
-import type { DayPlan, ModuleNote } from "./curriculum";
+import { buildThirtyDayPlan, type DayPlan, type ModuleNote } from "./curriculum";
 
 /* ---------- Per-module notes ---------- */
 export const cdlModuleNotes: ModuleNote[] = [
@@ -254,3 +254,6 @@ export const cdlOneHourPlan: DayPlan[] = [
     modules: [cdlToolTourModule],
   },
 ];
+
+/* ---------- 30-day / 1h-per-day plan (auto-generated) ---------- */
+export const cdlThirtyDayPlan: DayPlan[] = buildThirtyDayPlan(cdlModuleNotes);

@@ -237,3 +237,66 @@ export const oneHourPlan: DayPlan[] = [
 export function findDayForModule(plan: DayPlan[], moduleSlug: string | null): DayPlan | undefined {
   return plan.find((d) => d.modules.some((x) => x.moduleSlug === moduleSlug));
 }
+
+/* ---------- 30-day / ~1h-per-day generator ---------- */
+// Splits a course's modules across 30 daily ~60-minute cards. Days per module
+// are proportional to the module's total minutes (theory + lab). Each day card
+// references the parent module, with a slice of its topic list shown in the
+// subtitle so learners see meaningful per-day themes.
+//
+// All UI surfaces that already render DayPlan[] (Catalog, SessionPlanDuration,
+// program marketing pages) work unchanged — we just hand them 30 cards.
+export function buildThirtyDayPlan(modules: ModuleNote[], totalDays = 30): DayPlan[] {
+  if (modules.length === 0) return [];
+  const weights = modules.map((m) => Math.max(1, m.theoryMinutes + m.labBudgetMinutes));
+  const totalWeight = weights.reduce((a, b) => a + b, 0);
+
+  // Largest-remainder allocation so day counts sum exactly to totalDays.
+  const exact = weights.map((w) => (w / totalWeight) * totalDays);
+  const floor = exact.map((x) => Math.max(1, Math.floor(x)));
+  let allocated = floor.reduce((a, b) => a + b, 0);
+  // adjust by adding/removing days from largest-remainder modules
+  const remainders = exact.map((x, i) => ({ i, r: x - Math.floor(x) }))
+    .sort((a, b) => b.r - a.r);
+  let ri = 0;
+  while (allocated < totalDays) { floor[remainders[ri % remainders.length].i] += 1; allocated += 1; ri += 1; }
+  while (allocated > totalDays) {
+    // shrink the module with the most days (but never below 1)
+    const idx = floor
+      .map((d, i) => ({ d, i }))
+      .filter((x) => x.d > 1)
+      .sort((a, b) => b.d - a.d)[0]?.i;
+    if (idx == null) break;
+    floor[idx] -= 1; allocated -= 1;
+  }
+
+  const plan: DayPlan[] = [];
+  let dayCount = 0;
+  modules.forEach((mod, mi) => {
+    const days = floor[mi];
+    const minutesPerDay = Math.round((mod.theoryMinutes + mod.labBudgetMinutes) / Math.max(1, days));
+    const topics = mod.topics.length > 0 ? mod.topics : [mod.title];
+    // chunk topics evenly across days
+    const chunkSize = Math.max(1, Math.ceil(topics.length / days));
+    for (let d = 0; d < days; d += 1) {
+      dayCount += 1;
+      const slice = topics.slice(d * chunkSize, (d + 1) * chunkSize);
+      const subtitle = slice.length > 0
+        ? `${slice[0]}${slice.length > 1 ? ` (+${slice.length - 1} more)` : ""} (≈ ${minutesPerDay}m)`
+        : `${mod.title} — focus session (≈ ${minutesPerDay}m)`;
+      plan.push({
+        id: `d${String(dayCount).padStart(2, "0")}`,
+        label: `Day ${dayCount}`,
+        subtitle,
+        description: slice.length > 0
+          ? slice.map((t) => `• ${t}`).join("\n")
+          : `Continued deep-dive on ${mod.title}.`,
+        modules: [mod],
+      });
+    }
+  });
+  return plan;
+}
+
+/* ---------- 30-day / 1h-per-day plan (auto-generated) ---------- */
+export const thirtyDayPlan: DayPlan[] = buildThirtyDayPlan(moduleNotes);

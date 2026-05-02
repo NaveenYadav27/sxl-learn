@@ -4,13 +4,13 @@
 
 import type { LucideIcon } from "lucide-react";
 import { Shield, Wrench, Crosshair, Radar, Container, Cloud, Network } from "lucide-react";
-import { fiveDayPlan as sc900FiveDay, twoDayPlan as sc900TwoDay, oneDayPlan as sc900OneDay, oneHourPlan as sc900OneHour, moduleNotes as sc900Modules, type DayPlan, type ModuleNote } from "./curriculum";
-import { itsmFiveDayPlan, itsmTwoDayPlan, itsmOneDayPlan, itsmOneHourPlan, itsmModuleNotes } from "./curriculumItsm";
-import { pen200ModuleNotes, pen200FiveDayPlan, pen200TwoDayPlan, pen200OneDayPlan, pen200OneHourPlan } from "./curriculumPen200";
-import { csaModuleNotes, csaFiveDayPlan, csaTwoDayPlan, csaOneDayPlan, csaOneHourPlan } from "./curriculumCsa";
-import { k8sModuleNotes, k8sFiveDayPlan, k8sTwoDayPlan, k8sOneDayPlan, k8sOneHourPlan } from "./curriculumK8s";
-import { cdlModuleNotes, cdlFiveDayPlan, cdlTwoDayPlan, cdlOneDayPlan, cdlOneHourPlan } from "./curriculumCdl";
-import { ccnaModuleNotes, ccnaFiveDayPlan, ccnaTwoDayPlan, ccnaOneDayPlan, ccnaOneHourPlan } from "./curriculumCcna";
+import { fiveDayPlan as sc900FiveDay, twoDayPlan as sc900TwoDay, oneDayPlan as sc900OneDay, oneHourPlan as sc900OneHour, thirtyDayPlan as sc900ThirtyDay, moduleNotes as sc900Modules, type DayPlan, type ModuleNote } from "./curriculum";
+import { itsmFiveDayPlan, itsmTwoDayPlan, itsmOneDayPlan, itsmOneHourPlan, itsmThirtyDayPlan, itsmModuleNotes } from "./curriculumItsm";
+import { pen200ModuleNotes, pen200FiveDayPlan, pen200TwoDayPlan, pen200OneDayPlan, pen200OneHourPlan, pen200ThirtyDayPlan } from "./curriculumPen200";
+import { csaModuleNotes, csaFiveDayPlan, csaTwoDayPlan, csaOneDayPlan, csaOneHourPlan, csaThirtyDayPlan } from "./curriculumCsa";
+import { k8sModuleNotes, k8sFiveDayPlan, k8sTwoDayPlan, k8sOneDayPlan, k8sOneHourPlan, k8sThirtyDayPlan } from "./curriculumK8s";
+import { cdlModuleNotes, cdlFiveDayPlan, cdlTwoDayPlan, cdlOneDayPlan, cdlOneHourPlan, cdlThirtyDayPlan } from "./curriculumCdl";
+import { ccnaModuleNotes, ccnaFiveDayPlan, ccnaTwoDayPlan, ccnaOneDayPlan, ccnaOneHourPlan, ccnaThirtyDayPlan } from "./curriculumCcna";
 
 export type CourseCode = "sc-900" | "cis-itsm" | "pen-200" | "csa" | "k8s" | "cdl" | "ccna";
 
@@ -24,7 +24,7 @@ export type CourseDefinition = {
   icon: LucideIcon;
   accentClass: string;        // tailwind text class for chips
   modules: ModuleNote[];
-  plans: { fiveDay: DayPlan[]; twoDay: DayPlan[]; oneDay: DayPlan[]; oneHour?: DayPlan[] };
+  plans: { fiveDay: DayPlan[]; twoDay: DayPlan[]; oneDay: DayPlan[]; oneHour?: DayPlan[]; thirtyDay?: DayPlan[] };
   examTitle: string;          // "SC-900 Practice Exam"
   examIntroBullets: string[]; // shown on the exam intro card
   licensingFocus: string;     // banner copy on /licensing
@@ -41,7 +41,7 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     icon: Shield,
     accentClass: "text-domain-security",
     modules: sc900Modules,
-    plans: { fiveDay: sc900FiveDay, twoDay: sc900TwoDay, oneDay: sc900OneDay, oneHour: sc900OneHour },
+    plans: { fiveDay: sc900FiveDay, twoDay: sc900TwoDay, oneDay: sc900OneDay, oneHour: sc900OneHour, thirtyDay: sc900ThirtyDay },
     examTitle: "SC-900 Practice Exam",
     examIntroBullets: [
       "Questions drawn randomly from across all SC-900 modules.",
@@ -61,7 +61,7 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     icon: Wrench,
     accentClass: "text-domain-entra",
     modules: itsmModuleNotes,
-    plans: { fiveDay: itsmFiveDayPlan, twoDay: itsmTwoDayPlan, oneDay: itsmOneDayPlan, oneHour: itsmOneHourPlan },
+    plans: { fiveDay: itsmFiveDayPlan, twoDay: itsmTwoDayPlan, oneDay: itsmOneDayPlan, oneHour: itsmOneHourPlan, thirtyDay: itsmThirtyDayPlan },
     examTitle: "CIS-ITSM Practice Exam",
     examIntroBullets: [
       "Scenario-based questions across Incident, Problem, Change, Request, CMDB & Knowledge.",
@@ -81,7 +81,7 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     icon: Crosshair,
     accentClass: "text-domain-security",
     modules: pen200ModuleNotes,
-    plans: { fiveDay: pen200FiveDayPlan, twoDay: pen200TwoDayPlan, oneDay: pen200OneDayPlan, oneHour: pen200OneHourPlan },
+    plans: { fiveDay: pen200FiveDayPlan, twoDay: pen200TwoDayPlan, oneDay: pen200OneDayPlan, oneHour: pen200OneHourPlan, thirtyDay: pen200ThirtyDayPlan },
     examTitle: "OSCP+ Practice Exam",
     examIntroBullets: [
       "Hands-on offensive security curriculum — practice exam coming soon.",
@@ -99,7 +99,7 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     icon: Radar,
     accentClass: "text-domain-security",
     modules: csaModuleNotes,
-    plans: { fiveDay: csaFiveDayPlan, twoDay: csaTwoDayPlan, oneDay: csaOneDayPlan, oneHour: csaOneHourPlan },
+    plans: { fiveDay: csaFiveDayPlan, twoDay: csaTwoDayPlan, oneDay: csaOneDayPlan, oneHour: csaOneHourPlan, thirtyDay: csaThirtyDayPlan },
     examTitle: "CSA Practice Exam",
     examIntroBullets: [
       "Scenario-based questions across SOC ops, SIEM, KQL, Defender XDR and IR playbooks.",
@@ -119,7 +119,7 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     icon: Container,
     accentClass: "text-domain-entra",
     modules: k8sModuleNotes,
-    plans: { fiveDay: k8sFiveDayPlan, twoDay: k8sTwoDayPlan, oneDay: k8sOneDayPlan, oneHour: k8sOneHourPlan },
+    plans: { fiveDay: k8sFiveDayPlan, twoDay: k8sTwoDayPlan, oneDay: k8sOneDayPlan, oneHour: k8sOneHourPlan, thirtyDay: k8sThirtyDayPlan },
     examTitle: "K8S Foundation Practice Exam",
     examIntroBullets: [
       "Hands-on Kubernetes & Docker curriculum — practice exam coming soon.",
@@ -137,7 +137,7 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     icon: Cloud,
     accentClass: "text-shadowx-azure",
     modules: cdlModuleNotes,
-    plans: { fiveDay: cdlFiveDayPlan, twoDay: cdlTwoDayPlan, oneDay: cdlOneDayPlan, oneHour: cdlOneHourPlan },
+    plans: { fiveDay: cdlFiveDayPlan, twoDay: cdlTwoDayPlan, oneDay: cdlOneDayPlan, oneHour: cdlOneHourPlan, thirtyDay: cdlThirtyDayPlan },
     examTitle: "CDL Practice Exam",
     examIntroBullets: [
       "Scenario-based questions across all six CDL exam sections.",
@@ -157,7 +157,7 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     icon: Network,
     accentClass: "text-shadowx-azure",
     modules: ccnaModuleNotes,
-    plans: { fiveDay: ccnaFiveDayPlan, twoDay: ccnaTwoDayPlan, oneDay: ccnaOneDayPlan, oneHour: ccnaOneHourPlan },
+    plans: { fiveDay: ccnaFiveDayPlan, twoDay: ccnaTwoDayPlan, oneDay: ccnaOneDayPlan, oneHour: ccnaOneHourPlan, thirtyDay: ccnaThirtyDayPlan },
     examTitle: "CCNA 200-301 Practice Exam",
     examIntroBullets: [
       "Scenario-based questions across all six CCNA exam sections.",
