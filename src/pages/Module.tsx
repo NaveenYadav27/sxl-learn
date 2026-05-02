@@ -23,6 +23,7 @@ import { getPen200ModuleExplanation } from "@/lib/moduleExplanationsPen200";
 import { getCsaModuleExplanation } from "@/lib/moduleExplanationsCsa";
 import { getK8sModuleExplanation } from "@/lib/moduleExplanationsK8s";
 import { getCdlModuleExplanation } from "@/lib/moduleExplanationsCdl";
+import { getCcnaModuleExplanation } from "@/lib/moduleExplanationsCcna";
 import { useCourse } from "@/hooks/useCourse";
 import { COURSE_LIST } from "@/lib/courses";
 import { courseCodeToProgram } from "@/lib/programMap";
