@@ -110,7 +110,7 @@ export default function Lab() {
 
       // 5. Realtime: pick up step completions from the full-screen tab.
       channel = supabase
-        .channel(`step_progress_lab:${att!.id}`)
+        .channel(`step_progress_lab:${att!.id}:${Math.random().toString(36).slice(2, 8)}`)
         .on(
           "postgres_changes",
           { event: "*", schema: "public", table: "step_progress", filter: `attempt_id=eq.${att!.id}` },
