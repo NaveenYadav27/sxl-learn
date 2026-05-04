@@ -241,26 +241,48 @@ export const csaOneDayPlan: DayPlan[] = [
   },
 ];
 
-/* ---------- 1-hour SOC tool tour ---------- */
-const csaToolTourModule: ModuleNote = {
-  moduleSlug: "csa-tool-tour",
-  domain: "security",
-  title: "SOC tool tour — 5 essentials in 60 minutes",
-  code: "CSA-T1",
-  theoryMinutes: 10,
-  labBudgetMinutes: 50,
+/* ---------- 1-hour CSA intro session ----------
+   Designed as a single 60-minute live session with a clear narrative arc:
+   Hook (5) → SOC mental model (8) → Live alert triage in Sentinel (12) →
+   First KQL hunt (10) → Defender XDR pivot (10) → Phishing IR mini-playbook (10) →
+   Wrap-up + CSA roadmap + Q&A (5). Total = 60 min.
+   Split into two ModuleNotes so the timeline renders as two clear blocks
+   (Orientation + Hands-on), but together they sum to exactly 60 minutes. */
+
+const csaIntroOrientation: ModuleNote = {
+  moduleSlug: "csa-intro-orientation",
+  domain: "concepts",
+  title: "Block 1 — Orientation: what a SOC analyst actually does (13 min)",
+  code: "CSA-I1",
+  theoryMinutes: 13,
+  labBudgetMinutes: 0,
   topics: [
-    "1. Microsoft Sentinel workspace & incidents",
-    "2. KQL — your first hunting query",
-    "3. Defender XDR incident graph",
-    "4. Entra sign-in log triage",
-    "5. Phishing playbook walkthrough",
+    "0:00–0:05 — Hook: a real breach timeline (SolarWinds / MGM) and where the SOC stepped in",
+    "0:05–0:09 — SOC in 4 boxes: collect → detect → triage → respond (people, process, tech)",
+    "0:09–0:12 — Day in the life of an L1 analyst: queue, SLAs, escalation, shift handover",
+    "0:12–0:13 — What you'll touch in the next 47 minutes: Sentinel, KQL, Defender XDR, IR playbook",
+  ],
+  labSlugs: [],
+};
+
+const csaIntroHandsOn: ModuleNote = {
+  moduleSlug: "csa-intro-handson",
+  domain: "security",
+  title: "Block 2 — Hands-on: triage → hunt → respond (47 min)",
+  code: "CSA-I2",
+  theoryMinutes: 5,
+  labBudgetMinutes: 42,
+  topics: [
+    "0:13–0:25 — Lab 1 · Sentinel workspace tour: open an incident, read entities, assign + comment",
+    "0:25–0:35 — Lab 2 · First KQL hunt: SigninLogs | where ResultType != 0 — filter, project, summarize",
+    "0:35–0:45 — Lab 3 · Defender XDR pivot: incident graph, device timeline, isolate a device",
+    "0:45–0:55 — Lab 4 · Phishing IR mini-playbook: identify → contain → eradicate → recover",
+    "0:55–1:00 — Wrap-up: CSA 5-day roadmap, free resources, Q&A and next-batch CTA",
   ],
   labSlugs: [
     "csa-sentinel-tour",
     "csa-kql-basics",
     "csa-defender-incident-triage",
-    "csa-signin-log-triage",
     "csa-phishing-playbook",
   ],
 };
@@ -268,11 +290,11 @@ const csaToolTourModule: ModuleNote = {
 export const csaOneHourPlan: DayPlan[] = [
   {
     id: "session1",
-    label: "Session",
-    subtitle: "SOC tool tour — 5 essentials in 1h",
+    label: "Intro session",
+    subtitle: "CSA in 60 minutes — triage your first incident",
     description:
-      "Hands-on 60-minute walkthrough of the five tools every SOC L1 analyst uses on day one: Sentinel, KQL, Defender XDR, Entra sign-in logs and the phishing playbook.",
-    modules: [csaToolTourModule],
+      "A tightly-timed 1-hour live intro to the Certified SOC Analyst track. Learners walk away having (1) opened a real Sentinel incident, (2) written their first KQL hunt, (3) pivoted into Defender XDR, and (4) executed a phishing IR playbook — with a clear roadmap to the full 5-day program.",
+    modules: [csaIntroOrientation, csaIntroHandsOn],
   },
 ];
 
