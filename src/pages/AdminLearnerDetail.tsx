@@ -96,7 +96,7 @@ const AdminLearnerDetail = () => {
   if (authLoading) return null;
   if (!allowed) return <Navigate to="/dashboard" replace />;
 
-  async function grant(program: "soc" | "itsm") {
+  async function grant(program: ProgramCode) {
     setWorking(true);
     const { error } = await supabase.from("program_access").insert({ user_id: userId, program });
     setWorking(false);
