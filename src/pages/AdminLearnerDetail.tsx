@@ -237,47 +237,47 @@ const AdminLearnerDetail = () => {
                       <div className="text-sm text-muted-foreground">No programs granted yet.</div>
                     ) : (
                       <div className="space-y-2">
-                        {access.map((a) => (
-                          <div key={a.id} className="flex items-center justify-between border rounded-md p-3">
-                            <div className="flex items-center gap-3">
-                              {a.program === "soc" ? (
-                                <Badge variant="outline" className="gap-1"><Shield className="h-3 w-3" />SOC Analyst</Badge>
-                              ) : (
-                                <Badge variant="outline" className="gap-1"><Cog className="h-3 w-3" />ITSM / ServiceNow</Badge>
+                        {access.map((a) => {
+                          const meta = programMeta(a.program);
+                          const Icon = meta.icon;
+                          return (
+                            <div key={a.id} className="flex items-center justify-between border rounded-md p-3">
+                              <div className="flex items-center gap-3">
+                                <Badge variant="outline" className="gap-1"><Icon className="h-3 w-3" />{meta.label}</Badge>
+                                <span className="text-xs text-muted-foreground">
+                                  granted {new Date(a.granted_at).toLocaleString()}
+                                </span>
+                              </div>
+                              {isAdmin && (
+                                <Button variant="ghost" size="sm" className="text-destructive" onClick={() => revoke(a.id)} disabled={working}>
+                                  <Trash2 className="h-3.5 w-3.5 mr-1" /> Revoke
+                                </Button>
                               )}
-                              <span className="text-xs text-muted-foreground">
-                                granted {new Date(a.granted_at).toLocaleString()}
-                              </span>
                             </div>
-                            {isAdmin && (
-                              <Button variant="ghost" size="sm" className="text-destructive" onClick={() => revoke(a.id)} disabled={working}>
-                                <Trash2 className="h-3.5 w-3.5 mr-1" /> Revoke
-                              </Button>
-                            )}
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     )}
 
                     {isAdmin && (
-                      <div className="flex flex-wrap gap-2 pt-2 border-t">
-                        <span className="text-sm text-muted-foreground self-center mr-2">Quick grant:</span>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => grant("soc")}
-                          disabled={working || access.some((a) => a.program === "soc")}
-                        >
-                          <UserPlus className="h-3.5 w-3.5 mr-1" /> SOC
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => grant("itsm")}
-                          disabled={working || access.some((a) => a.program === "itsm")}
-                        >
-                          <UserPlus className="h-3.5 w-3.5 mr-1" /> ITSM
-                        </Button>
+                      <div className="flex flex-wrap gap-2 pt-3 border-t">
+                        <span className="text-sm text-muted-foreground self-center mr-2 w-full md:w-auto">Quick grant:</span>
+                        {PROGRAMS.map((p) => {
+                          const Icon = p.icon;
+                          const already = access.some((a) => a.program === p.code);
+                          return (
+                            <Button
+                              key={p.code}
+                              size="sm"
+                              variant="outline"
+                              onClick={() => grant(p.code)}
+                              disabled={working || already}
+                              title={already ? "Already granted" : `Grant ${p.label}`}
+                            >
+                              <Icon className="h-3.5 w-3.5 mr-1" /> {p.label}
+                            </Button>
+                          );
+                        })}
                       </div>
                     )}
                   </CardContent>
