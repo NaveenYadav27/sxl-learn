@@ -12,10 +12,23 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import {
   Loader2, Shield, Cog, ArrowLeft, RotateCcw, Trash2, UserPlus, CheckCircle2, XCircle, Clock,
+  Mail, Network, Truck, Boxes, Bug, Users as UsersIcon,
 } from "lucide-react";
 
+type ProgramCode = "soc" | "itsm" | "ccna" | "cdl" | "k8s" | "pen200" | "csa";
+const PROGRAMS: { code: ProgramCode; label: string; icon: any }[] = [
+  { code: "soc", label: "SOC Analyst", icon: Shield },
+  { code: "itsm", label: "ITSM / ServiceNow", icon: Cog },
+  { code: "csa", label: "Certified SOC Analyst", icon: UsersIcon },
+  { code: "ccna", label: "CCNA", icon: Network },
+  { code: "cdl", label: "Cloud Digital Leader", icon: Truck },
+  { code: "k8s", label: "Kubernetes", icon: Boxes },
+  { code: "pen200", label: "PEN-200 / OSCP", icon: Bug },
+];
+const programMeta = (p: ProgramCode) => PROGRAMS.find((x) => x.code === p) ?? { code: p, label: p.toUpperCase(), icon: Shield };
+
 type Profile = { id: string; display_name: string | null; created_at: string; pdi_instance_url: string | null };
-type AccessRow = { id: string; program: "soc" | "itsm"; granted_at: string };
+type AccessRow = { id: string; program: ProgramCode; granted_at: string };
 type RoleRow = { role: "learner" | "instructor" | "admin" };
 type Attempt = {
   id: string; lab_id: string; status: string; score: number;
