@@ -176,8 +176,19 @@ const AdminLearnerDetail = () => {
                     <div className="font-semibold text-lg">{profile?.display_name || "(unnamed)"}</div>
                   </div>
                   <div>
+                    <div className="text-xs text-muted-foreground">Email</div>
+                    <div className="text-sm flex items-center gap-1.5">
+                      <Mail className="h-3.5 w-3.5 text-muted-foreground" />
+                      {email ? (
+                        <a href={`mailto:${email}`} className="text-primary hover:underline break-all">{email}</a>
+                      ) : (
+                        <span className="text-muted-foreground italic">unavailable</span>
+                      )}
+                    </div>
+                  </div>
+                  <div>
                     <div className="text-xs text-muted-foreground">User ID</div>
-                    <div className="font-mono text-xs">{userId}</div>
+                    <div className="font-mono text-xs break-all">{userId}</div>
                   </div>
                   <div>
                     <div className="text-xs text-muted-foreground">Role</div>
