@@ -1230,6 +1230,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_get_user_email: { Args: { _user_id: string }; Returns: string }
       admin_grant_access_by_email: {
         Args: {
           _email: string
