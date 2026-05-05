@@ -298,5 +298,198 @@ export const csaOneHourPlan: DayPlan[] = [
   },
 ];
 
-/* ---------- 30-day / 1h-per-day plan (auto-generated) ---------- */
-export const csaThirtyDayPlan: DayPlan[] = buildThirtyDayPlan(csaModuleNotes);
+/* ---------- 30-day / 1h-per-day plan ----------
+   Hand-curated: 30 standalone daily modules, each ~60 minutes (≈25m theory +
+   ≈35m guided lab). One sharply-scoped focus per day so learners get a fresh,
+   clearly different topic and lab every day for 30 days. Labs are drawn from
+   the existing CSA lab catalog (csa-* slugs in the labs table).            */
+
+const day = (
+  n: number,
+  parent: string,
+  domain: ModuleNote["domain"],
+  title: string,
+  topics: string[],
+  labSlugs: string[],
+  theoryMinutes = 25,
+  labBudgetMinutes = 35,
+): DayPlan => {
+  const id = `d${String(n).padStart(2, "0")}`;
+  const dayModule: ModuleNote = {
+    moduleSlug: `csa-30d-${id}`,
+    domain,
+    title: `Day ${n} — ${title}`,
+    code: `CSA-D${n}`,
+    theoryMinutes,
+    labBudgetMinutes,
+    topics,
+    labSlugs,
+  };
+  return {
+    id,
+    label: `Day ${n}`,
+    subtitle: `${title} (≈ 1h)`,
+    description: `Parent: ${parent}. ${topics[0]}.`,
+    modules: [dayModule],
+  };
+};
+
+export const csaThirtyDayPlan: DayPlan[] = [
+  // Week 1 — SOC foundations, threats, kill chain, ATT&CK
+  day(1, "M1 SOC Fundamentals", "concepts", "Welcome to the SOC", [
+    "What a SOC is: people, process, technology",
+    "SOC tiers L1/L2/L3 and the analyst career ladder",
+    "SOC models: in-house, MSSP, hybrid, virtual",
+  ], ["csa-soc-tour"]),
+  day(2, "M1 SOC Fundamentals", "concepts", "Daily life of an L1 analyst", [
+    "Queue triage, ticket SLAs, escalation paths",
+    "MTTD vs MTTR and other SOC KPIs",
+    "Shift handover discipline and the analyst journal",
+  ], ["csa-shift-handover-drill"]),
+  day(3, "M2 Cyber Threats", "concepts", "Threat actors & motivations", [
+    "Nation-state, organised crime, hacktivist, insider",
+    "Targets, motives and typical TTPs per actor type",
+    "Reading a threat report: who, what, why, how",
+  ], ["csa-killchain-walkthrough"]),
+  day(4, "M2 Cyber Threats", "concepts", "Cyber Kill Chain & Diamond Model", [
+    "Lockheed Martin Cyber Kill Chain — 7 stages",
+    "Diamond Model: adversary, capability, infra, victim",
+    "Mapping a real breach to kill-chain stages",
+  ], ["csa-killchain-walkthrough"]),
+  day(5, "M2 Cyber Threats", "security", "MITRE ATT&CK in practice", [
+    "Tactics vs techniques vs sub-techniques",
+    "Reading an ATT&CK technique page end-to-end",
+    "Mapping observed activity to ATT&CK IDs",
+  ], ["csa-attck-mapping"]),
+  day(6, "M2 Cyber Threats", "security", "Network alert triage with Suricata", [
+    "How an IDS produces alerts (signatures + anomaly)",
+    "Reading a Suricata C2 beacon alert",
+    "Pivoting from alert → flow → host",
+  ], ["csa-suricata-alert-triage"]),
+  day(7, "M2 Cyber Threats", "security", "Zeek conn.log for analysts", [
+    "Why Zeek/Bro logs are SOC gold",
+    "Fields that matter: duration, bytes, conn_state",
+    "Spotting beaconing and exfil patterns",
+  ], ["csa-zeek-conn-log"]),
+
+  // Week 2 — Logs everywhere & SIEM intro
+  day(8, "M3 Logs", "security", "Windows Security event log tour", [
+    "Event IDs you must know (4624, 4625, 4672, 4688)",
+    "Logon types decoded",
+    "Building a mental index of the Security log",
+  ], ["csa-windows-event-tour"]),
+  day(9, "M3 Logs", "security", "Sysmon process trees", [
+    "Why Sysmon beats default Windows logging",
+    "Reading ProcessCreate (Event ID 1) like a story",
+    "Spotting living-off-the-land binaries (LOLBins)",
+  ], ["csa-sysmon-process-tree"]),
+  day(10, "M3 Logs", "security", "Entra ID sign-in log triage", [
+    "Sign-in log fields: ResultType, risk, CA applied",
+    "Triaging failed and risky sign-ins",
+    "Spotting password spray vs brute force",
+  ], ["csa-signin-log-triage"]),
+  day(11, "M3 Logs", "security", "PCAP triage with Wireshark", [
+    "Capture, display & follow-stream filters",
+    "Triaging a phishing-delivery PCAP",
+    "Extracting IOCs from packet captures",
+  ], ["csa-wireshark-pcap-triage"]),
+  day(12, "M3 Logs", "security", "Wireshark conversations & top talkers", [
+    "Conversations and Endpoints statistics",
+    "Finding the loudest host in a capture",
+    "From top-talker → suspicious destination",
+  ], ["csa-wireshark-conversations"]),
+  day(13, "M4 SIEM", "security", "SIEM architecture in 60 minutes", [
+    "Collection → parsing → correlation → alerting",
+    "Watchlists, threat intel and entity behaviour",
+    "Use-case lifecycle: hypothesis → rule → tune → retire",
+  ], ["csa-sentinel-tour"]),
+  day(14, "M4 SIEM", "security", "Microsoft Sentinel workspace tour", [
+    "Workspace, data connectors, tables",
+    "Incidents, entities, comments and assignment",
+    "Where analytics rules and hunts live",
+  ], ["csa-sentinel-tour"]),
+
+  // Week 3 — KQL, hunting, SIEM tuning, Defender XDR
+  day(15, "M5 KQL", "security", "KQL essentials in one sitting", [
+    "where, project, extend, summarize, render",
+    "Time filters and the implicit TimeGenerated",
+    "Building your first useful query in 5 lines",
+  ], ["csa-kql-basics"]),
+  day(16, "M5 KQL", "security", "Hunting impossible-travel sign-ins", [
+    "Why impossible travel is a strong indicator",
+    "Joining SigninLogs to itself by user",
+    "Calculating geo-distance vs time delta",
+  ], ["csa-hunt-impossible-travel"]),
+  day(17, "M5 KQL", "security", "Hunting suspicious child processes", [
+    "Why parent-child relationships matter",
+    "Common bad pairs (winword.exe → powershell.exe)",
+    "DeviceProcessEvents and ATT&CK T1059",
+  ], ["csa-hunt-suspicious-process"]),
+  day(18, "M5 KQL", "security", "Elastic Discover & KQL", [
+    "Switching mental model from Sentinel to Elastic",
+    "Discover, fields, saved searches",
+    "Hunting failed logons across data views",
+  ], ["csa-elastic-discover-kql"]),
+  day(19, "M4 SIEM", "security", "Build a Sentinel analytics rule", [
+    "From hunting query → scheduled rule",
+    "Entity mapping and incident grouping",
+    "Severity, frequency and lookback choices",
+  ], ["csa-create-analytics-rule"]),
+  day(20, "M4 SIEM", "security", "Tune a noisy detection rule", [
+    "Reading false-positive patterns",
+    "Allow-listing safely (IP, user, app)",
+    "Threshold, suppression and entity tuning",
+  ], ["csa-tune-noisy-rule"]),
+  day(21, "M6 Defender XDR", "security", "Defender XDR incident triage", [
+    "Incident graph and correlated alerts",
+    "Evidence: devices, users, files, IPs",
+    "Triage decision tree in 5 minutes",
+  ], ["csa-defender-incident-triage"]),
+
+  // Week 4 — XDR depth, IR playbooks, intel, SOAR, exam prep
+  day(22, "M6 Defender XDR", "security", "Device timeline investigation", [
+    "Reading a device timeline like an attack story",
+    "Pivoting between processes, files and network",
+    "When to escalate vs contain vs close",
+  ], ["csa-device-timeline-walk"]),
+  day(23, "M6 Defender XDR", "security", "Automated Investigation & Response (AIR)", [
+    "What AIR can and cannot decide",
+    "Reviewing AIR verdicts and pending actions",
+    "When to override automation",
+  ], ["csa-air-review"]),
+  day(24, "M4 SIEM", "security", "Splunk SPL hunt for brute-force", [
+    "SPL crash course: search → stats → eval",
+    "Hunting failed logons that turn into success",
+    "Building a notable event from your hunt",
+  ], ["csa-splunk-spl-basics", "csa-splunk-notable-triage"]),
+  day(25, "M4 SIEM", "security", "QRadar offense triage & rule tuning", [
+    "QRadar magnitude, credibility, severity",
+    "Investigating an offense end-to-end",
+    "Reading and tuning correlation rules",
+  ], ["csa-qradar-offense-triage", "csa-qradar-rule-tuning"]),
+  day(26, "M7 IR", "compliance", "Phishing IR playbook", [
+    "NIST IR phases applied to phishing",
+    "Identify → contain → eradicate → recover",
+    "Communications & user-awareness loop",
+  ], ["csa-phishing-playbook"]),
+  day(27, "M7 IR", "compliance", "Account compromise IR", [
+    "Indicators of a compromised user",
+    "Containment: revoke sessions, reset, MFA reset",
+    "Post-incident hardening checklist",
+  ], ["csa-account-compromise-ir"]),
+  day(28, "M7 IR", "compliance", "Ransomware tabletop exercise", [
+    "Tabletop mechanics and roles",
+    "Decision points: pay, isolate, restore, disclose",
+    "Lessons-learned format that ships",
+  ], ["csa-ransomware-tabletop", "csa-thehive-create-case"]),
+  day(29, "M8 Threat Intel & SOAR", "exam", "Threat intel + IOC enrichment + SOAR", [
+    "Strategic vs tactical vs operational vs technical intel",
+    "MISP & TheHive/Cortex enrichment workflow",
+    "Sentinel automation rules & Logic Apps playbooks",
+  ], ["csa-ioc-enrichment", "csa-misp-event-review", "csa-thehive-cortex-enrichment", "csa-soar-auto-response"]),
+  day(30, "M8 Career Prep", "exam", "CSA exam strategy & SOC L1 mock interview", [
+    "CSA exam structure and time management",
+    "Top 50 SOC L1 interview questions",
+    "Resume polish, STAR stories, next-batch CTA",
+  ], ["csa-mock-interview"]),
+];
