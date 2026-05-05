@@ -85,7 +85,7 @@ export default function Module() {
       if (found) return found;
       // Also search plan-only modules (e.g. the 1-hour tool tour, which is
       // not in the main `modules` list but lives inside plans.oneHour)
-      const planLists = [c.plans.oneHour, c.plans.oneDay, c.plans.twoDay, c.plans.fiveDay];
+      const planLists = [c.plans.oneHour, c.plans.oneDay, c.plans.twoDay, c.plans.fiveDay, c.plans.thirtyDay];
       for (const plan of planLists) {
         if (!plan) continue;
         for (const day of plan) {
