@@ -12,10 +12,23 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import {
   Loader2, Shield, Cog, ArrowLeft, RotateCcw, Trash2, UserPlus, CheckCircle2, XCircle, Clock,
+  Mail, Network, Truck, Boxes, Bug, Users as UsersIcon,
 } from "lucide-react";
 
+type ProgramCode = "soc" | "itsm" | "ccna" | "cdl" | "k8s" | "pen200" | "csa";
+const PROGRAMS: { code: ProgramCode; label: string; icon: any }[] = [
+  { code: "soc", label: "SOC Analyst", icon: Shield },
+  { code: "itsm", label: "ITSM / ServiceNow", icon: Cog },
+  { code: "csa", label: "Certified SOC Analyst", icon: UsersIcon },
+  { code: "ccna", label: "CCNA", icon: Network },
+  { code: "cdl", label: "Cloud Digital Leader", icon: Truck },
+  { code: "k8s", label: "Kubernetes", icon: Boxes },
+  { code: "pen200", label: "PEN-200 / OSCP", icon: Bug },
+];
+const programMeta = (p: ProgramCode) => PROGRAMS.find((x) => x.code === p) ?? { code: p, label: p.toUpperCase(), icon: Shield };
+
 type Profile = { id: string; display_name: string | null; created_at: string; pdi_instance_url: string | null };
-type AccessRow = { id: string; program: "soc" | "itsm"; granted_at: string };
+type AccessRow = { id: string; program: ProgramCode; granted_at: string };
 type RoleRow = { role: "learner" | "instructor" | "admin" };
 type Attempt = {
   id: string; lab_id: string; status: string; score: number;
@@ -40,9 +53,11 @@ const AdminLearnerDetail = () => {
   const [loading, setLoading] = useState(true);
   const [working, setWorking] = useState(false);
 
+  const [email, setEmail] = useState<string | null>(null);
+
   async function refresh() {
     setLoading(true);
-    const [{ data: p }, { data: a }, { data: r }, { data: at }] = await Promise.all([
+    const [{ data: p }, { data: a }, { data: r }, { data: at }, { data: em }] = await Promise.all([
       supabase.from("profiles").select("id, display_name, created_at, pdi_instance_url").eq("id", userId).maybeSingle(),
       supabase.from("program_access").select("id, program, granted_at").eq("user_id", userId),
       supabase.from("user_roles").select("role").eq("user_id", userId),
@@ -51,8 +66,10 @@ const AdminLearnerDetail = () => {
         .select("id, lab_id, status, score, started_at, completed_at, labs(title, slug, module_id)")
         .eq("user_id", userId)
         .order("started_at", { ascending: false }),
+      supabase.rpc("admin_get_user_email", { _user_id: userId }),
     ]);
     setProfile((p as Profile) ?? null);
+    setEmail((em as string | null) ?? null);
     setAccess((a ?? []) as AccessRow[]);
     setRoles((r ?? []) as RoleRow[]);
     setAttempts((at ?? []) as Attempt[]);
@@ -79,7 +96,7 @@ const AdminLearnerDetail = () => {
   if (authLoading) return null;
   if (!allowed) return <Navigate to="/dashboard" replace />;
 
-  async function grant(program: "soc" | "itsm") {
+  async function grant(program: ProgramCode) {
     setWorking(true);
     const { error } = await supabase.from("program_access").insert({ user_id: userId, program });
     setWorking(false);
@@ -159,8 +176,19 @@ const AdminLearnerDetail = () => {
                     <div className="font-semibold text-lg">{profile?.display_name || "(unnamed)"}</div>
                   </div>
                   <div>
+                    <div className="text-xs text-muted-foreground">Email</div>
+                    <div className="text-sm flex items-center gap-1.5">
+                      <Mail className="h-3.5 w-3.5 text-muted-foreground" />
+                      {email ? (
+                        <a href={`mailto:${email}`} className="text-primary hover:underline break-all">{email}</a>
+                      ) : (
+                        <span className="text-muted-foreground italic">unavailable</span>
+                      )}
+                    </div>
+                  </div>
+                  <div>
                     <div className="text-xs text-muted-foreground">User ID</div>
-                    <div className="font-mono text-xs">{userId}</div>
+                    <div className="font-mono text-xs break-all">{userId}</div>
                   </div>
                   <div>
                     <div className="text-xs text-muted-foreground">Role</div>
@@ -209,47 +237,47 @@ const AdminLearnerDetail = () => {
                       <div className="text-sm text-muted-foreground">No programs granted yet.</div>
                     ) : (
                       <div className="space-y-2">
-                        {access.map((a) => (
-                          <div key={a.id} className="flex items-center justify-between border rounded-md p-3">
-                            <div className="flex items-center gap-3">
-                              {a.program === "soc" ? (
-                                <Badge variant="outline" className="gap-1"><Shield className="h-3 w-3" />SOC Analyst</Badge>
-                              ) : (
-                                <Badge variant="outline" className="gap-1"><Cog className="h-3 w-3" />ITSM / ServiceNow</Badge>
+                        {access.map((a) => {
+                          const meta = programMeta(a.program);
+                          const Icon = meta.icon;
+                          return (
+                            <div key={a.id} className="flex items-center justify-between border rounded-md p-3">
+                              <div className="flex items-center gap-3">
+                                <Badge variant="outline" className="gap-1"><Icon className="h-3 w-3" />{meta.label}</Badge>
+                                <span className="text-xs text-muted-foreground">
+                                  granted {new Date(a.granted_at).toLocaleString()}
+                                </span>
+                              </div>
+                              {isAdmin && (
+                                <Button variant="ghost" size="sm" className="text-destructive" onClick={() => revoke(a.id)} disabled={working}>
+                                  <Trash2 className="h-3.5 w-3.5 mr-1" /> Revoke
+                                </Button>
                               )}
-                              <span className="text-xs text-muted-foreground">
-                                granted {new Date(a.granted_at).toLocaleString()}
-                              </span>
                             </div>
-                            {isAdmin && (
-                              <Button variant="ghost" size="sm" className="text-destructive" onClick={() => revoke(a.id)} disabled={working}>
-                                <Trash2 className="h-3.5 w-3.5 mr-1" /> Revoke
-                              </Button>
-                            )}
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     )}
 
                     {isAdmin && (
-                      <div className="flex flex-wrap gap-2 pt-2 border-t">
-                        <span className="text-sm text-muted-foreground self-center mr-2">Quick grant:</span>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => grant("soc")}
-                          disabled={working || access.some((a) => a.program === "soc")}
-                        >
-                          <UserPlus className="h-3.5 w-3.5 mr-1" /> SOC
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => grant("itsm")}
-                          disabled={working || access.some((a) => a.program === "itsm")}
-                        >
-                          <UserPlus className="h-3.5 w-3.5 mr-1" /> ITSM
-                        </Button>
+                      <div className="flex flex-wrap gap-2 pt-3 border-t">
+                        <span className="text-sm text-muted-foreground self-center mr-2 w-full md:w-auto">Quick grant:</span>
+                        {PROGRAMS.map((p) => {
+                          const Icon = p.icon;
+                          const already = access.some((a) => a.program === p.code);
+                          return (
+                            <Button
+                              key={p.code}
+                              size="sm"
+                              variant="outline"
+                              onClick={() => grant(p.code)}
+                              disabled={working || already}
+                              title={already ? "Already granted" : `Grant ${p.label}`}
+                            >
+                              <Icon className="h-3.5 w-3.5 mr-1" /> {p.label}
+                            </Button>
+                          );
+                        })}
                       </div>
                     )}
                   </CardContent>
