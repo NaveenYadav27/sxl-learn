@@ -270,28 +270,62 @@ export function buildThirtyDayPlan(modules: ModuleNote[], totalDays = 30): DayPl
     floor[idx] -= 1; allocated -= 1;
   }
 
+  // Helper: split an array into N roughly-equal contiguous chunks (every chunk
+  // gets at least 0; earlier chunks absorb the remainder so we don't drop items).
+  const splitInto = <T,>(arr: T[], n: number): T[][] => {
+    if (n <= 1) return [arr.slice()];
+    const out: T[][] = [];
+    const base = Math.floor(arr.length / n);
+    const rem = arr.length % n;
+    let i = 0;
+    for (let k = 0; k < n; k += 1) {
+      const size = base + (k < rem ? 1 : 0);
+      out.push(arr.slice(i, i + size));
+      i += size;
+    }
+    return out;
+  };
+
   const plan: DayPlan[] = [];
   let dayCount = 0;
   modules.forEach((mod, mi) => {
     const days = floor[mi];
     const minutesPerDay = Math.round((mod.theoryMinutes + mod.labBudgetMinutes) / Math.max(1, days));
+    const theoryPerDay = Math.round(mod.theoryMinutes / Math.max(1, days));
+    const labPerDay = Math.max(0, minutesPerDay - theoryPerDay);
     const topics = mod.topics.length > 0 ? mod.topics : [mod.title];
-    // chunk topics evenly across days
-    const chunkSize = Math.max(1, Math.ceil(topics.length / days));
+    const topicChunks = splitInto(topics, days);
+    const labChunks = splitInto(mod.labSlugs, days);
+
     for (let d = 0; d < days; d += 1) {
       dayCount += 1;
-      const slice = topics.slice(d * chunkSize, (d + 1) * chunkSize);
-      const subtitle = slice.length > 0
-        ? `${slice[0]}${slice.length > 1 ? ` (+${slice.length - 1} more)` : ""} (≈ ${minutesPerDay}m)`
+      const topicSlice = topicChunks[d] ?? [];
+      const labSlice = labChunks[d] ?? [];
+      const dayLabel = days > 1 ? ` · part ${d + 1}/${days}` : "";
+
+      // Build a per-day scoped copy of the ModuleNote so Catalog/SessionPlan
+      // render only this day's topics + labs (not the full module every day).
+      const dayModule: ModuleNote = {
+        ...mod,
+        title: `${mod.title}${dayLabel}`,
+        theoryMinutes: theoryPerDay,
+        labBudgetMinutes: labPerDay,
+        topics: topicSlice.length > 0 ? topicSlice : [`${mod.title} — focus session`],
+        labSlugs: labSlice,
+      };
+
+      const subtitle = topicSlice.length > 0
+        ? `${topicSlice[0]}${topicSlice.length > 1 ? ` (+${topicSlice.length - 1} more)` : ""} (≈ ${minutesPerDay}m)`
         : `${mod.title} — focus session (≈ ${minutesPerDay}m)`;
+
       plan.push({
         id: `d${String(dayCount).padStart(2, "0")}`,
         label: `Day ${dayCount}`,
         subtitle,
-        description: slice.length > 0
-          ? slice.map((t) => `• ${t}`).join("\n")
+        description: topicSlice.length > 0
+          ? topicSlice.map((t) => `• ${t}`).join("\n")
           : `Continued deep-dive on ${mod.title}.`,
-        modules: [mod],
+        modules: [dayModule],
       });
     }
   });
