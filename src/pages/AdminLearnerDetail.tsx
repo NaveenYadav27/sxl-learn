@@ -70,11 +70,6 @@ const AdminLearnerDetail = () => {
     ]);
     setProfile((p as Profile) ?? null);
     setEmail((em as string | null) ?? null);
-        .select("id, lab_id, status, score, started_at, completed_at, labs(title, slug, module_id)")
-        .eq("user_id", userId)
-        .order("started_at", { ascending: false }),
-    ]);
-    setProfile((p as Profile) ?? null);
     setAccess((a ?? []) as AccessRow[]);
     setRoles((r ?? []) as RoleRow[]);
     setAttempts((at ?? []) as Attempt[]);
