@@ -3,7 +3,7 @@
 // Mirrors the SC-900 / CIS-ITSM / PEN-200 shape so all course-aware components
 // (Catalog, Module, Lab, Session Plan, Exam) work unchanged.
 
-import { buildThirtyDayPlan, type DayPlan, type ModuleNote } from "./curriculum";
+import type { DayPlan, ModuleNote } from "./curriculum";
 
 /* ---------- Per-module notes ---------- */
 export const csaModuleNotes: ModuleNote[] = [
