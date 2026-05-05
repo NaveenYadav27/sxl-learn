@@ -53,14 +53,23 @@ const AdminLearnerDetail = () => {
   const [loading, setLoading] = useState(true);
   const [working, setWorking] = useState(false);
 
+  const [email, setEmail] = useState<string | null>(null);
+
   async function refresh() {
     setLoading(true);
-    const [{ data: p }, { data: a }, { data: r }, { data: at }] = await Promise.all([
+    const [{ data: p }, { data: a }, { data: r }, { data: at }, { data: em }] = await Promise.all([
       supabase.from("profiles").select("id, display_name, created_at, pdi_instance_url").eq("id", userId).maybeSingle(),
       supabase.from("program_access").select("id, program, granted_at").eq("user_id", userId),
       supabase.from("user_roles").select("role").eq("user_id", userId),
       supabase
         .from("lab_attempts")
+        .select("id, lab_id, status, score, started_at, completed_at, labs(title, slug, module_id)")
+        .eq("user_id", userId)
+        .order("started_at", { ascending: false }),
+      supabase.rpc("admin_get_user_email", { _user_id: userId }),
+    ]);
+    setProfile((p as Profile) ?? null);
+    setEmail((em as string | null) ?? null);
         .select("id, lab_id, status, score, started_at, completed_at, labs(title, slug, module_id)")
         .eq("user_id", userId)
         .order("started_at", { ascending: false }),
