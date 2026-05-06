@@ -143,13 +143,99 @@ export default function Module() {
   }, [note, user]);
 
   if (!slug) return <Navigate to="/catalog" replace />;
-  if (!note || !explanation) {
+  if (!note) {
     return (
       <AppLayout breadcrumb={<Breadcrumb items={[{ label: "Catalog", to: "/catalog" }, { label: "Module" }]} />} title="Module not found">
         <div className="container py-10 max-w-3xl">
           <Card><CardContent className="pt-6 text-sm text-muted-foreground">
-            We couldn't find an explanation for this module. <Link className="text-primary underline" to="/catalog">Back to catalog</Link>.
+            We couldn't find this module. <Link className="text-primary underline" to="/catalog">Back to catalog</Link>.
           </CardContent></Card>
+        </div>
+      </AppLayout>
+    );
+  }
+  if (!explanation) {
+    // Synthetic plan-only module (e.g. CSA 30-day daily blocks, 1-hour intro
+    // sessions). These don't ship a rich explanation doc — render the note's
+    // topics + lab list so the page is still useful instead of empty.
+    const fallbackMeta = domainMeta[note.domain];
+    const FIcon = fallbackMeta.icon;
+    return (
+      <AppLayout
+        breadcrumb={<Breadcrumb items={[
+          { label: "Course Catalog", to: "/catalog" },
+          { label: note.title.replace(/^Day \d+ — /, "").replace(/^Block \d+ — /, "") },
+        ]} />}
+        title={note.title}
+      >
+        <div className="container py-6 space-y-6 max-w-4xl">
+          <Card className="border-0 shadow-portal overflow-hidden">
+            <div className={`h-1.5 ${fallbackMeta.bar}`} />
+            <CardContent className={`pt-6 ${fallbackMeta.soft}`}>
+              <div className="flex items-start gap-4">
+                <div className={`h-12 w-12 rounded-lg grid place-items-center ${fallbackMeta.bar} text-primary-foreground shrink-0`}>
+                  <FIcon className="h-6 w-6" />
+                </div>
+                <div className="flex-1">
+                  <Badge variant="outline" className={fallbackMeta.chip}>{fallbackMeta.label}</Badge>
+                  {note.code && <Badge variant="outline" className="ml-2 text-[10px]">{note.code}</Badge>}
+                  <h1 className="text-2xl font-bold mt-2">{note.title}</h1>
+                  <div className="text-xs text-muted-foreground mt-2 inline-flex items-center gap-3 flex-wrap">
+                    <span className="inline-flex items-center gap-1"><BookOpen className="h-3 w-3" />{fmtMin(note.theoryMinutes)} theory</span>
+                    <span className="inline-flex items-center gap-1"><FlaskConical className="h-3 w-3" />{fmtMin(note.labBudgetMinutes)} labs</span>
+                    <span className="inline-flex items-center gap-1 font-medium text-foreground/70"><Clock className="h-3 w-3" />{fmtMin(note.theoryMinutes + note.labBudgetMinutes)} total</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1.5 mb-3">
+                <BookOpen className="h-3 w-3" /> What you'll cover
+              </div>
+              <ul className="space-y-2 text-sm">
+                {note.topics.map((t, i) => (
+                  <li key={i} className="flex gap-2">
+                    <span className={`mt-1.5 h-1.5 w-1.5 rounded-full shrink-0 ${fallbackMeta.bar}`} />
+                    <span className="text-foreground/85">{t}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+
+          {labs.length > 0 && (
+            <Card>
+              <CardContent className="pt-6">
+                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-1.5 mb-3">
+                  <FlaskConical className="h-3 w-3" /> Hands-on labs ({labs.length})
+                </div>
+                <ul className="space-y-2">
+                  {labs.map((lab) => (
+                    <li key={lab.id}>
+                      <Link to={`/lab/${lab.slug}`} className="flex items-center justify-between gap-3 rounded-md border border-border px-3 py-2 hover:bg-muted/40 transition-colors">
+                        <div className="min-w-0">
+                          <div className="text-sm font-medium truncate">{lab.title}</div>
+                          {lab.objective && <div className="text-xs text-muted-foreground truncate">{lab.objective}</div>}
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <Badge variant="outline" className="text-[10px] capitalize">{lab.difficulty}</Badge>
+                          <Badge variant="secondary" className="text-[10px]">{fmtMin(lab.duration_min)}</Badge>
+                          <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
+
+          <div className="flex justify-between">
+            <Link to="/catalog"><Button variant="outline" size="sm" className="gap-1"><ArrowLeft className="h-3 w-3" /> Back to catalog</Button></Link>
+          </div>
         </div>
       </AppLayout>
     );
