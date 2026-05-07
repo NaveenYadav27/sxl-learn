@@ -168,6 +168,26 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
     ],
     licensingFocus: "What you need (Cisco Packet Tracer / EVE-NG / CML) to spin up CCNA hands-on labs.",
   },
+  "splunk-es": {
+    code: "splunk-es",
+    shortName: "Splunk ES",
+    longName: "Splunk Enterprise Security — SOC Analyst & Admin",
+    vendor: "Splunk",
+    certCode: "SPLK-3001",
+    tagline: "Splunk Enterprise Security — full SOC analyst + admin track with a complete ES mimic.",
+    icon: ShieldCheck,
+    accentClass: "text-shadowx-gold",
+    modules: splunkesModuleNotes,
+    plans: { fiveDay: splunkesFiveDayPlan, twoDay: splunkesTwoDayPlan, oneDay: splunkesOneDayPlan, oneHour: splunkesOneHourPlan, thirtyDay: splunkesThirtyDayPlan },
+    examTitle: "Splunk ES Practice Exam",
+    examIntroBullets: [
+      "Scenario-based questions across SPL, CIM, ES install, RBA and Incident Review.",
+      "You can flag questions and revisit before submitting.",
+      "Auto-submits when the timer reaches zero.",
+      "Detailed review with per-module score and rationale on submit.",
+    ],
+    licensingFocus: "What you need (Splunk Free / Splunk Cloud Trial / ES sandbox) to practice Splunk Enterprise Security hands-on.",
+  },
 };
 
 export const COURSE_LIST: CourseDefinition[] = Object.values(COURSES);
