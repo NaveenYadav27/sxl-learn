@@ -3,7 +3,7 @@
 // this registry so they stay in sync.
 
 import type { LucideIcon } from "lucide-react";
-import { Shield, Wrench, Crosshair, Radar, Container, Cloud, Network } from "lucide-react";
+import { Shield, Wrench, Crosshair, Radar, Container, Cloud, Network, ShieldCheck } from "lucide-react";
 import { fiveDayPlan as sc900FiveDay, twoDayPlan as sc900TwoDay, oneDayPlan as sc900OneDay, oneHourPlan as sc900OneHour, thirtyDayPlan as sc900ThirtyDay, moduleNotes as sc900Modules, type DayPlan, type ModuleNote } from "./curriculum";
 import { itsmFiveDayPlan, itsmTwoDayPlan, itsmOneDayPlan, itsmOneHourPlan, itsmThirtyDayPlan, itsmModuleNotes } from "./curriculumItsm";
 import { pen200ModuleNotes, pen200FiveDayPlan, pen200TwoDayPlan, pen200OneDayPlan, pen200OneHourPlan, pen200ThirtyDayPlan } from "./curriculumPen200";
@@ -11,8 +11,9 @@ import { csaModuleNotes, csaFiveDayPlan, csaTwoDayPlan, csaOneDayPlan, csaOneHou
 import { k8sModuleNotes, k8sFiveDayPlan, k8sTwoDayPlan, k8sOneDayPlan, k8sOneHourPlan, k8sThirtyDayPlan } from "./curriculumK8s";
 import { cdlModuleNotes, cdlFiveDayPlan, cdlTwoDayPlan, cdlOneDayPlan, cdlOneHourPlan, cdlThirtyDayPlan } from "./curriculumCdl";
 import { ccnaModuleNotes, ccnaFiveDayPlan, ccnaTwoDayPlan, ccnaOneDayPlan, ccnaOneHourPlan, ccnaThirtyDayPlan } from "./curriculumCcna";
+import { splunkesModuleNotes, splunkesFiveDayPlan, splunkesTwoDayPlan, splunkesOneDayPlan, splunkesOneHourPlan, splunkesThirtyDayPlan } from "./curriculumSplunkes";
 
-export type CourseCode = "sc-900" | "cis-itsm" | "pen-200" | "csa" | "k8s" | "cdl" | "ccna";
+export type CourseCode = "sc-900" | "cis-itsm" | "pen-200" | "csa" | "k8s" | "cdl" | "ccna" | "splunk-es";
 
 export type CourseDefinition = {
   code: CourseCode;
