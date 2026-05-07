@@ -22,6 +22,7 @@ import { K8sTerminalSimulator } from "@/components/simulators/K8sTerminalSimulat
 import { GcpConsoleSimulator } from "@/components/simulators/GcpConsoleSimulator";
 import { CiscoIosSimulator } from "@/components/simulators/CiscoIosSimulator";
 import { SocToolSimulator, type SocTool } from "@/components/simulators/SocToolSimulator";
+import { SplunkEsSimulator } from "@/components/simulators/SplunkEsSimulator";
 
 const SOC_TOOLS: Record<string, SocTool> = {
   splunk: "splunk", qradar: "qradar", elastic: "elastic", kibana: "elastic",
@@ -135,6 +136,9 @@ export default function LabSimulator() {
     }
     if (lab.simulator === "cisco-ios" || lab.simulator === "ios" || lab.simulator === "ccna") {
       return <CiscoIosSimulator expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
+    }
+    if (lab.simulator === "splunk-es" || lab.simulator === "splunkes") {
+      return <SplunkEsSimulator expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
     }
     if (SOC_TOOLS[lab.simulator]) {
       return <SocToolSimulator tool={SOC_TOOLS[lab.simulator]} expectedAction={currentStep.expected_action} onValidate={(ok) => { if (ok) markStepDone(); }} />;
