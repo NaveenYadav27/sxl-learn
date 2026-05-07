@@ -3,7 +3,7 @@
 
 import type { CourseCode } from "./courses";
 
-export type ProgramCode = "soc" | "itsm" | "pen200" | "csa" | "k8s" | "cdl" | "ccna";
+export type ProgramCode = "soc" | "itsm" | "pen200" | "csa" | "k8s" | "cdl" | "ccna" | "splunkes";
 
 export const courseCodeToProgram: Record<CourseCode, ProgramCode> = {
   "sc-900": "soc",
@@ -13,6 +13,7 @@ export const courseCodeToProgram: Record<CourseCode, ProgramCode> = {
   "k8s": "k8s",
   "cdl": "cdl",
   "ccna": "ccna",
+  "splunk-es": "splunkes",
 };
 
 export const programToCourseCode: Record<ProgramCode, CourseCode> = {
@@ -23,6 +24,7 @@ export const programToCourseCode: Record<ProgramCode, CourseCode> = {
   k8s: "k8s",
   cdl: "cdl",
   ccna: "ccna",
+  splunkes: "splunk-es",
 };
 
 export const programLabels: Record<ProgramCode, string> = {
@@ -33,6 +35,7 @@ export const programLabels: Record<ProgramCode, string> = {
   k8s: "Kubernetes & Docker",
   cdl: "Cloud Digital Leader (CDL)",
   ccna: "Cisco CCNA 200-301",
+  splunkes: "Splunk Enterprise Security",
 };
 
 export const programMarketingPath: Record<ProgramCode, string> = {
@@ -43,10 +46,10 @@ export const programMarketingPath: Record<ProgramCode, string> = {
   k8s: "/k8s",
   cdl: "/cdl",
   ccna: "/ccna",
+  splunkes: "/splunk-es",
 };
 
 // First module slug per program — used for free-preview gating.
-// Module 1 is open to everyone with an account; the rest require program_access.
 export const firstModuleByProgram: Record<ProgramCode, string> = {
   soc: "concepts",
   itsm: "concepts",
@@ -55,9 +58,11 @@ export const firstModuleByProgram: Record<ProgramCode, string> = {
   k8s: "k8s-containerization-fundamentals",
   cdl: "cdl-digital-transformation",
   ccna: "ccna-network-fundamentals",
+  splunkes: "splunkes-foundations",
 };
 
 export function getProgramForModuleSlug(slug: string): ProgramCode | null {
+  if (slug.startsWith("splunkes-")) return "splunkes";
   if (slug.startsWith("ccna-")) return "ccna";
   if (slug.startsWith("cdl-")) return "cdl";
   if (slug.startsWith("k8s-")) return "k8s";

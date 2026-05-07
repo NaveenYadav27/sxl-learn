@@ -3,7 +3,7 @@
 // this registry so they stay in sync.
 
 import type { LucideIcon } from "lucide-react";
-import { Shield, Wrench, Crosshair, Radar, Container, Cloud, Network } from "lucide-react";
+import { Shield, Wrench, Crosshair, Radar, Container, Cloud, Network, ShieldCheck } from "lucide-react";
 import { fiveDayPlan as sc900FiveDay, twoDayPlan as sc900TwoDay, oneDayPlan as sc900OneDay, oneHourPlan as sc900OneHour, thirtyDayPlan as sc900ThirtyDay, moduleNotes as sc900Modules, type DayPlan, type ModuleNote } from "./curriculum";
 import { itsmFiveDayPlan, itsmTwoDayPlan, itsmOneDayPlan, itsmOneHourPlan, itsmThirtyDayPlan, itsmModuleNotes } from "./curriculumItsm";
 import { pen200ModuleNotes, pen200FiveDayPlan, pen200TwoDayPlan, pen200OneDayPlan, pen200OneHourPlan, pen200ThirtyDayPlan } from "./curriculumPen200";
@@ -11,8 +11,9 @@ import { csaModuleNotes, csaFiveDayPlan, csaTwoDayPlan, csaOneDayPlan, csaOneHou
 import { k8sModuleNotes, k8sFiveDayPlan, k8sTwoDayPlan, k8sOneDayPlan, k8sOneHourPlan, k8sThirtyDayPlan } from "./curriculumK8s";
 import { cdlModuleNotes, cdlFiveDayPlan, cdlTwoDayPlan, cdlOneDayPlan, cdlOneHourPlan, cdlThirtyDayPlan } from "./curriculumCdl";
 import { ccnaModuleNotes, ccnaFiveDayPlan, ccnaTwoDayPlan, ccnaOneDayPlan, ccnaOneHourPlan, ccnaThirtyDayPlan } from "./curriculumCcna";
+import { splunkesModuleNotes, splunkesFiveDayPlan, splunkesTwoDayPlan, splunkesOneDayPlan, splunkesOneHourPlan, splunkesThirtyDayPlan } from "./curriculumSplunkes";
 
-export type CourseCode = "sc-900" | "cis-itsm" | "pen-200" | "csa" | "k8s" | "cdl" | "ccna";
+export type CourseCode = "sc-900" | "cis-itsm" | "pen-200" | "csa" | "k8s" | "cdl" | "ccna" | "splunk-es";
 
 export type CourseDefinition = {
   code: CourseCode;
@@ -166,6 +167,26 @@ export const COURSES: Record<CourseCode, CourseDefinition> = {
       "Detailed review with per-section score and rationale on submit.",
     ],
     licensingFocus: "What you need (Cisco Packet Tracer / EVE-NG / CML) to spin up CCNA hands-on labs.",
+  },
+  "splunk-es": {
+    code: "splunk-es",
+    shortName: "Splunk ES",
+    longName: "Splunk Enterprise Security — SOC Analyst & Admin",
+    vendor: "Splunk",
+    certCode: "SPLK-3001",
+    tagline: "Splunk Enterprise Security — full SOC analyst + admin track with a complete ES mimic.",
+    icon: ShieldCheck,
+    accentClass: "text-shadowx-gold",
+    modules: splunkesModuleNotes,
+    plans: { fiveDay: splunkesFiveDayPlan, twoDay: splunkesTwoDayPlan, oneDay: splunkesOneDayPlan, oneHour: splunkesOneHourPlan, thirtyDay: splunkesThirtyDayPlan },
+    examTitle: "Splunk ES Practice Exam",
+    examIntroBullets: [
+      "Scenario-based questions across SPL, CIM, ES install, RBA and Incident Review.",
+      "You can flag questions and revisit before submitting.",
+      "Auto-submits when the timer reaches zero.",
+      "Detailed review with per-module score and rationale on submit.",
+    ],
+    licensingFocus: "What you need (Splunk Free / Splunk Cloud Trial / ES sandbox) to practice Splunk Enterprise Security hands-on.",
   },
 };
 
