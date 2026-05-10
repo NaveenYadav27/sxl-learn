@@ -202,4 +202,26 @@
       radial-gradient(ellipse 50% 70% at 100% 100%, hsl(var(--shadow-ember) / 0.06), transparent 55%);
   }
   .hero-surface > * { position: relative; z-index: 1; }
+
+  /* ===========================================================
+     Ops Platform theme — scoped to .ops-theme on /ops shell.
+     Dark graphite enterprise palette. Does NOT affect rest of app.
+     =========================================================== */
+  .ops-theme {
+    --ops-bg: 222 18% 9%;
+    --ops-panel: 222 16% 12%;
+    --ops-panel-2: 222 14% 15%;
+    --ops-sidebar: 222 22% 7%;
+    --ops-sidebar-fg: 220 12% 78%;
+    --ops-border: 222 12% 20%;
+    --ops-fg: 220 14% 94%;
+    --ops-muted-fg: 220 10% 62%;
+    --ops-accent: 204 92% 58%;
+    --ops-info: 200 90% 60%;
+    --ops-success: 152 60% 48%;
+    --ops-warning: 38 92% 58%;
+    --ops-critical: 0 80% 60%;
+    --ops-high: 14 85% 58%;
+  }
+  .ops-theme ::selection { background: hsl(var(--ops-accent) / 0.35); }
 }
