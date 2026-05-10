@@ -40,6 +40,8 @@ import Terms from "./pages/Terms.tsx";
 import InstructorCohort from "./pages/InstructorCohort.tsx";
 import AdminContent from "./pages/AdminContent.tsx";
 import Demo from "./pages/Demo.tsx";
+import { OpsLayout } from "./ops/layout/OpsLayout.tsx";
+import OpsDashboard from "./ops/pages/OpsDashboard.tsx";
 
 const queryClient = new QueryClient();
 
@@ -85,6 +87,9 @@ const App = () => (
             <Route path="/instructor/cohort" element={<InstructorCohort />} />
             <Route path="/admin/content" element={<AdminContent />} />
             <Route path="/demo" element={<Demo />} />
+            <Route path="/ops" element={<OpsLayout />}>
+              <Route index element={<OpsDashboard />} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
           </CourseProvider>
