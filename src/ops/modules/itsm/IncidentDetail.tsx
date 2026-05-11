@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { PageHeader } from "@/ops/components/PageHeader";
 import { SectionCard } from "@/ops/components/SectionCard";
@@ -33,6 +33,7 @@ export default function IncidentDetail() {
   const { number = "" } = useParams();
   const navigate = useNavigate();
   const inc = findIncident(number);
+  const [tab, setTab] = useState<"activity" | "comments" | "related">("activity");
 
   const timeline = useMemo<ActivityEvent[]>(() => {
     if (!inc) return [];
@@ -127,64 +128,51 @@ export default function IncidentDetail() {
             </div>
           </SectionCard>
 
-          <SectionCard bodyClassName="px-4 pb-4">
+          <SectionCard bodyClassName="p-0">
             <OpsTabs
+              active={tab}
+              onChange={(k) => setTab(k as typeof tab)}
               tabs={[
-                {
-                  value: "activity",
-                  label: `Activity (${inc.events.length})`,
-                  content: (
-                    <div className="pt-3">
-                      <ActivityTimeline events={timeline} />
-                    </div>
-                  ),
-                },
-                {
-                  value: "comments",
-                  label: `Work notes (${inc.comments.length})`,
-                  content: (
-                    <div className="pt-3">
-                      {inc.comments.length === 0 ? (
-                        <EmptyState icon={MessageSquare} title="No work notes yet" hint="Add the first update." />
-                      ) : (
-                        <ul className="space-y-3">
-                          {inc.comments.map((c) => (
-                            <li key={c.id} className="rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] p-3">
-                              <div className="flex items-center justify-between text-[11px] text-[hsl(var(--ops-muted-fg))]">
-                                <span className="font-semibold text-[hsl(var(--ops-fg))]">{c.author}</span>
-                                <span>{rel(c.at)}</span>
-                              </div>
-                              <p className="mt-1 text-[12px] text-[hsl(var(--ops-fg))]">{c.body}</p>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  ),
-                },
-                {
-                  value: "related",
-                  label: `Related (${inc.related?.length ?? 0})`,
-                  content: (
-                    <div className="pt-3">
-                      {!inc.related?.length ? (
-                        <EmptyState title="No related records" hint="Linked incidents will appear here." />
-                      ) : (
-                        <ul className="space-y-1.5">
-                          {inc.related.map((n) => (
-                            <li key={n}>
-                              <Link to={`/ops/incidents/${n}`} className="inline-flex items-center gap-1 text-[12px] text-[hsl(var(--ops-accent))] hover:underline">
-                                {n} <ExternalLink className="h-3 w-3" />
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  ),
-                },
+                { key: "activity", label: "Activity", count: inc.events.length },
+                { key: "comments", label: "Work notes", count: inc.comments.length },
+                { key: "related", label: "Related", count: inc.related?.length ?? 0 },
               ]}
             />
+            <div className="p-4">
+              {tab === "activity" && <ActivityTimeline events={timeline} />}
+              {tab === "comments" && (
+                inc.comments.length === 0 ? (
+                  <EmptyState icon={MessageSquare} title="No work notes yet" hint="Add the first update." />
+                ) : (
+                  <ul className="space-y-3">
+                    {inc.comments.map((c) => (
+                      <li key={c.id} className="rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] p-3">
+                        <div className="flex items-center justify-between text-[11px] text-[hsl(var(--ops-muted-fg))]">
+                          <span className="font-semibold text-[hsl(var(--ops-fg))]">{c.author}</span>
+                          <span>{rel(c.at)}</span>
+                        </div>
+                        <p className="mt-1 text-[12px] text-[hsl(var(--ops-fg))]">{c.body}</p>
+                      </li>
+                    ))}
+                  </ul>
+                )
+              )}
+              {tab === "related" && (
+                !inc.related?.length ? (
+                  <EmptyState title="No related records" hint="Linked incidents will appear here." />
+                ) : (
+                  <ul className="space-y-1.5">
+                    {inc.related.map((n) => (
+                      <li key={n}>
+                        <Link to={`/ops/incidents/${n}`} className="inline-flex items-center gap-1 text-[12px] text-[hsl(var(--ops-accent))] hover:underline">
+                          {n} <ExternalLink className="h-3 w-3" />
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )
+              )}
+            </div>
           </SectionCard>
         </div>
 
