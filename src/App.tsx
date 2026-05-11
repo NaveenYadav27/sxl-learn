@@ -42,6 +42,8 @@ import AdminContent from "./pages/AdminContent.tsx";
 import Demo from "./pages/Demo.tsx";
 import { OpsLayout } from "./ops/layout/OpsLayout.tsx";
 import OpsDashboard from "./ops/pages/OpsDashboard.tsx";
+import IncidentsList from "./ops/modules/itsm/IncidentsList.tsx";
+import IncidentDetail from "./ops/modules/itsm/IncidentDetail.tsx";
 
 const queryClient = new QueryClient();
 
@@ -89,6 +91,8 @@ const App = () => (
             <Route path="/demo" element={<Demo />} />
             <Route path="/ops" element={<OpsLayout />}>
               <Route index element={<OpsDashboard />} />
+              <Route path="incidents" element={<IncidentsList />} />
+              <Route path="incidents/:number" element={<IncidentDetail />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

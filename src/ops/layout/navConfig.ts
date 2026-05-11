@@ -40,7 +40,7 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     label: "Service Management",
     items: [
-      { label: "Incidents", to: "/ops/incidents", icon: AlertTriangle, enabled: false },
+      { label: "Incidents", to: "/ops/incidents", icon: AlertTriangle, enabled: true },
       { label: "Problems", to: "/ops/problems", icon: AlertOctagon, enabled: false },
       { label: "Changes", to: "/ops/changes", icon: GitPullRequest, enabled: false },
       { label: "CMDB", to: "/ops/cmdb", icon: Database, enabled: false },
