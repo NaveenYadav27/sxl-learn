@@ -49,8 +49,8 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     label: "Security",
     items: [
-      { label: "SOC Operations", to: "/ops/soc", icon: ShieldAlert, enabled: false },
-      { label: "Splunk ES", to: "/ops/splunk-es", icon: Search, enabled: false },
+      { label: "Alerts", to: "/ops/alerts", icon: ShieldAlert, enabled: true },
+      { label: "Splunk ES Notables", to: "/ops/notables", icon: Search, enabled: true },
     ],
   },
   {
