@@ -152,7 +152,7 @@ export default function NotablesList() {
         <KpiCard label="Open Notables" value={kpis.open} intent="default" hint="ES workflow" />
         <KpiCard label="Critical" value={kpis.crit} intent="critical" hint="Highest urgency" />
         <KpiCard label="Unassigned" value={kpis.unassigned} intent="warning" hint="Need ownership" />
-        <KpiCard label="Events Rolled Up" value={kpis.events} intent="info" hint="Across all notables" />
+        <KpiCard label="Events Rolled Up" value={kpis.events} intent="default" hint="Across all notables" />
       </div>
 
       <div className="px-4 pb-6">

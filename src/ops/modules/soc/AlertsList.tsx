@@ -169,7 +169,7 @@ export default function AlertsList() {
         <KpiCard label="Open Alerts" value={kpis.open} intent="default" hint="All sensors" />
         <KpiCard label="Critical" value={kpis.crit} intent="critical" hint="Risk ≥ 80" />
         <KpiCard label="Unassigned" value={kpis.unassigned} intent="warning" hint="Awaiting Tier 1" />
-        <KpiCard label="True Positives (24h)" value={kpis.tp} intent="info" hint="Confirmed threats" />
+        <KpiCard label="True Positives (24h)" value={kpis.tp} intent="default" hint="Confirmed threats" />
       </div>
 
       <div className="px-4 pb-6">
