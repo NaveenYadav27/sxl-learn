@@ -62,6 +62,12 @@ import ClustersList from "./ops/modules/k8s/ClustersList.tsx";
 import WorkloadsList from "./ops/modules/k8s/WorkloadsList.tsx";
 import PodsList from "./ops/modules/k8s/PodsList.tsx";
 import ContainersList from "./ops/modules/k8s/ContainersList.tsx";
+import PipelinesList from "./ops/modules/devops/PipelinesList.tsx";
+import DeploymentsList from "./ops/modules/devops/DeploymentsList.tsx";
+import RepositoriesList from "./ops/modules/devops/RepositoriesList.tsx";
+import AccountsList from "./ops/modules/cloud/AccountsList.tsx";
+import ResourcesList from "./ops/modules/cloud/ResourcesList.tsx";
+import CostsList from "./ops/modules/cloud/CostsList.tsx";
 
 const queryClient = new QueryClient();
 
