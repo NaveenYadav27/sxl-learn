@@ -128,6 +128,7 @@ const App = () => (
               <Route path="alerts/:id" element={<AlertDetail />} />
               <Route path="notables" element={<NotablesList />} />
               <Route path="notables/:id" element={<NotableDetail />} />
+              <Route path="splunk-live" element={<SplunkLive />} />
               <Route path="monitoring" element={<MonitoringList />} />
               <Route path="sre" element={<ServicesList />} />
               <Route path="sre/services" element={<ServicesList />} />
