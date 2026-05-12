@@ -54,6 +54,7 @@ import AlertsList from "./ops/modules/soc/AlertsList.tsx";
 import AlertDetail from "./ops/modules/soc/AlertDetail.tsx";
 import NotablesList from "./ops/modules/soc/NotablesList.tsx";
 import NotableDetail from "./ops/modules/soc/NotableDetail.tsx";
+import SplunkLive from "./ops/pages/SplunkLive.tsx";
 import ServicesList from "./ops/modules/sre/ServicesList.tsx";
 import ServiceDetail from "./ops/modules/sre/ServiceDetail.tsx";
 import SlosList from "./ops/modules/sre/SlosList.tsx";
