@@ -7,6 +7,7 @@ import {
 import {
   Home, LayoutDashboard, BookOpen, Users, Shield, Lock, Gavel, Trophy,
   Settings, GraduationCap, Network, ClipboardCheck, Flame, Zap, Wallet, Building2, CalendarDays, Award, Crosshair, Eye, Radar, Cloud,
+  Activity, AlertTriangle, ShieldAlert, Boxes, Server, Container, Target, Cpu, Layers,
 } from "lucide-react";
 import { getXpStats, type XpStats } from "@/lib/xp";
 import { useAuth } from "@/hooks/useAuth";
@@ -143,6 +144,33 @@ export function AppSidebar() {
                 )}
               </div>
             )}
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Ops Console</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {[
+                { title: "Ops Dashboard", url: "/ops", icon: LayoutDashboard },
+                { title: "Incidents (ITSM)", url: "/ops/incidents", icon: AlertTriangle },
+                { title: "SOC Alerts", url: "/ops/alerts", icon: ShieldAlert },
+                { title: "Monitoring", url: "/ops/monitoring", icon: Activity },
+                { title: "Services & SLOs", url: "/ops/sre/services", icon: Cpu },
+                { title: "K8s Workloads", url: "/ops/k8s/workloads", icon: Boxes },
+                { title: "K8s Pods", url: "/ops/k8s/pods", icon: Server },
+                { title: "Docker", url: "/ops/k8s/containers", icon: Container },
+              ].map((item) => (
+                <SidebarMenuItem key={item.url}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                    <Link to={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
 
