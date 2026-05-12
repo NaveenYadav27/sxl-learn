@@ -76,10 +76,24 @@ export const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
+    label: "DevOps",
+    items: [
+      { label: "Pipelines", to: "/ops/devops/pipelines", icon: Workflow, enabled: true },
+      { label: "Deployments", to: "/ops/devops/deployments", icon: GitPullRequest, enabled: true },
+      { label: "Repositories", to: "/ops/devops/repos", icon: BookOpen, enabled: true },
+    ],
+  },
+  {
+    label: "Cloud Operations",
+    items: [
+      { label: "Accounts", to: "/ops/cloud/accounts", icon: Cloud, enabled: true },
+      { label: "Resources", to: "/ops/cloud/resources", icon: Boxes, enabled: true },
+      { label: "Costs", to: "/ops/cloud/costs", icon: BarChart3, enabled: true },
+    ],
+  },
+  {
     label: "Insights",
     items: [
-      { label: "DevOps", to: "/ops/devops", icon: Workflow, enabled: false },
-      { label: "Cloud Operations", to: "/ops/cloud", icon: Cloud, enabled: false },
       { label: "Reports", to: "/ops/reports", icon: BarChart3, enabled: false },
       { label: "Knowledge Base", to: "/ops/kb", icon: BookOpen, enabled: false },
       { label: "Automation", to: "/ops/automation", icon: Bot, enabled: false },
