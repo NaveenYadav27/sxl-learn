@@ -184,11 +184,43 @@ export default function NotableDetail() {
 
           <SectionCard title="Quick actions" bodyClassName="p-3">
             <div className="grid gap-1.5">
-              {["Open in Splunk ES", "Adjust correlation rule", "Suppress 1h", "Promote to incident", "Add to investigation"].map((s) => (
-                <button key={s} className="rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] px-2.5 py-1.5 text-left text-[12px] hover:border-[hsl(var(--ops-accent)/0.5)] hover:text-[hsl(var(--ops-accent))]">
-                  {s}
-                </button>
-              ))}
+              {(() => {
+                const SPLUNK = "https://siem.shadowxlab.com";
+                const spl = n.drilldown_spl || n.spl || `search index=* "${n.id}"`;
+                const searchUrl = `${SPLUNK}/en-US/app/search/search?q=${encodeURIComponent(spl)}&earliest=-24h&latest=now`;
+                const incidentReviewUrl = `${SPLUNK}/en-US/app/SplunkEnterpriseSecuritySuite/incident_review?form.search=${encodeURIComponent(n.id)}`;
+                const ruleUrl = `${SPLUNK}/en-US/app/SplunkEnterpriseSecuritySuite/ess_correlation_search_search?form.search=${encodeURIComponent(n.search_name)}`;
+                const actions: { label: string; href?: string; onClick?: () => void }[] = [
+                  { label: "Open in Splunk ES", href: incidentReviewUrl },
+                  { label: "Run drilldown SPL in Splunk", href: searchUrl },
+                  { label: "Adjust correlation rule", href: ruleUrl },
+                  { label: "Suppress 1h" },
+                  { label: "Promote to incident" },
+                  { label: "Add to investigation" },
+                ];
+                return actions.map((a) =>
+                  a.href ? (
+                    <a
+                      key={a.label}
+                      href={a.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-between rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] px-2.5 py-1.5 text-left text-[12px] hover:border-[hsl(var(--ops-accent)/0.5)] hover:text-[hsl(var(--ops-accent))]"
+                    >
+                      <span>{a.label}</span>
+                      <ExternalLink className="h-3 w-3 opacity-70" />
+                    </a>
+                  ) : (
+                    <button
+                      key={a.label}
+                      onClick={a.onClick}
+                      className="rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] px-2.5 py-1.5 text-left text-[12px] hover:border-[hsl(var(--ops-accent)/0.5)] hover:text-[hsl(var(--ops-accent))]"
+                    >
+                      {a.label}
+                    </button>
+                  )
+                );
+              })()}
             </div>
           </SectionCard>
         </div>
