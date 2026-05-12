@@ -7,6 +7,7 @@ import {
 import {
   Home, LayoutDashboard, BookOpen, Users, Shield, Lock, Gavel, Trophy,
   Settings, GraduationCap, Network, ClipboardCheck, Flame, Zap, Wallet, Building2, CalendarDays, Award, Crosshair, Eye, Radar, Cloud,
+  Activity, AlertTriangle, ShieldAlert, Boxes, Server, Container, Target, Cpu, Layers,
 } from "lucide-react";
 import { getXpStats, type XpStats } from "@/lib/xp";
 import { useAuth } from "@/hooks/useAuth";
