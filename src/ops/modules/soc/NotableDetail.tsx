@@ -186,14 +186,10 @@ export default function NotableDetail() {
             <div className="grid gap-1.5">
               {(() => {
                 const SPLUNK = "https://siem.shadowxlab.com";
-                const spl = n.drilldown_spl || n.spl || `search index=* "${n.id}"`;
-                const searchUrl = `${SPLUNK}/en-US/app/search/search?q=${encodeURIComponent(spl)}&earliest=-24h&latest=now`;
-                const incidentReviewUrl = `${SPLUNK}/en-US/app/SplunkEnterpriseSecuritySuite/incident_review?form.search=${encodeURIComponent(n.id)}`;
-                const ruleUrl = `${SPLUNK}/en-US/app/SplunkEnterpriseSecuritySuite/ess_correlation_search_search?form.search=${encodeURIComponent(n.search_name)}`;
                 const actions: { label: string; href?: string; onClick?: () => void }[] = [
-                  { label: "Open in Splunk ES", href: incidentReviewUrl },
-                  { label: "Run drilldown SPL in Splunk", href: searchUrl },
-                  { label: "Adjust correlation rule", href: ruleUrl },
+                  { label: "Open in Splunk ES", href: `${SPLUNK}/?notable=${encodeURIComponent(n.id)}` },
+                  { label: "Run drilldown SPL in Splunk", href: `${SPLUNK}/?q=${encodeURIComponent(n.drilldown_spl || n.spl)}` },
+                  { label: "Adjust correlation rule", href: `${SPLUNK}/?rule=${encodeURIComponent(n.search_name)}` },
                   { label: "Suppress 1h" },
                   { label: "Promote to incident" },
                   { label: "Add to investigation" },
