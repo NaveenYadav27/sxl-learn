@@ -1,0 +1,16 @@
+import type { DockerContainer } from "./types";
+
+const ago = (h: number) => new Date(Date.now() - h * 3600 * 1000).toISOString();
+
+export const DOCKERS: DockerContainer[] = [
+  { id: "f3a91b22ce17", name: "edge-router-1", host: "edge-host-01.sxl", image: "traefik:v3.0", state: "running", status: "Up 14 days", ports: "80→80, 443→443", cpu_pct: 12.4, mem_mb: 320, mem_limit_mb: 1024, network_rx_mb: 14820, network_tx_mb: 19840, created_at: ago(336), command: "traefik --configfile=/etc/traefik/traefik.yml" },
+  { id: "9bd4427ae12c", name: "log-shipper", host: "edge-host-01.sxl", image: "fluent/fluent-bit:2.2.0", state: "running", status: "Up 14 days", ports: "2020/tcp", cpu_pct: 3.1, mem_mb: 88, mem_limit_mb: 256, network_rx_mb: 4220, network_tx_mb: 8810, created_at: ago(336), command: "/fluent-bit/bin/fluent-bit -c /fluent-bit/etc/fluent-bit.conf" },
+  { id: "abc742881130", name: "redis-cache", host: "build-runner-02.sxl", image: "redis:7.2-alpine", state: "running", status: "Up 3 days", ports: "6379/tcp", cpu_pct: 1.2, mem_mb: 142, mem_limit_mb: 512, network_rx_mb: 240, network_tx_mb: 380, created_at: ago(72), command: "redis-server --appendonly yes" },
+  { id: "5f1108bb4eda", name: "ci-runner-12", host: "build-runner-02.sxl", image: "ghcr.io/sxl/ci-runner:2024.05.1", state: "running", status: "Up 6 hours", ports: "—", cpu_pct: 88.0, mem_mb: 3140, mem_limit_mb: 4096, network_rx_mb: 980, network_tx_mb: 240, created_at: ago(6), command: "/runner/run.sh" },
+  { id: "7c2ad0e91cd0", name: "scanner-trivy", host: "build-runner-02.sxl", image: "aquasec/trivy:0.50.0", state: "exited", status: "Exited (0) 2h ago", ports: "—", cpu_pct: 0, mem_mb: 0, mem_limit_mb: 1024, network_rx_mb: 12, network_tx_mb: 4, created_at: ago(8), command: "trivy image ghcr.io/sxl/checkout-api:1.42.3" },
+  { id: "e09b1a2cf440", name: "ci-runner-13", host: "build-runner-02.sxl", image: "ghcr.io/sxl/ci-runner:2024.05.1", state: "restarting", status: "Restarting (1) 1m ago", ports: "—", cpu_pct: 0, mem_mb: 0, mem_limit_mb: 4096, network_rx_mb: 0, network_tx_mb: 0, created_at: ago(1), command: "/runner/run.sh" },
+  { id: "b88714509a2a", name: "vault-agent", host: "edge-host-02.sxl", image: "hashicorp/vault:1.16", state: "running", status: "Up 30 days", ports: "8200/tcp", cpu_pct: 0.8, mem_mb: 96, mem_limit_mb: 256, network_rx_mb: 80, network_tx_mb: 110, created_at: ago(720), command: "vault agent -config=/etc/vault/agent.hcl" },
+  { id: "00f99d2bc114", name: "edge-router-2", host: "edge-host-02.sxl", image: "traefik:v3.0", state: "running", status: "Up 30 days", ports: "80→80, 443→443", cpu_pct: 9.8, mem_mb: 290, mem_limit_mb: 1024, network_rx_mb: 11200, network_tx_mb: 17400, created_at: ago(720), command: "traefik --configfile=/etc/traefik/traefik.yml" },
+  { id: "44a0bb22ddf1", name: "lab-sandbox-04", host: "lab-host-01.sxl", image: "ubuntu:22.04", state: "exited", status: "Exited (137) 3d ago", ports: "—", cpu_pct: 0, mem_mb: 0, mem_limit_mb: 512, network_rx_mb: 1, network_tx_mb: 0, created_at: ago(96), command: "/bin/bash" },
+  { id: "21b09ee6a7c8", name: "synthetic-probe", host: "edge-host-02.sxl", image: "ghcr.io/sxl/synthetic:0.4", state: "paused", status: "Paused", ports: "—", cpu_pct: 0, mem_mb: 22, mem_limit_mb: 128, network_rx_mb: 5, network_tx_mb: 7, created_at: ago(168), command: "python /app/probe.py" },
+];

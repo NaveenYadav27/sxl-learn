@@ -54,6 +54,14 @@ import AlertsList from "./ops/modules/soc/AlertsList.tsx";
 import AlertDetail from "./ops/modules/soc/AlertDetail.tsx";
 import NotablesList from "./ops/modules/soc/NotablesList.tsx";
 import NotableDetail from "./ops/modules/soc/NotableDetail.tsx";
+import ServicesList from "./ops/modules/sre/ServicesList.tsx";
+import ServiceDetail from "./ops/modules/sre/ServiceDetail.tsx";
+import SlosList from "./ops/modules/sre/SlosList.tsx";
+import MonitoringList from "./ops/modules/sre/MonitoringList.tsx";
+import ClustersList from "./ops/modules/k8s/ClustersList.tsx";
+import WorkloadsList from "./ops/modules/k8s/WorkloadsList.tsx";
+import PodsList from "./ops/modules/k8s/PodsList.tsx";
+import ContainersList from "./ops/modules/k8s/ContainersList.tsx";
 
 const queryClient = new QueryClient();
 
@@ -113,6 +121,16 @@ const App = () => (
               <Route path="alerts/:id" element={<AlertDetail />} />
               <Route path="notables" element={<NotablesList />} />
               <Route path="notables/:id" element={<NotableDetail />} />
+              <Route path="monitoring" element={<MonitoringList />} />
+              <Route path="sre" element={<ServicesList />} />
+              <Route path="sre/services" element={<ServicesList />} />
+              <Route path="sre/services/:id" element={<ServiceDetail />} />
+              <Route path="sre/slos" element={<SlosList />} />
+              <Route path="k8s" element={<ClustersList />} />
+              <Route path="k8s/clusters" element={<ClustersList />} />
+              <Route path="k8s/workloads" element={<WorkloadsList />} />
+              <Route path="k8s/pods" element={<PodsList />} />
+              <Route path="k8s/containers" element={<ContainersList />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
