@@ -22,7 +22,7 @@ export default function OpsDashboard() {
   const critIncidents = openIncidents.filter((i) => i.severity === "critical").length;
   const activeAlerts = ALERTS.filter((a) => a.status !== "resolved" && a.status !== "closed").length;
   const openNotables = NOTABLES.filter((n) => n.status !== "resolved" && n.status !== "closed").length;
-  const pendingChanges = CHANGES.filter((c) => c.approvals.some((a) => a.decision === "pending")).length;
+  const pendingChanges = CHANGES.filter((c) => c.approvals.some((a) => a.status === "pending")).length;
   const firingMonitors = MONITORS.filter((m) => m.state === "alerting").length;
   const breachedSlos = SLOS.filter((s) => s.status === "breached" || s.status === "burning").length;
   const failingWorkloads = WORKLOADS.filter((w) => w.status === "degraded" || w.status === "failed").length;
