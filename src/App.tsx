@@ -50,6 +50,10 @@ import ChangesList from "./ops/modules/itsm/ChangesList.tsx";
 import ChangeDetail from "./ops/modules/itsm/ChangeDetail.tsx";
 import CmdbList from "./ops/modules/itsm/CmdbList.tsx";
 import CmdbDetail from "./ops/modules/itsm/CmdbDetail.tsx";
+import AlertsList from "./ops/modules/soc/AlertsList.tsx";
+import AlertDetail from "./ops/modules/soc/AlertDetail.tsx";
+import NotablesList from "./ops/modules/soc/NotablesList.tsx";
+import NotableDetail from "./ops/modules/soc/NotableDetail.tsx";
 
 const queryClient = new QueryClient();
 
@@ -105,6 +109,10 @@ const App = () => (
               <Route path="changes/:number" element={<ChangeDetail />} />
               <Route path="cmdb" element={<CmdbList />} />
               <Route path="cmdb/:id" element={<CmdbDetail />} />
+              <Route path="alerts" element={<AlertsList />} />
+              <Route path="alerts/:id" element={<AlertDetail />} />
+              <Route path="notables" element={<NotablesList />} />
+              <Route path="notables/:id" element={<NotableDetail />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
