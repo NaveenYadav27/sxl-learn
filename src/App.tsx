@@ -44,6 +44,12 @@ import { OpsLayout } from "./ops/layout/OpsLayout.tsx";
 import OpsDashboard from "./ops/pages/OpsDashboard.tsx";
 import IncidentsList from "./ops/modules/itsm/IncidentsList.tsx";
 import IncidentDetail from "./ops/modules/itsm/IncidentDetail.tsx";
+import ProblemsList from "./ops/modules/itsm/ProblemsList.tsx";
+import ProblemDetail from "./ops/modules/itsm/ProblemDetail.tsx";
+import ChangesList from "./ops/modules/itsm/ChangesList.tsx";
+import ChangeDetail from "./ops/modules/itsm/ChangeDetail.tsx";
+import CmdbList from "./ops/modules/itsm/CmdbList.tsx";
+import CmdbDetail from "./ops/modules/itsm/CmdbDetail.tsx";
 
 const queryClient = new QueryClient();
 
@@ -93,6 +99,12 @@ const App = () => (
               <Route index element={<OpsDashboard />} />
               <Route path="incidents" element={<IncidentsList />} />
               <Route path="incidents/:number" element={<IncidentDetail />} />
+              <Route path="problems" element={<ProblemsList />} />
+              <Route path="problems/:number" element={<ProblemDetail />} />
+              <Route path="changes" element={<ChangesList />} />
+              <Route path="changes/:number" element={<ChangeDetail />} />
+              <Route path="cmdb" element={<CmdbList />} />
+              <Route path="cmdb/:id" element={<CmdbDetail />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
