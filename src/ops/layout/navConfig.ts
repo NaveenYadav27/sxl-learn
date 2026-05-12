@@ -14,6 +14,11 @@ import {
   BookOpen,
   Bot,
   Settings,
+  Target,
+  Boxes,
+  Server,
+  Container,
+  Layers,
   type LucideIcon,
 } from "lucide-react";
 
@@ -56,15 +61,25 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     label: "Reliability",
     items: [
-      { label: "Monitoring", to: "/ops/monitoring", icon: Activity, enabled: false },
-      { label: "SRE", to: "/ops/sre", icon: Cpu, enabled: false },
-      { label: "DevOps", to: "/ops/devops", icon: Workflow, enabled: false },
-      { label: "Cloud Operations", to: "/ops/cloud", icon: Cloud, enabled: false },
+      { label: "Monitoring", to: "/ops/monitoring", icon: Activity, enabled: true },
+      { label: "Services", to: "/ops/sre/services", icon: Cpu, enabled: true },
+      { label: "SLOs", to: "/ops/sre/slos", icon: Target, enabled: true },
+    ],
+  },
+  {
+    label: "Kubernetes & Containers",
+    items: [
+      { label: "Clusters", to: "/ops/k8s/clusters", icon: Layers, enabled: true },
+      { label: "Workloads", to: "/ops/k8s/workloads", icon: Boxes, enabled: true },
+      { label: "Pods", to: "/ops/k8s/pods", icon: Server, enabled: true },
+      { label: "Docker", to: "/ops/k8s/containers", icon: Container, enabled: true },
     ],
   },
   {
     label: "Insights",
     items: [
+      { label: "DevOps", to: "/ops/devops", icon: Workflow, enabled: false },
+      { label: "Cloud Operations", to: "/ops/cloud", icon: Cloud, enabled: false },
       { label: "Reports", to: "/ops/reports", icon: BarChart3, enabled: false },
       { label: "Knowledge Base", to: "/ops/kb", icon: BookOpen, enabled: false },
       { label: "Automation", to: "/ops/automation", icon: Bot, enabled: false },
