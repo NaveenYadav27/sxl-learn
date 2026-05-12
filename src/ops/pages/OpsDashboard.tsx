@@ -36,6 +36,14 @@ export default function OpsDashboard() {
         title="Operations Dashboard"
         description="Single pane of glass across ITSM, SOC, and reliability operations."
         breadcrumb={<span>Operate / Dashboard</span>}
+        actions={
+          <Button asChild variant="outline" size="sm" className="gap-1.5">
+            <Link to="/dashboard">
+              <ArrowLeft className="h-3.5 w-3.5" />
+              Back to Course
+            </Link>
+          </Button>
+        }
       />
 
       <div className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-4">
