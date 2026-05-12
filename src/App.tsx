@@ -62,6 +62,12 @@ import ClustersList from "./ops/modules/k8s/ClustersList.tsx";
 import WorkloadsList from "./ops/modules/k8s/WorkloadsList.tsx";
 import PodsList from "./ops/modules/k8s/PodsList.tsx";
 import ContainersList from "./ops/modules/k8s/ContainersList.tsx";
+import PipelinesList from "./ops/modules/devops/PipelinesList.tsx";
+import DeploymentsList from "./ops/modules/devops/DeploymentsList.tsx";
+import RepositoriesList from "./ops/modules/devops/RepositoriesList.tsx";
+import AccountsList from "./ops/modules/cloud/AccountsList.tsx";
+import ResourcesList from "./ops/modules/cloud/ResourcesList.tsx";
+import CostsList from "./ops/modules/cloud/CostsList.tsx";
 
 const queryClient = new QueryClient();
 
@@ -131,6 +137,14 @@ const App = () => (
               <Route path="k8s/workloads" element={<WorkloadsList />} />
               <Route path="k8s/pods" element={<PodsList />} />
               <Route path="k8s/containers" element={<ContainersList />} />
+              <Route path="devops" element={<PipelinesList />} />
+              <Route path="devops/pipelines" element={<PipelinesList />} />
+              <Route path="devops/deployments" element={<DeploymentsList />} />
+              <Route path="devops/repos" element={<RepositoriesList />} />
+              <Route path="cloud" element={<AccountsList />} />
+              <Route path="cloud/accounts" element={<AccountsList />} />
+              <Route path="cloud/resources" element={<ResourcesList />} />
+              <Route path="cloud/costs" element={<CostsList />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
