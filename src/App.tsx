@@ -54,6 +54,7 @@ import AlertsList from "./ops/modules/soc/AlertsList.tsx";
 import AlertDetail from "./ops/modules/soc/AlertDetail.tsx";
 import NotablesList from "./ops/modules/soc/NotablesList.tsx";
 import NotableDetail from "./ops/modules/soc/NotableDetail.tsx";
+import SplunkLive from "./ops/pages/SplunkLive.tsx";
 import ServicesList from "./ops/modules/sre/ServicesList.tsx";
 import ServiceDetail from "./ops/modules/sre/ServiceDetail.tsx";
 import SlosList from "./ops/modules/sre/SlosList.tsx";
@@ -127,6 +128,7 @@ const App = () => (
               <Route path="alerts/:id" element={<AlertDetail />} />
               <Route path="notables" element={<NotablesList />} />
               <Route path="notables/:id" element={<NotableDetail />} />
+              <Route path="splunk-live" element={<SplunkLive />} />
               <Route path="monitoring" element={<MonitoringList />} />
               <Route path="sre" element={<ServicesList />} />
               <Route path="sre/services" element={<ServicesList />} />

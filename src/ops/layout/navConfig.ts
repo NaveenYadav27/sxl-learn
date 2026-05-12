@@ -19,6 +19,7 @@ import {
   Server,
   Container,
   Layers,
+  ExternalLink,
   type LucideIcon,
 } from "lucide-react";
 
@@ -56,6 +57,7 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { label: "Alerts", to: "/ops/alerts", icon: ShieldAlert, enabled: true },
       { label: "Splunk ES Notables", to: "/ops/notables", icon: Search, enabled: true },
+      { label: "Splunk ES (Live)", to: "/ops/splunk-live", icon: ExternalLink, enabled: true, badge: "LIVE" },
     ],
   },
   {
