@@ -364,6 +364,12 @@ export default function Module() {
           </CardContent>
         </Card>
 
+        {/* Module 1 & 2 enhancements: hover-glossary chips + (M1 only) runtime visualizations */}
+        {(slug === "k8s-containerization-fundamentals" || slug === "k8s-docker-images") && (
+          <HoverGlossary moduleSlug={slug} />
+        )}
+        {slug === "k8s-containerization-fundamentals" && <RuntimeVisualizations />}
+
         {/* Concept deep dives — every term fully self-explained */}
         <Card className="shadow-card">
           <CardContent className="pt-5">
