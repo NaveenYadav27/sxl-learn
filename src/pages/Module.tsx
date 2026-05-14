@@ -218,7 +218,7 @@ export default function Module() {
                 <ul className="space-y-2">
                   {labs.map((lab) => (
                     <li key={lab.id}>
-                      <Link to={`/lab/${lab.slug}`} className="flex items-center justify-between gap-3 rounded-md border border-border px-3 py-2 hover:bg-muted/40 transition-colors">
+                      <a href={`/lab/${lab.slug}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between gap-3 rounded-md border border-border px-3 py-2 hover:bg-muted/40 transition-colors">
                         <div className="min-w-0">
                           <div className="text-sm font-medium truncate">{lab.title}</div>
                           {lab.objective && <div className="text-xs text-muted-foreground truncate">{lab.objective}</div>}
@@ -226,9 +226,9 @@ export default function Module() {
                         <div className="flex items-center gap-2 shrink-0">
                           <Badge variant="outline" className="text-[10px] capitalize">{lab.difficulty}</Badge>
                           <Badge variant="secondary" className="text-[10px]">{fmtMin(lab.duration_min)}</Badge>
-                          <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
+                          <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
                         </div>
-                      </Link>
+                      </a>
                     </li>
                   ))}
                 </ul>
