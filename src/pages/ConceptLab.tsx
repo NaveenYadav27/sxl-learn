@@ -167,6 +167,11 @@ export default function ConceptLab() {
           </CardContent>
         </Card>
 
+        {/* Visual model — always visible architecture diagram */}
+        <div className="animate-fade-in">
+          <ConceptDiagram conceptName={concept.name} conceptId={concept.id} />
+        </div>
+
         {!done && current && (
           <>
             {/* Step navigator chips */}
