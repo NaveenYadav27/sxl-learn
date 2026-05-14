@@ -35,8 +35,12 @@ interface Props {
 }
 
 type Line = { kind: "prompt" | "stdout" | "ok" | "err" | "info"; text: string };
+type OS = "linux" | "windows";
 
-const PROMPT = "devops@shadowx:~/lab$ ";
+const PROMPTS: Record<OS, string> = {
+  linux: "devops@shadowx:~/lab$ ",
+  windows: "PS C:\\Users\\devops\\lab> ",
+};
 
 // ------------------------------------------------------------------
 // Realistic command output snippets
