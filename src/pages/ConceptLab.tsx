@@ -326,7 +326,7 @@ function AnalogyBlock({ text }: { text: string }) {
   return (
     <div className="rounded-md border border-primary/30 bg-primary/5 p-3 flex gap-3">
       <Lightbulb className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-      <p className="text-base leading-relaxed text-foreground italic">{text}</p>
+      <SmartText text={text} className="text-base leading-relaxed text-foreground italic block" />
     </div>
   );
 }
