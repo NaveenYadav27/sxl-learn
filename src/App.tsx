@@ -107,6 +107,8 @@ const App = () => (
             <Route path="/session-plan" element={<SessionPlan />} />
             <Route path="/session-plan/:duration" element={<SessionPlanDuration />} />
             <Route path="/module/:slug" element={<Module />} />
+            <Route path="/concept-lab/:moduleSlug/:conceptId" element={<ConceptLab />} />
+            <Route path="/module-lab/:moduleSlug" element={<ModuleLab />} />
             <Route path="/defender" element={<Defender />} />
             <Route path="/portal/:sim" element={<PortalSandbox />} />
             <Route path="/purview" element={<Purview />} />
