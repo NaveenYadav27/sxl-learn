@@ -282,7 +282,7 @@ function KpiTile({ icon: Icon, label, value }: { icon: any; label: string; value
 function TerminalBlock({ text, cluster }: { text: string; cluster: string }) {
   return (
     <div className="space-y-2">
-      <p className="text-base leading-relaxed text-foreground">{text}</p>
+      <SmartText text={text} className="text-base leading-relaxed text-foreground block" />
       <div className="rounded-md border border-border bg-black/90 text-green-400 font-mono text-[11px] overflow-hidden">
         <div className="flex items-center gap-1.5 px-3 py-1.5 bg-black/60 border-b border-green-500/20">
           <span className="h-2 w-2 rounded-full bg-red-500/70" />
