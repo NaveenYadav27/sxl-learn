@@ -405,7 +405,12 @@ export default function Module() {
                 </a>
               ))}
             </div>
-            <div className="flex justify-end mt-3">
+            <div className="flex flex-wrap justify-end gap-2 mt-3">
+              <a href="/term-labs" target="_blank" rel="noopener noreferrer">
+                <Button size="sm" variant="outline" className="h-8 text-xs gap-1">
+                  Browse all term labs <ExternalLink className="h-3 w-3" />
+                </Button>
+              </a>
               <a href={`/module-lab/${slug}`} target="_blank" rel="noopener noreferrer">
                 <Button size="sm" variant="default" className="h-8 text-xs gap-1">
                   Run full module as one lab <ExternalLink className="h-3 w-3" />

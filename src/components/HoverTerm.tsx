@@ -82,6 +82,14 @@ export function HoverTerm({ termKey, children, asChip }: Props) {
           {t.commonIssue && (
             <Row icon={AlertTriangle} label="Common issue" body={t.commonIssue} tone="warning" />
           )}
+          <a
+            href={`/term-lab/${encodeURIComponent(termKey.toLowerCase())}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-1 flex items-center justify-center gap-1 text-[11px] font-semibold text-primary border border-primary/30 rounded-md py-1.5 hover:bg-primary/10 transition-colors"
+          >
+            Open as full lab →
+          </a>
         </div>
       </HoverCardContent>
     </HoverCard>
