@@ -19,6 +19,7 @@ import {
 import { HoverGlossary } from "@/components/HoverGlossary";
 import { SmartText } from "@/components/SmartText";
 import { RuntimeVisualizations } from "@/components/RuntimeVisualizations";
+import { ConceptDiagram } from "@/components/ConceptDiagram";
 import { type DomainKey } from "@/lib/curriculum";
 import { getModuleExplanation } from "@/lib/moduleExplanations";
 import { getItsmModuleExplanation } from "@/lib/moduleExplanationsItsm";
