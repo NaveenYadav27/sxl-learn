@@ -370,6 +370,50 @@ export default function Module() {
         )}
         {slug === "k8s-containerization-fundamentals" && <RuntimeVisualizations />}
 
+        {/* Concept Labs — every concept as its own interactive lab */}
+        <Card className="shadow-card border-primary/30">
+          <CardContent className="pt-5">
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <FlaskConical className="h-4 w-4 text-primary" />
+              <h3 className="text-base font-semibold">Concept Labs</h3>
+              <Badge variant="outline" className="text-[10px]">Each concept as a lab</Badge>
+              <Badge variant="secondary" className="ml-auto text-[10px]">
+                {explanation.conceptDeepDives.length} labs
+              </Badge>
+            </div>
+            <p className="text-xs text-muted-foreground mb-3">
+              Every concept in this module is available as a standalone interactive lab. Each opens in a new tab.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+              {explanation.conceptDeepDives.map((c, i) => (
+                <a
+                  key={c.id}
+                  href={`/concept-lab/${slug}/${c.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group block border border-border rounded-md p-3 hover:border-primary/60 hover:bg-primary/5 transition-colors"
+                >
+                  <div className="flex items-start gap-2">
+                    <Badge variant="outline" className="text-[10px] shrink-0 mt-0.5">L{i + 1}</Badge>
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-semibold group-hover:text-primary truncate">{c.name}</div>
+                      <div className="text-[11px] text-muted-foreground line-clamp-2 mt-0.5">{c.oneLine}</div>
+                    </div>
+                    <ExternalLink className="h-3 w-3 text-muted-foreground group-hover:text-primary shrink-0 mt-1" />
+                  </div>
+                </a>
+              ))}
+            </div>
+            <div className="flex justify-end mt-3">
+              <a href={`/module-lab/${slug}`} target="_blank" rel="noopener noreferrer">
+                <Button size="sm" variant="default" className="h-8 text-xs gap-1">
+                  Run full module as one lab <ExternalLink className="h-3 w-3" />
+                </Button>
+              </a>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Concept deep dives — every term fully self-explained */}
         <Card className="shadow-card">
           <CardContent className="pt-5">
