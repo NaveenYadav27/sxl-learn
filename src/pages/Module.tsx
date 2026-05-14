@@ -17,6 +17,7 @@ import {
   CheckCircle2, XCircle, BookMarked, ExternalLink, Layers,
 } from "lucide-react";
 import { HoverGlossary } from "@/components/HoverGlossary";
+import { SmartText } from "@/components/SmartText";
 import { RuntimeVisualizations } from "@/components/RuntimeVisualizations";
 import { type DomainKey } from "@/lib/curriculum";
 import { getModuleExplanation } from "@/lib/moduleExplanations";
