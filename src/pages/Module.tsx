@@ -491,12 +491,12 @@ export default function Module() {
                           {status === "in_progress" && <Badge variant="outline" className="text-[10px]">In progress</Badge>}
                         </div>
                       </div>
-                      <Link to={`/lab/${lab.slug}`}>
+                      <a href={`/lab/${lab.slug}`} target="_blank" rel="noopener noreferrer">
                         <Button size="sm" className="gap-1 h-7">
                           {status === "completed" ? "Review" : status === "in_progress" ? "Resume" : "Start"}
-                          <ArrowRight className="h-3 w-3" />
+                          <ExternalLink className="h-3 w-3" />
                         </Button>
-                      </Link>
+                      </a>
                     </li>
                   );
                 })}
