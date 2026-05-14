@@ -156,6 +156,19 @@ export default function Lab() {
 
     toast.success(`+${currentStep.points} points`, { icon: <Sparkles className="h-4 w-4 text-primary" /> });
 
+    // Ops dashboard sync — fire learner-driven incidents for the Docker build labs.
+    // Step 1 of `k8s-build-tag-image` opens the build-failure incident; the final
+    // step of `k8s-push-to-registry` resolves it.
+    try {
+      const { emitImageBuildFailure, emitImageBuildResolved } = await import("@/ops/lib/learnerEvents");
+      if (lab.slug === "k8s-build-tag-image" && currentStep.step_number === 1) {
+        emitImageBuildFailure(lab.slug);
+      }
+      if (lab.slug === "k8s-push-to-registry" && currentIdx === steps.length - 1) {
+        emitImageBuildResolved(lab.slug);
+      }
+    } catch { /* best effort — don't break lab flow */ }
+
     // auto-advance after a moment (do NOT auto-complete; quiz is the gate)
     setTimeout(() => {
       if (currentIdx < steps.length - 1) {
