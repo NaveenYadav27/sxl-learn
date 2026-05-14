@@ -23,6 +23,8 @@ import Purview from "./pages/Purview.tsx";
 import SessionPlan from "./pages/SessionPlan.tsx";
 import SessionPlanDuration from "./pages/SessionPlanDuration.tsx";
 import Module from "./pages/Module.tsx";
+import ConceptLab from "./pages/ConceptLab.tsx";
+import ModuleLab from "./pages/ModuleLab.tsx";
 import ServiceNowJourney from "./pages/ServiceNowJourney.tsx";
 import SocProgram from "./pages/SocProgram.tsx";
 import ItsmProgram from "./pages/ItsmProgram.tsx";
@@ -105,6 +107,8 @@ const App = () => (
             <Route path="/session-plan" element={<SessionPlan />} />
             <Route path="/session-plan/:duration" element={<SessionPlanDuration />} />
             <Route path="/module/:slug" element={<Module />} />
+            <Route path="/concept-lab/:moduleSlug/:conceptId" element={<ConceptLab />} />
+            <Route path="/module-lab/:moduleSlug" element={<ModuleLab />} />
             <Route path="/defender" element={<Defender />} />
             <Route path="/portal/:sim" element={<PortalSandbox />} />
             <Route path="/purview" element={<Purview />} />
