@@ -373,22 +373,34 @@ export default function Module() {
         {/* Concept deep dives — every term fully self-explained */}
         <Card className="shadow-card">
           <CardContent className="pt-5">
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex items-center gap-2 mb-3 flex-wrap">
               <Layers className="h-4 w-4 text-primary" />
               <h3 className="text-base font-semibold">Concept deep dives</h3>
               <Badge variant="outline" className="ml-auto">{explanation.conceptDeepDives.length} concepts</Badge>
+              <a href={`/module-lab/${slug}`} target="_blank" rel="noopener noreferrer">
+                <Button size="sm" variant="outline" className="h-7 text-[11px] gap-1">
+                  Run full module as one lab <ExternalLink className="h-3 w-3" />
+                </Button>
+              </a>
             </div>
-            <p className="text-xs text-muted-foreground mb-3">Click any concept for a full explanation — definition, plain English, analogy, how it works, Microsoft mapping, when (not) to use, common mistakes, and exam angle.</p>
+            <p className="text-xs text-muted-foreground mb-3">Click any concept for a full explanation — or open it as its own concept lab in a new tab.</p>
             <Accordion type="single" collapsible className="space-y-2">
               {explanation.conceptDeepDives.map((c) => (
                 <AccordionItem key={c.id} value={c.id} className="border border-border rounded-md px-3">
                   <AccordionTrigger className="hover:no-underline py-3">
-                    <div className="text-left">
+                    <div className="text-left flex-1">
                       <div className="text-sm font-semibold">{c.name}</div>
                       <div className="text-xs text-muted-foreground mt-0.5">{c.oneLine}</div>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="pb-4 space-y-3 text-sm">
+                    <div className="flex justify-end -mt-1">
+                      <a href={`/concept-lab/${slug}/${c.id}`} target="_blank" rel="noopener noreferrer">
+                        <Button size="sm" variant="outline" className="h-7 text-[11px] gap-1">
+                          Open as concept lab <ExternalLink className="h-3 w-3" />
+                        </Button>
+                      </a>
+                    </div>
                     <DDRow label="Formal definition" value={c.formal} />
                     <DDRow label="Plain English" value={c.plainEnglish} />
                     <DDRow label="Analogy" value={c.analogy} />
