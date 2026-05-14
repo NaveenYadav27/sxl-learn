@@ -17,7 +17,7 @@ interface Props {
 }
 
 export function HoverTerm({ termKey, children, asChip }: Props) {
-  const t: HoverTerm | undefined = findHoverTerm(termKey);
+  const t: HoverTerm | undefined = findHoverTerm(termKey) ?? findGlossaryTerm(termKey);
   const label = children ?? t?.term ?? termKey;
 
   if (!t) {
