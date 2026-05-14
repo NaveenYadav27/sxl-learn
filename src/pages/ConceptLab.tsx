@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { getAnyModuleExplanation } from "@/lib/getAnyExplanation";
 import { SmartText } from "@/components/SmartText";
+import { ConceptDiagram } from "@/components/ConceptDiagram";
 
 type Tone = "default" | "warning" | "primary" | "success" | "danger";
 type Section = { key: string; label: string; value: string; icon: any; tone: Tone };
