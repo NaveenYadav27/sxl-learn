@@ -19,6 +19,7 @@ import {
 import { HoverGlossary } from "@/components/HoverGlossary";
 import { SmartText } from "@/components/SmartText";
 import { RuntimeVisualizations } from "@/components/RuntimeVisualizations";
+import { ConceptDiagram } from "@/components/ConceptDiagram";
 import { type DomainKey } from "@/lib/curriculum";
 import { getModuleExplanation } from "@/lib/moduleExplanations";
 import { getItsmModuleExplanation } from "@/lib/moduleExplanationsItsm";
@@ -385,19 +386,20 @@ export default function Module() {
             <p className="text-xs text-muted-foreground mb-3">
               Every concept in this module is available as a standalone interactive lab. Each opens in a new tab.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {explanation.conceptDeepDives.map((c, i) => (
                 <a
                   key={c.id}
                   href={`/concept-lab/${slug}/${c.id}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group block border border-border rounded-md p-3 hover:border-primary/60 hover:bg-primary/5 transition-colors"
+                  className="group block border border-border rounded-md overflow-hidden hover:border-primary/60 hover:shadow-md transition-all bg-background"
                 >
-                  <div className="flex items-start gap-2">
+                  <ConceptDiagram conceptName={c.name} conceptId={c.id} />
+                  <div className="p-3 flex items-start gap-2 border-t border-border">
                     <Badge variant="outline" className="text-[10px] shrink-0 mt-0.5">L{i + 1}</Badge>
                     <div className="flex-1 min-w-0">
-                      <div className="text-sm font-semibold group-hover:text-primary truncate">{c.name}</div>
+                      <div className="text-sm font-semibold group-hover:text-primary">{c.name}</div>
                       <div className="text-[11px] text-muted-foreground line-clamp-2 mt-0.5">{c.oneLine}</div>
                     </div>
                     <ExternalLink className="h-3 w-3 text-muted-foreground group-hover:text-primary shrink-0 mt-1" />
