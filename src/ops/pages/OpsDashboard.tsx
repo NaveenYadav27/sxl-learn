@@ -18,6 +18,7 @@ import { WORKLOADS } from "../modules/k8s/workloadsData";
 import { PODS } from "../modules/k8s/podsData";
 import { HEALTH_TOKEN, SLO_TOKEN } from "../modules/sre/lib";
 import { POD_TOKEN } from "../modules/k8s/lib";
+import { LearnerOpsStrip } from "../components/LearnerOpsStrip";
 
 export default function OpsDashboard() {
   const openIncidents = INCIDENTS.filter((i) => i.status !== "resolved" && i.status !== "closed");
@@ -45,6 +46,8 @@ export default function OpsDashboard() {
           </Button>
         }
       />
+
+      <LearnerOpsStrip />
 
       <div className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard label="Open Incidents" value={openIncidents.length} hint={`${critIncidents} critical`} intent={critIncidents > 0 ? "critical" : "default"} />

@@ -16,6 +16,8 @@ import {
   Wrench, GraduationCap, ListChecks, ScrollText, Award, AlertTriangle, MessageCircleQuestion,
   CheckCircle2, XCircle, BookMarked, ExternalLink, Layers,
 } from "lucide-react";
+import { HoverGlossary } from "@/components/HoverGlossary";
+import { RuntimeVisualizations } from "@/components/RuntimeVisualizations";
 import { type DomainKey } from "@/lib/curriculum";
 import { getModuleExplanation } from "@/lib/moduleExplanations";
 import { getItsmModuleExplanation } from "@/lib/moduleExplanationsItsm";
@@ -361,6 +363,12 @@ export default function Module() {
             </ol>
           </CardContent>
         </Card>
+
+        {/* Module 1 & 2 enhancements: hover-glossary chips + (M1 only) runtime visualizations */}
+        {(slug === "k8s-containerization-fundamentals" || slug === "k8s-docker-images") && (
+          <HoverGlossary moduleSlug={slug} />
+        )}
+        {slug === "k8s-containerization-fundamentals" && <RuntimeVisualizations />}
 
         {/* Concept deep dives — every term fully self-explained */}
         <Card className="shadow-card">

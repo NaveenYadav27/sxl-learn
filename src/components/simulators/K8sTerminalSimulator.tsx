@@ -35,8 +35,12 @@ interface Props {
 }
 
 type Line = { kind: "prompt" | "stdout" | "ok" | "err" | "info"; text: string };
+type OS = "linux" | "windows";
 
-const PROMPT = "devops@shadowx:~/lab$ ";
+const PROMPTS: Record<OS, string> = {
+  linux: "devops@shadowx:~/lab$ ",
+  windows: "PS C:\\Users\\devops\\lab> ",
+};
 
 // ------------------------------------------------------------------
 // Realistic command output snippets
@@ -433,6 +437,7 @@ export function K8sTerminalSimulator({ expectedAction, onValidate }: Props) {
   const [past, setPast] = useState<string[]>([]);
   const [pastIdx, setPastIdx] = useState<number>(-1);
   const [solved, setSolved] = useState(false);
+  const [os, setOs] = useState<OS>("linux");
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const expectedHint = useMemo(() => {
@@ -455,7 +460,7 @@ export function K8sTerminalSimulator({ expectedAction, onValidate }: Props) {
   function submit() {
     const c = input.trim();
     if (!c) return;
-    const newLines: Line[] = [{ kind: "prompt", text: PROMPT + c }, ...runCommand(c)];
+    const newLines: Line[] = [{ kind: "prompt", text: PROMPTS[os] + c }, ...runCommand(c)];
     setHistory((h) => [...h, ...newLines]);
     setPast((p) => [...p, c]);
     setPastIdx(-1);
@@ -489,8 +494,24 @@ export function K8sTerminalSimulator({ expectedAction, onValidate }: Props) {
       <div className="flex items-center justify-between bg-[hsl(220_15%_10%)] text-foreground px-3 py-2 border-b border-border">
         <div className="flex items-center gap-2 text-xs font-mono">
           <Container className="h-4 w-4 text-shadowx-azure" />
-          <span className="font-semibold">devops@shadowx</span>
-          <span className="text-muted-foreground">— bash · docker · kubectl</span>
+          <span className="font-semibold">{os === "windows" ? "PS C:\\Users\\devops" : "devops@shadowx"}</span>
+          <span className="text-muted-foreground">— {os === "windows" ? "PowerShell · docker · kubectl" : "bash · docker · kubectl"}</span>
+          {/* OS toggle — Windows / Linux tabs */}
+          <div className="ml-3 inline-flex rounded border border-border overflow-hidden">
+            {(["linux", "windows"] as const).map((o) => (
+              <button
+                key={o}
+                onClick={() => setOs(o)}
+                className={`px-2 py-0.5 text-[10px] uppercase tracking-wider transition-colors ${
+                  os === o
+                    ? "bg-shadowx-azure/20 text-shadowx-azure"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {o}
+              </button>
+            ))}
+          </div>
         </div>
         <div className="flex items-center gap-2">
           {expectedHint && (
@@ -525,7 +546,7 @@ export function K8sTerminalSimulator({ expectedAction, onValidate }: Props) {
 
       {/* Input row */}
       <div className="flex items-center gap-2 bg-[hsl(220_20%_7%)] px-3 py-2 border-t border-border">
-        <span className="font-mono text-xs text-[hsl(45_90%_70%)] shrink-0">$</span>
+        <span className="font-mono text-xs text-[hsl(45_90%_70%)] shrink-0">{os === "windows" ? ">" : "$"}</span>
         <input
           autoFocus
           value={input}
