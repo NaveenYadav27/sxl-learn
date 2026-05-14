@@ -12,6 +12,7 @@ import {
   XCircle, GraduationCap, Terminal, Cpu, Network, Zap, Clock, Gauge,
 } from "lucide-react";
 import { getAnyModuleExplanation } from "@/lib/getAnyExplanation";
+import { SmartText } from "@/components/SmartText";
 
 type Tone = "default" | "warning" | "primary" | "success" | "danger";
 type Section = { key: string; label: string; value: string; icon: any; tone: Tone };
