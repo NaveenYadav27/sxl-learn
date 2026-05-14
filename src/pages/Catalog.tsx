@@ -459,12 +459,12 @@ function LabRow({ lab, index, status }: { lab: Lab; index: number; status?: stri
           )}
         </div>
         <div className="flex flex-col gap-1.5 shrink-0">
-          <Link to={`/lab/${lab.slug}`}>
+          <a href={`/lab/${lab.slug}`} target="_blank" rel="noopener noreferrer">
             <Button size="sm" className="gap-1 h-7 w-full">
               {status === "completed" ? "Review" : status === "in_progress" ? "Resume" : "Start"}
-              <ArrowRight className="h-3 w-3" />
+              <ExternalLink className="h-3 w-3" />
             </Button>
-          </Link>
+          </a>
           {lab.ms_learn_url && (
             <a
               href={lab.ms_learn_url} target="_blank" rel="noopener noreferrer"
