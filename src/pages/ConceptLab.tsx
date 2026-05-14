@@ -205,7 +205,7 @@ export default function ConceptLab() {
                 ) : current.key === "analogy" ? (
                   <AnalogyBlock text={current.value} />
                 ) : (
-                  <p className="text-base leading-relaxed text-foreground">{current.value}</p>
+                  <SmartText text={current.value} className="text-base leading-relaxed text-foreground block" />)
                 )}
 
                 <div className="flex items-center justify-between pt-3 border-t border-border">
