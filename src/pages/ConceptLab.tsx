@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { getAnyModuleExplanation } from "@/lib/getAnyExplanation";
 import { SmartText } from "@/components/SmartText";
+import { ConceptDiagram } from "@/components/ConceptDiagram";
 
 type Tone = "default" | "warning" | "primary" | "success" | "danger";
 type Section = { key: string; label: string; value: string; icon: any; tone: Tone };
@@ -165,6 +166,11 @@ export default function ConceptLab() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Visual model — always visible architecture diagram */}
+        <div className="animate-fade-in">
+          <ConceptDiagram conceptName={concept.name} conceptId={concept.id} />
+        </div>
 
         {!done && current && (
           <>
