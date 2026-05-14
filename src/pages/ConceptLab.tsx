@@ -313,7 +313,7 @@ function IncidentBlock({ text, incId, cluster }: { text: string; incId: string; 
         <div className="text-[11px] text-muted-foreground mb-2">
           Cluster <span className="font-mono text-foreground">{cluster}</span> · Severity: <span className="text-warning">P2</span> · Detected via SRE on-call
         </div>
-        <p className="text-sm text-foreground leading-relaxed">{text}</p>
+        <SmartText text={text} className="text-sm text-foreground leading-relaxed block" />
       </div>
       <div className="text-[11px] text-muted-foreground">
         <Terminal className="inline h-3 w-3 mr-1" /> Tip: avoiding this mistake protects your error budget and reduces MTTR.
