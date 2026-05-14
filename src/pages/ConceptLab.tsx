@@ -12,6 +12,7 @@ import {
   XCircle, GraduationCap, Terminal, Cpu, Network, Zap, Clock, Gauge,
 } from "lucide-react";
 import { getAnyModuleExplanation } from "@/lib/getAnyExplanation";
+import { SmartText } from "@/components/SmartText";
 
 type Tone = "default" | "warning" | "primary" | "success" | "danger";
 type Section = { key: string; label: string; value: string; icon: any; tone: Tone };
@@ -204,7 +205,7 @@ export default function ConceptLab() {
                 ) : current.key === "analogy" ? (
                   <AnalogyBlock text={current.value} />
                 ) : (
-                  <p className="text-base leading-relaxed text-foreground">{current.value}</p>
+                  <SmartText text={current.value} className="text-base leading-relaxed text-foreground block" />
                 )}
 
                 <div className="flex items-center justify-between pt-3 border-t border-border">
@@ -281,7 +282,7 @@ function KpiTile({ icon: Icon, label, value }: { icon: any; label: string; value
 function TerminalBlock({ text, cluster }: { text: string; cluster: string }) {
   return (
     <div className="space-y-2">
-      <p className="text-base leading-relaxed text-foreground">{text}</p>
+      <SmartText text={text} className="text-base leading-relaxed text-foreground block" />
       <div className="rounded-md border border-border bg-black/90 text-green-400 font-mono text-[11px] overflow-hidden">
         <div className="flex items-center gap-1.5 px-3 py-1.5 bg-black/60 border-b border-green-500/20">
           <span className="h-2 w-2 rounded-full bg-red-500/70" />
@@ -312,7 +313,7 @@ function IncidentBlock({ text, incId, cluster }: { text: string; incId: string; 
         <div className="text-[11px] text-muted-foreground mb-2">
           Cluster <span className="font-mono text-foreground">{cluster}</span> · Severity: <span className="text-warning">P2</span> · Detected via SRE on-call
         </div>
-        <p className="text-sm text-foreground leading-relaxed">{text}</p>
+        <SmartText text={text} className="text-sm text-foreground leading-relaxed block" />
       </div>
       <div className="text-[11px] text-muted-foreground">
         <Terminal className="inline h-3 w-3 mr-1" /> Tip: avoiding this mistake protects your error budget and reduces MTTR.
@@ -325,7 +326,7 @@ function AnalogyBlock({ text }: { text: string }) {
   return (
     <div className="rounded-md border border-primary/30 bg-primary/5 p-3 flex gap-3">
       <Lightbulb className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-      <p className="text-base leading-relaxed text-foreground italic">{text}</p>
+      <SmartText text={text} className="text-base leading-relaxed text-foreground italic block" />
     </div>
   );
 }

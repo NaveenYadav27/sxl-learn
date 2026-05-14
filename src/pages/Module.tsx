@@ -17,6 +17,7 @@ import {
   CheckCircle2, XCircle, BookMarked, ExternalLink, Layers,
 } from "lucide-react";
 import { HoverGlossary } from "@/components/HoverGlossary";
+import { SmartText } from "@/components/SmartText";
 import { RuntimeVisualizations } from "@/components/RuntimeVisualizations";
 import { type DomainKey } from "@/lib/curriculum";
 import { getModuleExplanation } from "@/lib/moduleExplanations";
@@ -735,7 +736,7 @@ function DDRow({ label, value, tone }: { label: string; value: string; tone?: "w
   return (
     <div>
       <div className={`text-[10px] uppercase tracking-wide font-semibold mb-0.5 ${toneClass}`}>{label}</div>
-      <p className="text-sm leading-relaxed text-foreground/85">{value}</p>
+      <SmartText text={value} className="text-sm leading-relaxed text-foreground/85 block" />
     </div>
   );
 }
