@@ -546,7 +546,7 @@ export function K8sTerminalSimulator({ expectedAction, onValidate }: Props) {
 
       {/* Input row */}
       <div className="flex items-center gap-2 bg-[hsl(220_20%_7%)] px-3 py-2 border-t border-border">
-        <span className="font-mono text-xs text-[hsl(45_90%_70%)] shrink-0">$</span>
+        <span className="font-mono text-xs text-[hsl(45_90%_70%)] shrink-0">{os === "windows" ? ">" : "$"}</span>
         <input
           autoFocus
           value={input}
