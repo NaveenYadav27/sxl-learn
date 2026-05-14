@@ -111,6 +111,8 @@ const App = () => (
             <Route path="/module/:slug" element={<Module />} />
             <Route path="/concept-lab/:moduleSlug/:conceptId" element={<ConceptLab />} />
             <Route path="/module-lab/:moduleSlug" element={<ModuleLab />} />
+            <Route path="/term-labs" element={<TermLabsIndex />} />
+            <Route path="/term-lab/:termKey" element={<TermLab />} />
             <Route path="/defender" element={<Defender />} />
             <Route path="/portal/:sim" element={<PortalSandbox />} />
             <Route path="/purview" element={<Purview />} />
