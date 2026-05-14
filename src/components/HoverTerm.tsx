@@ -4,6 +4,7 @@
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Badge } from "@/components/ui/badge";
 import { findHoverTerm, type HoverTerm } from "@/lib/dockerHoverTerms";
+import { findGlossaryTerm } from "@/lib/techGlossary";
 import { Info, AlertTriangle, ShieldCheck, Building2 } from "lucide-react";
 
 interface Props {
