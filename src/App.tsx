@@ -25,6 +25,8 @@ import SessionPlanDuration from "./pages/SessionPlanDuration.tsx";
 import Module from "./pages/Module.tsx";
 import ConceptLab from "./pages/ConceptLab.tsx";
 import ModuleLab from "./pages/ModuleLab.tsx";
+import TermLab from "./pages/TermLab.tsx";
+import TermLabsIndex from "./pages/TermLabsIndex.tsx";
 import ServiceNowJourney from "./pages/ServiceNowJourney.tsx";
 import SocProgram from "./pages/SocProgram.tsx";
 import ItsmProgram from "./pages/ItsmProgram.tsx";
