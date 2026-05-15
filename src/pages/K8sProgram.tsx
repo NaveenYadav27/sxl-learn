@@ -83,14 +83,19 @@ const K8sProgram = () => (
               Become job-ready on the cloud-native stack. Build Docker images, deploy to a real Kubernetes cluster, expose services and ship a containerized capstone — all in an interactive in-browser terminal.
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
+              <Link to="/module/k8s-containerization-fundamentals">
+                <Button size="lg" className="gap-2 font-semibold bg-shadowx-gold text-black hover:bg-shadowx-gold/90">
+                  Start free 2-hour preview <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
               <a href="#enroll">
-                <Button size="lg" className="gap-2 font-semibold">
-                  Reserve seat for ₹199 <ArrowRight className="h-4 w-4" />
+                <Button size="lg" variant="outline" className="gap-2 font-semibold">
+                  Reserve seat for ₹199
                 </Button>
               </a>
-              <div className="text-sm text-muted-foreground">
-                <span className="text-shadowx-gold font-semibold">1hr Intro Batch · ₹199</span> · full program pricing TBA
-              </div>
+            </div>
+            <div className="mt-3 text-sm text-muted-foreground">
+              No login needed · full course unlocked for 2 hours from your first click
             </div>
             <div className="mt-8 grid grid-cols-3 gap-4 max-w-md">
               <Stat n="5" l="Modules" />
