@@ -112,13 +112,15 @@ export default function LabSimulator() {
   async function markStepDone() {
     if (!currentStep || !attempt || done[currentStep.id]) return;
     setDone((m) => ({ ...m, [currentStep.id]: true }));
-    await supabase.from("step_progress").upsert({
-      attempt_id: attempt.id, step_id: currentStep.id,
-      completed: true, completed_at: new Date().toISOString(), attempts: 1,
-    }, { onConflict: "attempt_id,step_id" });
     const newScore = (attempt.score ?? 0) + (currentStep.points ?? 10);
-    await supabase.from("lab_attempts").update({ score: newScore }).eq("id", attempt.id);
     setAttempt((a: any) => ({ ...a, score: newScore }));
+    if (user && !attempt.anon) {
+      await supabase.from("step_progress").upsert({
+        attempt_id: attempt.id, step_id: currentStep.id,
+        completed: true, completed_at: new Date().toISOString(), attempts: 1,
+      }, { onConflict: "attempt_id,step_id" });
+      await supabase.from("lab_attempts").update({ score: newScore }).eq("id", attempt.id);
+    }
     toast.success(`+${currentStep.points} points`);
     setTimeout(() => { if (idx < steps.length - 1) goto(idx + 1); }, 700);
   }
