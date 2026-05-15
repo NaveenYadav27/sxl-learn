@@ -173,7 +173,9 @@ export default function LabSimulator() {
   if (authLoading) {
     return <div className="min-h-screen p-8"><Skeleton className="h-12 w-1/3" /></div>;
   }
-  if (!user) return <Navigate to="/auth" replace />;
+  // Allow anonymous K8s public-trial visitors; gate everything else.
+  const isK8sLab = !!slug && slug.startsWith("k8s-");
+  if (!user && !isK8sLab) return <Navigate to="/auth" replace />;
   if (loading || !lab) {
     return (
       <div className="min-h-screen p-8 space-y-4">
