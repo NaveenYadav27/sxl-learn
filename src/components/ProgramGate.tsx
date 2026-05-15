@@ -30,8 +30,10 @@ interface Props {
 export function ProgramGate({ program, moduleSlug, children }: Props) {
   const { user, loading: authLoading } = useAuth();
   const { has, loading: accessLoading } = useProgramAccess();
+  const isK8s = program === "k8s";
+  const trial = useK8sTrial();
 
-  if (authLoading || accessLoading) {
+  if (authLoading || accessLoading || (isK8s && user && trial.loading)) {
     return <div className="container py-16 text-center text-muted-foreground text-sm">Loading…</div>;
   }
 
@@ -46,7 +48,42 @@ export function ProgramGate({ program, moduleSlug, children }: Props) {
 
   if (has(program)) return <>{children}</>;
 
+  // K8s 2-hour free trial from first access
+  if (isK8s && trial.active) {
+    return (
+      <>
+        <K8sTrialBanner remainingMs={trial.remainingMs} />
+        {children}
+      </>
+    );
+  }
+
+  if (isK8s && trial.expired) {
+    return <Paywall program={program} trialExpired />;
+  }
+
   return <Paywall program={program} />;
+}
+
+function K8sTrialBanner({ remainingMs }: { remainingMs: number }) {
+  return (
+    <div className="sticky top-0 z-40 border-b border-shadowx-gold/30 bg-shadowx-gold/10 backdrop-blur">
+      <div className="container py-2 flex items-center justify-between gap-3 text-xs sm:text-sm">
+        <div className="flex items-center gap-2 font-medium">
+          <Timer className="h-4 w-4 text-shadowx-gold" />
+          <span>Free 2-hour K8s preview</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-shadowx-gold font-semibold tabular-nums">
+            {formatRemaining(remainingMs)}
+          </span>
+          <Link to="/k8s">
+            <Button size="sm" className="h-7 text-xs">Unlock full access</Button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function Paywall({ program, unauthenticated }: { program: ProgramCode; unauthenticated?: boolean }) {
