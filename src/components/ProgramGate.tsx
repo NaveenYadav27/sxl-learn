@@ -33,8 +33,22 @@ export function ProgramGate({ program, moduleSlug, children }: Props) {
   const isK8s = program === "k8s";
   const trial = useK8sTrial();
 
-  if (authLoading || accessLoading || (isK8s && user && trial.loading)) {
+  if (authLoading || (!isK8s && accessLoading) || (isK8s && trial.loading)) {
     return <div className="container py-16 text-center text-muted-foreground text-sm">Loading…</div>;
+  }
+
+  // K8s: no login required — 2-hour preview from first visit (anon or signed-in)
+  if (isK8s) {
+    if (user && has("k8s")) return <>{children}</>;
+    if (trial.active) {
+      return (
+        <>
+          <K8sTrialBanner remainingMs={trial.remainingMs} />
+          {children}
+        </>
+      );
+    }
+    return <Paywall program={program} trialExpired />;
   }
 
   if (!user) {
