@@ -64,7 +64,7 @@ export default function Lab() {
   const [nextLab, setNextLab] = useState<{ slug: string; title: string } | null>(null);
 
   useEffect(() => {
-    if (!slug || !user) return;
+    if (!slug) return;
     let channel: ReturnType<typeof supabase.channel> | null = null;
     (async () => {
       // 1. Lab + steps
@@ -77,6 +77,15 @@ export default function Lab() {
       if (l.module_id) {
         const { data: m } = await supabase.from("modules").select("slug").eq("id", l.module_id).maybeSingle();
         setModuleSlug(m?.slug ?? null);
+      }
+
+      // Anonymous (K8s public trial): no DB attempt — track progress in local state only.
+      if (!user) {
+        setAttempt({ id: `anon-${l.id}`, lab_id: l.id, score: 0, status: "in_progress", anon: true });
+        setStepProgress({});
+        setCurrentIdx(0);
+        setLoading(false);
+        return;
       }
 
       // 2. Attempt — find existing in-progress or create
