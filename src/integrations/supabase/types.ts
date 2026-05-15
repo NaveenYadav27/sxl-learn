@@ -219,6 +219,24 @@ export type Database = {
         }
         Relationships: []
       }
+      k8s_trials: {
+        Row: {
+          created_at: string
+          started_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          started_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          started_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       lab_attempts: {
         Row: {
           completed_at: string | null

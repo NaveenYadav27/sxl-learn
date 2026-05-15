@@ -2,9 +2,10 @@ import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useProgramAccess } from "@/hooks/useProgramAccess";
+import { useK8sTrial, formatRemaining } from "@/hooks/useK8sTrial";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Lock, Sparkles, ArrowRight } from "lucide-react";
+import { Lock, Sparkles, ArrowRight, Timer } from "lucide-react";
 import {
   programLabels,
   programMarketingPath,
@@ -29,8 +30,10 @@ interface Props {
 export function ProgramGate({ program, moduleSlug, children }: Props) {
   const { user, loading: authLoading } = useAuth();
   const { has, loading: accessLoading } = useProgramAccess();
+  const isK8s = program === "k8s";
+  const trial = useK8sTrial();
 
-  if (authLoading || accessLoading) {
+  if (authLoading || accessLoading || (isK8s && user && trial.loading)) {
     return <div className="container py-16 text-center text-muted-foreground text-sm">Loading…</div>;
   }
 
@@ -45,27 +48,63 @@ export function ProgramGate({ program, moduleSlug, children }: Props) {
 
   if (has(program)) return <>{children}</>;
 
+  // K8s 2-hour free trial from first access
+  if (isK8s && trial.active) {
+    return (
+      <>
+        <K8sTrialBanner remainingMs={trial.remainingMs} />
+        {children}
+      </>
+    );
+  }
+
+  if (isK8s && trial.expired) {
+    return <Paywall program={program} trialExpired />;
+  }
+
   return <Paywall program={program} />;
 }
 
-function Paywall({ program, unauthenticated }: { program: ProgramCode; unauthenticated?: boolean }) {
+function K8sTrialBanner({ remainingMs }: { remainingMs: number }) {
+  return (
+    <div className="sticky top-0 z-40 border-b border-shadowx-gold/30 bg-shadowx-gold/10 backdrop-blur">
+      <div className="container py-2 flex items-center justify-between gap-3 text-xs sm:text-sm">
+        <div className="flex items-center gap-2 font-medium">
+          <Timer className="h-4 w-4 text-shadowx-gold" />
+          <span>Free 2-hour K8s preview</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-shadowx-gold font-semibold tabular-nums">
+            {formatRemaining(remainingMs)}
+          </span>
+          <Link to="/k8s">
+            <Button size="sm" className="h-7 text-xs">Unlock full access</Button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Paywall({ program, unauthenticated, trialExpired }: { program: ProgramCode; unauthenticated?: boolean; trialExpired?: boolean }) {
   return (
     <div className="container py-16">
       <Card className="max-w-xl mx-auto border-primary/30 shadow-elevated">
         <CardContent className="p-8 text-center space-y-5">
           <div className="mx-auto h-14 w-14 rounded-full bg-primary/15 grid place-items-center">
-            <Lock className="h-6 w-6 text-primary" />
+            {trialExpired ? <Timer className="h-6 w-6 text-primary" /> : <Lock className="h-6 w-6 text-primary" />}
           </div>
           <div>
             <div className="text-xs font-mono uppercase tracking-widest text-shadowx-azure">
               {programLabels[program]}
             </div>
             <h1 className="font-display text-2xl md:text-3xl font-bold mt-2">
-              This content is part of the full program
+              {trialExpired ? "Your 2-hour free preview has ended" : "This content is part of the full program"}
             </h1>
             <p className="mt-3 text-sm text-muted-foreground">
-              You're previewing <span className="font-medium text-foreground">Module 1 free</span>.
-              Unlock the rest with the 1-hour intro batch at <span className="text-shadowx-gold font-semibold">₹199</span>.
+              {trialExpired
+                ? <>Hope you enjoyed exploring K8s. Unlock lifetime access at <span className="text-shadowx-gold font-semibold">₹199</span>.</>
+                : <>You're previewing <span className="font-medium text-foreground">Module 1 free</span>. Unlock the rest with the 1-hour intro batch at <span className="text-shadowx-gold font-semibold">₹199</span>.</>}
             </p>
           </div>
 
