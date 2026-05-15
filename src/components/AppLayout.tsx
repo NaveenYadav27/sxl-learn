@@ -31,9 +31,11 @@ interface Props {
   actions?: ReactNode;
   /** When true, skip the program-access gate (used by /pending and admin pages). */
   skipAccessGate?: boolean;
+  /** When true, allow anonymous visitors (used by K8s 2-hour public trial). */
+  publicTrial?: boolean;
 }
 
-export function AppLayout({ children, title, breadcrumb, actions, skipAccessGate }: Props) {
+export function AppLayout({ children, title, breadcrumb, actions, skipAccessGate, publicTrial }: Props) {
   const { user, loading, isAdmin } = useAuth();
   const { hasAny, loading: accessLoading } = useProgramAccess();
   const [sidebarOpen, setSidebarOpen] = useAutoSidebarOpen();
@@ -46,8 +48,9 @@ export function AppLayout({ children, title, breadcrumb, actions, skipAccessGate
       </div>
     );
   }
-  if (!user) return <Navigate to="/auth" replace />;
-  if (!skipAccessGate && !isAdmin && !hasAny) return <Navigate to="/pending" replace />;
+  if (!user && !publicTrial) return <Navigate to="/auth" replace />;
+  if (user && !skipAccessGate && !publicTrial && !isAdmin && !hasAny) return <Navigate to="/pending" replace />;
+
 
   return (
     <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
