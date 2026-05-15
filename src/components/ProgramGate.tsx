@@ -72,10 +72,6 @@ export function ProgramGate({ program, moduleSlug, children }: Props) {
     );
   }
 
-  if (isK8s && trial.expired) {
-    return <Paywall program={program} trialExpired />;
-  }
-
   return <Paywall program={program} />;
 }
 
