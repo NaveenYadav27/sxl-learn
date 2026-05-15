@@ -149,19 +149,20 @@ export default function Lab() {
     if (!currentStep || !attempt || stepProgress[currentStep.id]) return;
     setStepProgress((m) => ({ ...m, [currentStep.id]: true }));
 
-    // upsert step_progress
-    await supabase.from("step_progress").upsert({
-      attempt_id: attempt.id,
-      step_id: currentStep.id,
-      completed: true,
-      completed_at: new Date().toISOString(),
-      attempts: 1,
-    }, { onConflict: "attempt_id,step_id" });
-
-    // bump attempt score
     const newScore = (attempt.score ?? 0) + (currentStep.points ?? 10);
-    await supabase.from("lab_attempts").update({ score: newScore }).eq("id", attempt.id);
     setAttempt((a: any) => ({ ...a, score: newScore }));
+
+    // Persist only for signed-in users
+    if (user && !attempt.anon) {
+      await supabase.from("step_progress").upsert({
+        attempt_id: attempt.id,
+        step_id: currentStep.id,
+        completed: true,
+        completed_at: new Date().toISOString(),
+        attempts: 1,
+      }, { onConflict: "attempt_id,step_id" });
+      await supabase.from("lab_attempts").update({ score: newScore }).eq("id", attempt.id);
+    }
 
     toast.success(`+${currentStep.points} points`, { icon: <Sparkles className="h-4 w-4 text-primary" /> });
 
