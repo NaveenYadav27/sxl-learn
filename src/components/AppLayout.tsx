@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation, useParams } from "react-router-dom";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { NotificationBanner } from "@/components/NotificationBanner";
@@ -31,14 +31,26 @@ interface Props {
   actions?: ReactNode;
   /** When true, skip the program-access gate (used by /pending and admin pages). */
   skipAccessGate?: boolean;
+  /** When true, allow anonymous visitors (used by K8s 2-hour public trial). */
+  publicTrial?: boolean;
 }
 
-export function AppLayout({ children, title, breadcrumb, actions, skipAccessGate }: Props) {
+export function AppLayout({ children, title, breadcrumb, actions, skipAccessGate, publicTrial }: Props) {
   const { user, loading, isAdmin } = useAuth();
   const { hasAny, loading: accessLoading } = useProgramAccess();
   const [sidebarOpen, setSidebarOpen] = useAutoSidebarOpen();
+  const location = useLocation();
+  const params = useParams();
 
-  if (loading || (user && !skipAccessGate && accessLoading)) {
+  // Auto-detect K8s public-trial routes (no login required for the 2-hour preview)
+  const slugLike = (params.slug || params.termKey || params.conceptId || "") as string;
+  const isK8sRoute =
+    slugLike.startsWith("k8s-") ||
+    /\/(module|module-lab|lab|concept-lab|term-lab)\/k8s-/.test(location.pathname) ||
+    location.pathname.startsWith("/term-labs");
+  const allowAnon = publicTrial || isK8sRoute;
+
+  if (loading || (user && !skipAccessGate && !allowAnon && accessLoading)) {
     return (
       <div className="min-h-screen p-8 space-y-4">
         <Skeleton className="h-12 w-1/3" />
@@ -46,8 +58,9 @@ export function AppLayout({ children, title, breadcrumb, actions, skipAccessGate
       </div>
     );
   }
-  if (!user) return <Navigate to="/auth" replace />;
-  if (!skipAccessGate && !isAdmin && !hasAny) return <Navigate to="/pending" replace />;
+  if (!user && !allowAnon) return <Navigate to="/auth" replace />;
+  if (user && !skipAccessGate && !allowAnon && !isAdmin && !hasAny) return <Navigate to="/pending" replace />;
+
 
   return (
     <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
