@@ -19,15 +19,15 @@ export function useK8sTrial() {
   useEffect(() => {
     let cancelled = false;
 
-    // Anonymous: localStorage-based trial
+    // Anonymous: sessionStorage-based trial (resets when browser/tab closes)
     if (!user) {
       try {
-        const stored = localStorage.getItem(LS_KEY);
+        const stored = sessionStorage.getItem(LS_KEY);
         if (stored) {
           setStartedAt(new Date(stored));
         } else {
           const startIso = new Date().toISOString();
-          localStorage.setItem(LS_KEY, startIso);
+          sessionStorage.setItem(LS_KEY, startIso);
           setStartedAt(new Date(startIso));
         }
       } catch {
