@@ -50,13 +50,21 @@ export default function LabSimulator() {
   const [idx, setIdx] = useState(Number.isFinite(stepParam) ? stepParam : 0);
 
   useEffect(() => {
-    if (!slug || !user) return;
+    if (!slug) return;
     let channel: ReturnType<typeof supabase.channel> | null = null;
     (async () => {
       const { data: l } = await supabase.from("labs").select("*").eq("slug", slug).maybeSingle();
       if (!l) { toast.error("Lab not found"); return; }
       const { data: s } = await supabase.from("lab_steps").select("*").eq("lab_id", l.id).order("step_number");
       setLab(l); setSteps(s ?? []);
+
+      // Anonymous (K8s public trial): no DB attempt — local progress only.
+      if (!user) {
+        setAttempt({ id: `anon-${l.id}`, lab_id: l.id, score: 0, status: "in_progress", anon: true });
+        setDone({});
+        setLoading(false);
+        return;
+      }
 
       const { data: existing } = await supabase
         .from("lab_attempts").select("*")
@@ -104,13 +112,15 @@ export default function LabSimulator() {
   async function markStepDone() {
     if (!currentStep || !attempt || done[currentStep.id]) return;
     setDone((m) => ({ ...m, [currentStep.id]: true }));
-    await supabase.from("step_progress").upsert({
-      attempt_id: attempt.id, step_id: currentStep.id,
-      completed: true, completed_at: new Date().toISOString(), attempts: 1,
-    }, { onConflict: "attempt_id,step_id" });
     const newScore = (attempt.score ?? 0) + (currentStep.points ?? 10);
-    await supabase.from("lab_attempts").update({ score: newScore }).eq("id", attempt.id);
     setAttempt((a: any) => ({ ...a, score: newScore }));
+    if (user && !attempt.anon) {
+      await supabase.from("step_progress").upsert({
+        attempt_id: attempt.id, step_id: currentStep.id,
+        completed: true, completed_at: new Date().toISOString(), attempts: 1,
+      }, { onConflict: "attempt_id,step_id" });
+      await supabase.from("lab_attempts").update({ score: newScore }).eq("id", attempt.id);
+    }
     toast.success(`+${currentStep.points} points`);
     setTimeout(() => { if (idx < steps.length - 1) goto(idx + 1); }, 700);
   }
@@ -163,7 +173,9 @@ export default function LabSimulator() {
   if (authLoading) {
     return <div className="min-h-screen p-8"><Skeleton className="h-12 w-1/3" /></div>;
   }
-  if (!user) return <Navigate to="/auth" replace />;
+  // Allow anonymous K8s public-trial visitors; gate everything else.
+  const isK8sLab = !!slug && slug.startsWith("k8s-");
+  if (!user && !isK8sLab) return <Navigate to="/auth" replace />;
   if (loading || !lab) {
     return (
       <div className="min-h-screen p-8 space-y-4">
