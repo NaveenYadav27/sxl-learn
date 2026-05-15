@@ -28,7 +28,18 @@ export function OpsLayout() {
       </div>
     );
   }
-  if (!user) return <Navigate to="/auth" replace />;
+  // Allow anonymous access during K8s 2-hour public trial
+  if (!user) {
+    const trialStart = (() => {
+      try { return sessionStorage.getItem("shadowx.k8sTrialStartedAt"); } catch { return null; }
+    })();
+    if (!trialStart) {
+      try { sessionStorage.setItem("shadowx.k8sTrialStartedAt", new Date().toISOString()); } catch { /* ignore */ }
+    } else {
+      const elapsed = Date.now() - new Date(trialStart).getTime();
+      if (elapsed > 2 * 60 * 60 * 1000) return <Navigate to="/k8s" replace />;
+    }
+  }
 
   return (
     <div className="ops-theme flex h-screen w-full overflow-hidden bg-[hsl(var(--ops-bg))] text-[hsl(var(--ops-fg))]">
