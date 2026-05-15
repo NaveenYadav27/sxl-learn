@@ -86,24 +86,25 @@ function K8sTrialBanner({ remainingMs }: { remainingMs: number }) {
   );
 }
 
-function Paywall({ program, unauthenticated }: { program: ProgramCode; unauthenticated?: boolean }) {
+function Paywall({ program, unauthenticated, trialExpired }: { program: ProgramCode; unauthenticated?: boolean; trialExpired?: boolean }) {
   return (
     <div className="container py-16">
       <Card className="max-w-xl mx-auto border-primary/30 shadow-elevated">
         <CardContent className="p-8 text-center space-y-5">
           <div className="mx-auto h-14 w-14 rounded-full bg-primary/15 grid place-items-center">
-            <Lock className="h-6 w-6 text-primary" />
+            {trialExpired ? <Timer className="h-6 w-6 text-primary" /> : <Lock className="h-6 w-6 text-primary" />}
           </div>
           <div>
             <div className="text-xs font-mono uppercase tracking-widest text-shadowx-azure">
               {programLabels[program]}
             </div>
             <h1 className="font-display text-2xl md:text-3xl font-bold mt-2">
-              This content is part of the full program
+              {trialExpired ? "Your 2-hour free preview has ended" : "This content is part of the full program"}
             </h1>
             <p className="mt-3 text-sm text-muted-foreground">
-              You're previewing <span className="font-medium text-foreground">Module 1 free</span>.
-              Unlock the rest with the 1-hour intro batch at <span className="text-shadowx-gold font-semibold">₹199</span>.
+              {trialExpired
+                ? <>Hope you enjoyed exploring K8s. Unlock lifetime access at <span className="text-shadowx-gold font-semibold">₹199</span>.</>
+                : <>You're previewing <span className="font-medium text-foreground">Module 1 free</span>. Unlock the rest with the 1-hour intro batch at <span className="text-shadowx-gold font-semibold">₹199</span>.</>}
             </p>
           </div>
 
