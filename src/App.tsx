@@ -67,6 +67,8 @@ import ClustersList from "./ops/modules/k8s/ClustersList.tsx";
 import WorkloadsList from "./ops/modules/k8s/WorkloadsList.tsx";
 import PodsList from "./ops/modules/k8s/PodsList.tsx";
 import ContainersList from "./ops/modules/k8s/ContainersList.tsx";
+import K8sIncidentsList from "./ops/modules/k8s/IncidentsList.tsx";
+import K8sIncidentDetail from "./ops/modules/k8s/IncidentDetail.tsx";
 import PipelinesList from "./ops/modules/devops/PipelinesList.tsx";
 import DeploymentsList from "./ops/modules/devops/DeploymentsList.tsx";
 import RepositoriesList from "./ops/modules/devops/RepositoriesList.tsx";
@@ -147,6 +149,8 @@ const App = () => (
               <Route path="k8s/workloads" element={<WorkloadsList />} />
               <Route path="k8s/pods" element={<PodsList />} />
               <Route path="k8s/containers" element={<ContainersList />} />
+              <Route path="k8s-incidents" element={<K8sIncidentsList />} />
+              <Route path="k8s-incidents/:id" element={<K8sIncidentDetail />} />
               <Route path="devops" element={<PipelinesList />} />
               <Route path="devops/pipelines" element={<PipelinesList />} />
               <Route path="devops/deployments" element={<DeploymentsList />} />
