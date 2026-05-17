@@ -40,8 +40,9 @@ import { LabCompletionModal } from "@/components/LabCompletionModal";
 import { PdiDeepLink } from "@/components/PdiDeepLink";
 import { awardBadgesForUser } from "@/lib/badges";
 import {
-  CheckCircle2, Circle, ChevronRight, Clock, Target, Sparkles, Trophy, ArrowLeft, Lightbulb, ExternalLink, BookOpen, Maximize2,
+  CheckCircle2, Circle, ChevronRight, Clock, Target, Sparkles, Trophy, ArrowLeft, Lightbulb, ExternalLink, BookOpen, Maximize2, AlertOctagon,
 } from "lucide-react";
+import { K8S_LAB_TO_INCIDENT } from "@/ops/modules/k8s/incidentsData";
 import { toast } from "sonner";
 
 import { ProgramGate } from "@/components/ProgramGate";
