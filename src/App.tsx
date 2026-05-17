@@ -67,6 +67,8 @@ import ClustersList from "./ops/modules/k8s/ClustersList.tsx";
 import WorkloadsList from "./ops/modules/k8s/WorkloadsList.tsx";
 import PodsList from "./ops/modules/k8s/PodsList.tsx";
 import ContainersList from "./ops/modules/k8s/ContainersList.tsx";
+import K8sIncidentsList from "./ops/modules/k8s/IncidentsList.tsx";
+import K8sIncidentDetail from "./ops/modules/k8s/IncidentDetail.tsx";
 import PipelinesList from "./ops/modules/devops/PipelinesList.tsx";
 import DeploymentsList from "./ops/modules/devops/DeploymentsList.tsx";
 import RepositoriesList from "./ops/modules/devops/RepositoriesList.tsx";
