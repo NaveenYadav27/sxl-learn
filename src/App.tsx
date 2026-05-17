@@ -149,6 +149,8 @@ const App = () => (
               <Route path="k8s/workloads" element={<WorkloadsList />} />
               <Route path="k8s/pods" element={<PodsList />} />
               <Route path="k8s/containers" element={<ContainersList />} />
+              <Route path="k8s-incidents" element={<K8sIncidentsList />} />
+              <Route path="k8s-incidents/:id" element={<K8sIncidentDetail />} />
               <Route path="devops" element={<PipelinesList />} />
               <Route path="devops/pipelines" element={<PipelinesList />} />
               <Route path="devops/deployments" element={<DeploymentsList />} />
