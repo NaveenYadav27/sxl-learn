@@ -657,4 +657,16 @@ export const K8S_LAB_TO_INCIDENT: Record<string, string> = {
   "k8s-rolling-update": "K8S-INC-1028",
   "k8s-expose-service": "K8S-INC-1029",
   "k8s-build-tag-image": "K8S-INC-1030",
+  "k8s-container-lifecycle": "K8S-INC-1032",
+  "k8s-pull-run-inspect": "K8S-INC-1033",
 };
+
+// Curriculum module index — used by the list page filter.
+export const K8S_MODULES: { code: K8sModuleCode; title: string }[] = [
+  { code: "K8S-M1", title: "M1 · Containerization Fundamentals & Docker Architecture" },
+  { code: "K8S-M2", title: "M2 · Building Docker Images & Containerized Apps" },
+  { code: "K8S-M3", title: "M3 · Kubernetes Fundamentals & Pod Architecture" },
+  { code: "K8S-M4", title: "M4 · Deployments & Service Exposure" },
+  { code: "K8S-M5", title: "M5 · Monitoring, Troubleshooting & Capstone Prep" },
+];
+
