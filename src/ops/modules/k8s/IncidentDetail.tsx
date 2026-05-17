@@ -81,6 +81,20 @@ export default function K8sIncidentDetail() {
         }
       />
 
+      {/* Curriculum alignment strip */}
+      <div className="mx-4 mt-3 flex flex-wrap items-center justify-between gap-2 rounded-md border border-[hsl(var(--ops-accent)/0.4)] bg-[hsl(var(--ops-accent)/0.08)] px-3 py-2 text-[12px]">
+        <div className="inline-flex items-center gap-1.5 text-[hsl(var(--ops-fg))]">
+          <BookOpen className="h-3.5 w-3.5 text-[hsl(var(--ops-accent))]" />
+          <span className="text-[hsl(var(--ops-muted-fg))]">Curriculum module:</span>
+          <span className="font-semibold">{n.module_title}</span>
+        </div>
+        {n.lab_slug && (
+          <Link to={`/lab/${n.lab_slug}/sim`} className="inline-flex items-center gap-1 text-[hsl(var(--ops-accent))] hover:underline">
+            Open the matching lab <ExternalLink className="h-3 w-3" />
+          </Link>
+        )}
+      </div>
+
       <div className="grid gap-3 p-4 lg:grid-cols-[1fr_320px]">
         <div className="flex flex-col gap-3">
           {/* Analyst briefing — yellow card */}
