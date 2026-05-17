@@ -72,6 +72,22 @@ export default function K8sIncidentsList() {
           </div>
         </div>
 
+        {/* Module strip — curriculum alignment */}
+        <div className="rounded-md border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel))] p-3">
+          <div className="mb-2 inline-flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-[hsl(var(--ops-muted-fg))]">
+            <BookOpen className="h-3.5 w-3.5" /> Aligned to K8s curriculum modules
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            <ModChip active={mod === "all"} onClick={() => setMod("all")} label={`All (${K8S_INCIDENTS.length})`} />
+            {K8S_MODULES.map((m) => {
+              const c = K8S_INCIDENTS.filter((i) => i.module === m.code).length;
+              return (
+                <ModChip key={m.code} active={mod === m.code} onClick={() => setMod(m.code)} label={`${m.code} · ${c}`} title={m.title} />
+              );
+            })}
+          </div>
+        </div>
+
         {/* Filters */}
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <FilterSelect label="Severity" value={sev} onChange={(v) => setSev(v as typeof sev)}
@@ -87,9 +103,12 @@ export default function K8sIncidentsList() {
               <li key={i.id}>
                 <Link
                   to={`/ops/k8s-incidents/${i.id}`}
-                  className="grid grid-cols-[100px_1fr_180px_120px_90px] items-center gap-3 px-4 py-3 text-[12px] hover:bg-[hsl(var(--ops-panel-2))]"
+                  className="grid grid-cols-[100px_70px_1fr_180px_120px_90px] items-center gap-3 px-4 py-3 text-[12px] hover:bg-[hsl(var(--ops-panel-2))]"
                 >
                   <span className="font-mono text-[hsl(var(--ops-muted-fg))]">{i.id}</span>
+                  <span className="rounded-sm border border-[hsl(var(--ops-accent)/0.4)] bg-[hsl(var(--ops-accent)/0.10)] px-1.5 py-0.5 text-center font-mono text-[10px] text-[hsl(var(--ops-accent))]" title={i.module_title}>
+                    {i.module}
+                  </span>
                   <span className="flex items-center gap-2 text-[hsl(var(--ops-fg))]">
                     <AlertOctagon className="h-3.5 w-3.5 text-[hsl(var(--ops-warning))]" />
                     {i.title}
