@@ -75,6 +75,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { label: "Workloads", to: "/ops/k8s/workloads", icon: Boxes, enabled: true },
       { label: "Pods", to: "/ops/k8s/pods", icon: Server, enabled: true },
       { label: "Docker", to: "/ops/k8s/containers", icon: Container, enabled: true },
+      { label: "K8s Incidents", to: "/ops/k8s-incidents", icon: AlertOctagon, enabled: true, badge: "NEW" },
     ],
   },
   {
