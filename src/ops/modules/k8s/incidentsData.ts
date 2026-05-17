@@ -56,6 +56,8 @@ export interface CveRow {
   title: string;
 }
 
+export type K8sModuleCode = "K8S-M1" | "K8S-M2" | "K8S-M3" | "K8S-M4" | "K8S-M5";
+
 export interface K8sIncident {
   id: string;
   title: string;
@@ -65,11 +67,19 @@ export interface K8sIncident {
   cluster: string;
   namespace: string;
   service: string;
+
+  // Curriculum alignment — every incident maps to one K8s module.
+  module: K8sModuleCode;
+  module_title: string;
+
   detected_at: string;            // ISO
   last_event_at: string;          // ISO
   failure_chain: string;          // "Build -> Push -> Deploy"
   current_phase: K8sPhaseId;
   failed_phases: K8sPhaseId[];
+
+  // Optional per-incident overrides for any of the 10 DevOps phases.
+  phase_walkthrough?: Partial<Record<K8sPhaseId, string>>;
 
   // 5W1H briefing
   briefing: {
