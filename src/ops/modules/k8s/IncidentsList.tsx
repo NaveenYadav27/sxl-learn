@@ -2,8 +2,8 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { PageHeader } from "@/ops/components/PageHeader";
 import { SectionCard } from "@/ops/components/SectionCard";
-import { K8S_INCIDENTS, type K8sIncidentSeverity, type K8sIncidentStatus } from "./incidentsData";
-import { AlertOctagon, ExternalLink } from "lucide-react";
+import { K8S_INCIDENTS, K8S_MODULES, type K8sIncidentSeverity, type K8sIncidentStatus, type K8sModuleCode } from "./incidentsData";
+import { AlertOctagon, BookOpen, ExternalLink } from "lucide-react";
 
 const SEV_TOKEN: Record<K8sIncidentSeverity, string> = {
   critical: "bg-[hsl(var(--ops-critical)/0.18)] text-[hsl(var(--ops-critical))] border-[hsl(var(--ops-critical)/0.5)]",
