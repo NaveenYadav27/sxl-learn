@@ -270,7 +270,7 @@ export default function K8sIncidentDetail() {
                 <span className={`rounded-sm border px-1.5 py-0.5 text-[10px] font-semibold uppercase ${SEV_TOKEN[n.severity]}`}>{n.severity}</span>
               </Field>
               <Field label="Status"><span className="capitalize text-[13px]">{n.status.replace("_", " ")}</span></Field>
-              <Field label="Owner"><AssigneeChip assignee={{ name: n.owner, group: "K8s Ops" }} /></Field>
+              <Field label="Owner"><AssigneeChip assignee={{ id: n.owner, name: n.owner, group: "K8s Ops" }} /></Field>
               <Field label="Cluster"><span className="font-mono text-[12px]">{n.cluster}</span></Field>
               <Field label="Namespace"><span className="font-mono text-[12px]">{n.namespace}</span></Field>
               <Field label="Service"><span className="font-mono text-[12px]">{n.service}</span></Field>
