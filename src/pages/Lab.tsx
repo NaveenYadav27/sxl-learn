@@ -242,6 +242,13 @@ export default function Lab() {
         <div className="flex items-center gap-2 text-xs">
           <Badge variant="outline"><Clock className="h-3 w-3 mr-1" />{lab.duration_min} min</Badge>
           <Badge variant="outline"><Trophy className="h-3 w-3 mr-1" />{attempt?.score ?? 0} pts</Badge>
+          {lab.slug.startsWith("k8s-") && K8S_LAB_TO_INCIDENT[lab.slug] && (
+            <Link to={`/ops/k8s-incidents/${K8S_LAB_TO_INCIDENT[lab.slug]}`}>
+              <Button variant="outline" size="sm" className="h-7 gap-1">
+                <AlertOctagon className="h-3 w-3" /> View in Ops Console
+              </Button>
+            </Link>
+          )}
           <a
             href={`/lab/${lab.slug}/sim?step=${currentIdx}`}
             target="_blank"
