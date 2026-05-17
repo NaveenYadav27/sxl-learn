@@ -6,7 +6,8 @@ import { OpsTabs } from "@/ops/components/OpsTabs";
 import { EmptyState } from "@/ops/components/EmptyState";
 import { AssigneeChip } from "@/ops/components/AssigneeChip";
 import { findK8sIncident, K8S_PHASES, type K8sIncidentSeverity, type K8sPhaseId } from "./incidentsData";
-import { ArrowLeft, ChevronRight, ExternalLink, Lightbulb, ShieldAlert, Boxes } from "lucide-react";
+import { TOOL_CATALOG, PHASE_DEFAULTS } from "./toolStack";
+import { ArrowLeft, ChevronRight, ExternalLink, Lightbulb, ShieldAlert, Boxes, BookOpen, Wrench } from "lucide-react";
 
 const SEV_TOKEN: Record<K8sIncidentSeverity, string> = {
   critical: "bg-[hsl(var(--ops-critical)/0.18)] text-[hsl(var(--ops-critical))] border-[hsl(var(--ops-critical)/0.5)]",
@@ -79,6 +80,20 @@ export default function K8sIncidentDetail() {
           </>
         }
       />
+
+      {/* Curriculum alignment strip */}
+      <div className="mx-4 mt-3 flex flex-wrap items-center justify-between gap-2 rounded-md border border-[hsl(var(--ops-accent)/0.4)] bg-[hsl(var(--ops-accent)/0.08)] px-3 py-2 text-[12px]">
+        <div className="inline-flex items-center gap-1.5 text-[hsl(var(--ops-fg))]">
+          <BookOpen className="h-3.5 w-3.5 text-[hsl(var(--ops-accent))]" />
+          <span className="text-[hsl(var(--ops-muted-fg))]">Curriculum module:</span>
+          <span className="font-semibold">{n.module_title}</span>
+        </div>
+        {n.lab_slug && (
+          <Link to={`/lab/${n.lab_slug}/sim`} className="inline-flex items-center gap-1 text-[hsl(var(--ops-accent))] hover:underline">
+            Open the matching lab <ExternalLink className="h-3 w-3" />
+          </Link>
+        )}
+      </div>
 
       <div className="grid gap-3 p-4 lg:grid-cols-[1fr_320px]">
         <div className="flex flex-col gap-3">
@@ -180,6 +195,89 @@ export default function K8sIncidentDetail() {
             <div className="border-t border-[hsl(var(--ops-border))] px-3 py-2 text-[11px] text-[hsl(var(--ops-muted-fg))]">
               Current phase: <span className="font-semibold text-[hsl(var(--ops-fg))]">{K8S_PHASES[phaseIdx]?.label}</span> · failed: {n.failed_phases.map((id) => K8S_PHASES.find((p) => p.id === id)?.label).join(", ")}
             </div>
+          </SectionCard>
+
+          {/* Full DevOps cycle walkthrough — every phase explained */}
+          <SectionCard
+            title="DevOps cycle walkthrough"
+            description="How each of the 10 phases applies to this specific incident."
+            bodyClassName="p-0"
+          >
+            <ol className="divide-y divide-[hsl(var(--ops-border))]">
+              {K8S_PHASES.map((p, idx) => {
+                const failed = failedSet.has(p.id);
+                const current = p.id === n.current_phase;
+                const text = n.phase_walkthrough?.[p.id] ?? PHASE_DEFAULTS[p.id];
+                const tag = failed ? "FAILED" : current ? "CURRENT" : idx < phaseIdx ? "PASSED" : "PENDING";
+                const tagCls = failed
+                  ? "border-[hsl(var(--ops-critical)/0.5)] bg-[hsl(var(--ops-critical)/0.15)] text-[hsl(var(--ops-critical))]"
+                  : current
+                  ? "border-[hsl(var(--ops-warning)/0.5)] bg-[hsl(var(--ops-warning)/0.15)] text-[hsl(var(--ops-warning))]"
+                  : idx < phaseIdx
+                  ? "border-[hsl(var(--ops-success)/0.4)] bg-[hsl(var(--ops-success)/0.12)] text-[hsl(var(--ops-success))]"
+                  : "border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] text-[hsl(var(--ops-muted-fg))]";
+                return (
+                  <li key={p.id} className="grid grid-cols-[48px_140px_1fr_90px] items-start gap-3 px-4 py-3 text-[12px]">
+                    <span className="font-mono text-[11px] text-[hsl(var(--ops-muted-fg))]">{String(idx + 1).padStart(2, "0")}</span>
+                    <div>
+                      <div className="font-semibold text-[hsl(var(--ops-fg))]">{p.label}</div>
+                      <div className="text-[11px] text-[hsl(var(--ops-muted-fg))]">{p.hint}</div>
+                    </div>
+                    <div className="leading-relaxed text-[hsl(var(--ops-fg))]">{text}</div>
+                    <span className={`inline-flex w-fit items-center justify-center rounded-sm border px-1.5 py-0.5 text-[10px] font-semibold uppercase ${tagCls}`}>{tag}</span>
+                  </li>
+                );
+              })}
+            </ol>
+          </SectionCard>
+
+          {/* Tool stack — explain every aligned tool */}
+          <SectionCard bodyClassName="p-0">
+            <div className="flex items-center justify-between border-b border-[hsl(var(--ops-border))] px-4 py-2.5">
+              <div className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[hsl(var(--ops-fg))]">
+                <Wrench className="h-3.5 w-3.5 text-[hsl(var(--ops-accent))]" /> Tool stack · {n.aligned_tools.length} tools in play
+              </div>
+              <div className="text-[11px] text-[hsl(var(--ops-muted-fg))]">Each tool mapped to its DevOps phase and curriculum module.</div>
+            </div>
+            <ul className="divide-y divide-[hsl(var(--ops-border))]">
+              {n.aligned_tools.map((t) => {
+                const d = TOOL_CATALOG[t];
+                if (!d) return null;
+                return (
+                  <li key={t} className="grid gap-2 px-4 py-3 text-[12px] md:grid-cols-[200px_1fr]">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className="rounded-sm border border-[hsl(var(--ops-accent)/0.5)] bg-[hsl(var(--ops-accent)/0.15)] px-1.5 py-0.5 text-[11px] font-semibold text-[hsl(var(--ops-accent))]">
+                          {d.tool}
+                        </span>
+                        <span className="rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] px-1.5 py-0.5 text-[10px] uppercase text-[hsl(var(--ops-muted-fg))]">
+                          {d.category}
+                        </span>
+                      </div>
+                      <div className="text-[11px] text-[hsl(var(--ops-muted-fg))]">{d.module_title}</div>
+                      <div className="flex flex-wrap gap-1">
+                        {d.phases.map((ph) => (
+                          <span key={ph} className="rounded-sm border border-[hsl(var(--ops-border))] px-1 py-0.5 text-[10px] text-[hsl(var(--ops-muted-fg))]">
+                            {K8S_PHASES.find((x) => x.id === ph)?.label}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="space-y-1.5">
+                      <div className="leading-relaxed text-[hsl(var(--ops-fg))]">{d.purpose}</div>
+                      <div className="text-[11px] italic text-[hsl(var(--ops-muted-fg))]">Why it matters: {d.why_it_matters}</div>
+                      <div className="flex flex-wrap gap-1 pt-0.5">
+                        {d.commands.map((c) => (
+                          <code key={c} className="rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] px-1.5 py-0.5 font-mono text-[10.5px] text-[hsl(var(--ops-fg))]">
+                            {c}
+                          </code>
+                        ))}
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
           </SectionCard>
 
           {/* Cross-tool enrichment */}

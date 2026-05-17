@@ -56,6 +56,8 @@ export interface CveRow {
   title: string;
 }
 
+export type K8sModuleCode = "K8S-M1" | "K8S-M2" | "K8S-M3" | "K8S-M4" | "K8S-M5";
+
 export interface K8sIncident {
   id: string;
   title: string;
@@ -65,11 +67,19 @@ export interface K8sIncident {
   cluster: string;
   namespace: string;
   service: string;
+
+  // Curriculum alignment — every incident maps to one K8s module.
+  module: K8sModuleCode;
+  module_title: string;
+
   detected_at: string;            // ISO
   last_event_at: string;          // ISO
   failure_chain: string;          // "Build -> Push -> Deploy"
   current_phase: K8sPhaseId;
   failed_phases: K8sPhaseId[];
+
+  // Optional per-incident overrides for any of the 10 DevOps phases.
+  phase_walkthrough?: Partial<Record<K8sPhaseId, string>>;
 
   // 5W1H briefing
   briefing: {
@@ -114,6 +124,8 @@ export const K8S_INCIDENTS: K8sIncident[] = [
     cluster: "prod-use1",
     namespace: "payments",
     service: "payments-api",
+    module: "K8S-M2",
+    module_title: "M2 · Building Docker Images & Containerized Apps",
     detected_at: iso(8),
     last_event_at: iso(1),
     failure_chain: "Push → Deploy → Schedule → Run",
@@ -171,6 +183,8 @@ payments_api_http_requests_per_min                              4,120 (served by
     cluster: "prod-use1",
     namespace: "commerce",
     service: "checkout-svc",
+    module: "K8S-M5",
+    module_title: "M5 · Monitoring, Troubleshooting & Capstone Prep",
     detected_at: iso(22),
     last_event_at: iso(2),
     failure_chain: "Deploy → Run → Observe",
@@ -228,6 +242,8 @@ http_5xx_total{service="checkout-svc"}                          1,883 / 5m`,
     cluster: "prod-euw1",
     namespace: "commerce",
     service: "search-api",
+    module: "K8S-M5",
+    module_title: "M5 · Monitoring, Troubleshooting & Capstone Prep",
     detected_at: iso(35),
     last_event_at: iso(3),
     failure_chain: "Run → Observe",
@@ -283,6 +299,8 @@ search_api_p99_latency_ms                             842 (SLO 400)`,
     cluster: "prod-euw1",
     namespace: "platform",
     service: "ingress-nginx",
+    module: "K8S-M3",
+    module_title: "M3 · Kubernetes Fundamentals & Pod Architecture",
     detected_at: iso(15),
     last_event_at: iso(2),
     failure_chain: "Deploy → Schedule",
@@ -329,6 +347,8 @@ node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes (avg)     0.04`,
     cluster: "prod-use1",
     namespace: "commerce",
     service: "orders-api",
+    module: "K8S-M4",
+    module_title: "M4 · Deployments & Service Exposure",
     detected_at: iso(11),
     last_event_at: iso(1),
     failure_chain: "Deploy → Run → Observe",
@@ -379,6 +399,8 @@ deployment_rollout_seconds                                            660`,
     cluster: "stg-use1",
     namespace: "qa",
     service: "billing-api",
+    module: "K8S-M4",
+    module_title: "M4 · Deployments & Service Exposure",
     detected_at: iso(180),
     last_event_at: iso(120),
     failure_chain: "Deploy → Run",
@@ -430,6 +452,8 @@ http_502_total{service="billing-api"}                                    417`,
     cluster: "ci-runner",
     namespace: "ci",
     service: "payments-api (build)",
+    module: "K8S-M2",
+    module_title: "M2 · Building Docker Images & Containerized Apps",
     detected_at: iso(6),
     last_event_at: iso(1),
     failure_chain: "Code → Build",
@@ -485,6 +509,8 @@ ci_build_duration_seconds{step="apt"}        14.2`,
     cluster: "ci-runner",
     namespace: "ci",
     service: "payments-api (push)",
+    module: "K8S-M2",
+    module_title: "M2 · Building Docker Images & Containerized Apps",
     detected_at: iso(4),
     last_event_at: iso(1),
     failure_chain: "Build → Push",
@@ -521,6 +547,102 @@ denied: permission_denied: write_package`,
     ],
     lab_slug: "k8s-push-to-registry",
   },
+
+  {
+    id: "K8S-INC-1032",
+    title: "Container exited (137) — runtime killed by host OOM",
+    severity: "medium",
+    status: "open",
+    owner: "platform-oncall",
+    cluster: "lab-docker-01",
+    namespace: "docker-host",
+    service: "nginx-demo",
+    module: "K8S-M1",
+    module_title: "M1 · Containerization Fundamentals & Docker Architecture",
+    detected_at: iso(45),
+    last_event_at: iso(2),
+    failure_chain: "Run → Observe",
+    current_phase: "run",
+    failed_phases: ["run"],
+    briefing: {
+      who: "Standalone Docker container nginx-demo on lab-docker-01.",
+      what: "Container exited with code 137 — SIGKILL from the host OOM killer.",
+      where: "Docker engine 24.0 on Ubuntu 22.04, no orchestrator.",
+      when: `${iso(45)} — 45m ago.`,
+      why: "Container has no --memory limit; a sibling test container consumed all host RAM and the kernel reaped the lowest-score process.",
+      how: "docker inspect → State.ExitCode=137 OOMKilled=true; dmesg shows oom_reaper for cgroup /docker/...",
+      severity_rationale: "MEDIUM — single-host lab impact; demonstrates why cgroups + memory limits matter before learning K8s.",
+    },
+    description:
+      "A Docker container was killed by the host kernel because no memory limit was set. This is the canonical lesson for namespaces + cgroups before moving to K8s.",
+    original_event: `$ docker inspect nginx-demo --format '{{.State.Status}} ({{.State.ExitCode}}) OOM={{.State.OOMKilled}}'
+exited (137) OOM=true
+$ dmesg | tail
+[ 9842.117] Memory cgroup out of memory: Killed process 4711 (nginx)
+[ 9842.118] oom_reaper: reaped process 4711 (nginx), now anon-rss:0kB`,
+    affected: [
+      { kind: "Container", name: "nginx-demo", detail: "exited (137) OOMKilled=true", action: "Re-run with --memory=256m.", severity: "medium" },
+    ],
+    aligned_tools: ["Docker", "containerd"],
+    data_sources: ["dockerd", "kernel-oom"],
+    logs_sample: `dockerd: container 4f1a died (status 137)
+kernel: Memory cgroup out of memory: Killed process (nginx)`,
+    metrics_sample: `host_mem_available_bytes  near 0
+container_oom_events_total{name="nginx-demo"}  1`,
+    response_actions: ["Set --memory", "Set --memory-swap", "Add restart policy", "Inspect cgroup"],
+    next_steps: [
+      { level: "L1", text: "docker run --memory=256m --memory-swap=256m --restart=on-failure nginx" },
+      { level: "L2", text: "Audit all containers on host for missing limits." },
+      { level: "L3", text: "Move workload to K8s where requests/limits are first-class." },
+    ],
+    lab_slug: "k8s-container-lifecycle",
+  },
+
+  {
+    id: "K8S-INC-1033",
+    title: "Pull failed — registry rate-limited (Docker Hub 429)",
+    severity: "low",
+    status: "in_progress",
+    owner: "platform-oncall",
+    cluster: "lab-docker-01",
+    namespace: "docker-host",
+    service: "alpine-base",
+    module: "K8S-M1",
+    module_title: "M1 · Containerization Fundamentals & Docker Architecture",
+    detected_at: iso(20),
+    last_event_at: iso(3),
+    failure_chain: "Push → Run",
+    current_phase: "run",
+    failed_phases: ["run"],
+    briefing: {
+      who: "Anonymous Docker pulls from a shared lab IP.",
+      what: "docker pull alpine:3.19 fails with 'toomanyrequests'.",
+      where: "Docker Hub registry-1.docker.io.",
+      when: `${iso(20)} — 20m ago.`,
+      why: "Anonymous tier limit (100 pulls / 6h / IP) exhausted by class lab.",
+      how: "docker pull log → 429 Too Many Requests; X-RateLimit-Remaining: 0.",
+      severity_rationale: "LOW — workaround is to authenticate or mirror via GHCR/ECR.",
+    },
+    description:
+      "The default container runtime cannot pull a base image because the upstream registry is rate-limiting unauthenticated requests.",
+    original_event: `$ docker pull alpine:3.19
+Error response from daemon: toomanyrequests: You have reached your pull rate limit.`,
+    affected: [
+      { kind: "Image", name: "alpine:3.19", detail: "pull blocked 429", action: "Authenticate or mirror.", severity: "low" },
+    ],
+    aligned_tools: ["Docker", "containerd", "GHCR"],
+    data_sources: ["dockerd", "registry-audit"],
+    logs_sample: `dockerd: pull alpine:3.19 -> 429 toomanyrequests
+containerd: failed to resolve reference, retry in 60s`,
+    metrics_sample: `registry_pull_failures_total{code="429"}  14`,
+    response_actions: ["docker login", "Use GHCR mirror", "Cache base layers"],
+    next_steps: [
+      { level: "L1", text: "docker login — switch to authenticated pulls (200/6h)." },
+      { level: "L2", text: "Mirror base images to GHCR or ECR pull-through cache." },
+      { level: "L3", text: "Pin base images by digest to avoid repeated pulls." },
+    ],
+    lab_slug: "k8s-pull-run-inspect",
+  },
 ];
 
 export function findK8sIncident(id: string) {
@@ -535,4 +657,16 @@ export const K8S_LAB_TO_INCIDENT: Record<string, string> = {
   "k8s-rolling-update": "K8S-INC-1028",
   "k8s-expose-service": "K8S-INC-1029",
   "k8s-build-tag-image": "K8S-INC-1030",
+  "k8s-container-lifecycle": "K8S-INC-1032",
+  "k8s-pull-run-inspect": "K8S-INC-1033",
 };
+
+// Curriculum module index — used by the list page filter.
+export const K8S_MODULES: { code: K8sModuleCode; title: string }[] = [
+  { code: "K8S-M1", title: "M1 · Containerization Fundamentals & Docker Architecture" },
+  { code: "K8S-M2", title: "M2 · Building Docker Images & Containerized Apps" },
+  { code: "K8S-M3", title: "M3 · Kubernetes Fundamentals & Pod Architecture" },
+  { code: "K8S-M4", title: "M4 · Deployments & Service Exposure" },
+  { code: "K8S-M5", title: "M5 · Monitoring, Troubleshooting & Capstone Prep" },
+];
+
