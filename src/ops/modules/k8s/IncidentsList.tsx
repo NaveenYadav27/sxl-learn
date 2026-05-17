@@ -154,3 +154,22 @@ function FilterSelect({ label, value, onChange, opts }: {
     </label>
   );
 }
+
+function ModChip({ active, onClick, label, title }: { active: boolean; onClick: () => void; label: string; title?: string }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      title={title}
+      className={[
+        "rounded-sm border px-2 py-0.5 text-[11px] font-medium transition-colors",
+        active
+          ? "border-[hsl(var(--ops-accent)/0.6)] bg-[hsl(var(--ops-accent)/0.18)] text-[hsl(var(--ops-accent))]"
+          : "border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] text-[hsl(var(--ops-muted-fg))] hover:text-[hsl(var(--ops-fg))]",
+      ].join(" ")}
+    >
+      {label}
+    </button>
+  );
+}
+
