@@ -6,7 +6,8 @@ import { OpsTabs } from "@/ops/components/OpsTabs";
 import { EmptyState } from "@/ops/components/EmptyState";
 import { AssigneeChip } from "@/ops/components/AssigneeChip";
 import { findK8sIncident, K8S_PHASES, type K8sIncidentSeverity, type K8sPhaseId } from "./incidentsData";
-import { ArrowLeft, ChevronRight, ExternalLink, Lightbulb, ShieldAlert, Boxes } from "lucide-react";
+import { TOOL_CATALOG, PHASE_DEFAULTS } from "./toolStack";
+import { ArrowLeft, ChevronRight, ExternalLink, Lightbulb, ShieldAlert, Boxes, BookOpen, Wrench } from "lucide-react";
 
 const SEV_TOKEN: Record<K8sIncidentSeverity, string> = {
   critical: "bg-[hsl(var(--ops-critical)/0.18)] text-[hsl(var(--ops-critical))] border-[hsl(var(--ops-critical)/0.5)]",
