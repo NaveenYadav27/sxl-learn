@@ -28,12 +28,16 @@ function rel(iso: string) {
 export default function K8sIncidentsList() {
   const [sev, setSev] = useState<"all" | K8sIncidentSeverity>("all");
   const [status, setStatus] = useState<"all" | K8sIncidentStatus>("all");
+  const [mod, setMod] = useState<"all" | K8sModuleCode>("all");
 
   const rows = useMemo(
     () =>
-      K8S_INCIDENTS.filter((i) => (sev === "all" || i.severity === sev) && (status === "all" || i.status === status))
-        .sort((a, b) => new Date(b.last_event_at).getTime() - new Date(a.last_event_at).getTime()),
-    [sev, status],
+      K8S_INCIDENTS.filter((i) =>
+        (sev === "all" || i.severity === sev) &&
+        (status === "all" || i.status === status) &&
+        (mod === "all" || i.module === mod),
+      ).sort((a, b) => new Date(b.last_event_at).getTime() - new Date(a.last_event_at).getTime()),
+    [sev, status, mod],
   );
 
   const counts = useMemo(() => {
