@@ -33,14 +33,22 @@ export const K8S_PHASES: { id: K8sPhaseId; label: string; hint: string }[] = [
 export type AlignedTool =
   | "kubectl"
   | "Docker"
+  | "Docker Desktop"
   | "Helm"
   | "ArgoCD"
   | "Prometheus"
   | "Grafana"
   | "Trivy"
+  | "Snyk"
   | "Falco"
   | "GHCR"
-  | "containerd";
+  | "containerd"
+  | "runc"
+  | "crictl"
+  | "journalctl"
+  | "BuildKit"
+  | "GitHub Actions"
+  | "Jenkins";
 
 export interface AffectedAsset {
   kind: "Pod" | "Deployment" | "Node" | "Image" | "Service" | "Container";
