@@ -72,3 +72,57 @@ function Bar({ used, label }: { used: number; label: string }) {
     </div>
   );
 }
+
+function BuildLearningStrip() {
+  const m2 = K8S_INCIDENTS.filter((i) => i.module === "K8S-M2" && i.learning).slice(0, 4);
+  return (
+    <div className="px-4 pb-2">
+      <SectionCard
+        title="Build Learning Insights — M2 · Building Docker Images"
+        description="Image-, build- and registry-side incidents driving the CI/CD KPIs below."
+        bodyClassName="p-3"
+      >
+        <div className="mb-2 grid gap-2 text-[11px] sm:grid-cols-3 lg:grid-cols-6">
+          <Stat label="Avg image size" value="412 MB" />
+          <Stat label="Avg layers" value="14" />
+          <Stat label="Build success" value="92%" tone="success" />
+          <Stat label="Registry p95" value="180 ms" />
+          <Stat label="Cache hit" value="68%" tone="warning" />
+          <Stat label="HIGH CVEs" value="4" tone="critical" />
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {m2.map((i) => (
+            <Link
+              key={i.id}
+              to={`/ops/k8s-incidents/${i.id}`}
+              className="block rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] p-2.5 text-[12px] hover:border-[hsl(var(--ops-accent)/0.5)]"
+            >
+              <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wide text-[hsl(var(--ops-accent))]">
+                <BookOpen className="h-3 w-3" /> {i.learning?.concept}
+              </div>
+              <div className="mt-1 font-semibold text-[hsl(var(--ops-fg))]">{i.title}</div>
+              <div className="mt-1 text-[11px] text-[hsl(var(--ops-muted-fg))]">{i.learning?.meaning}</div>
+              <div className="mt-1.5 inline-flex items-center gap-1 text-[10px] text-[hsl(var(--ops-accent))]">
+                Investigate <ExternalLink className="h-3 w-3" />
+              </div>
+            </Link>
+          ))}
+        </div>
+      </SectionCard>
+    </div>
+  );
+}
+
+function Stat({ label, value, tone }: { label: string; value: string; tone?: "success" | "warning" | "critical" }) {
+  const color =
+    tone === "critical" ? "text-[hsl(var(--ops-critical))]" :
+    tone === "warning"  ? "text-[hsl(var(--ops-warning))]"  :
+    tone === "success"  ? "text-[hsl(var(--ops-success))]"  :
+                          "text-[hsl(var(--ops-fg))]";
+  return (
+    <div className="rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] px-2 py-1.5">
+      <div className="text-[10px] uppercase tracking-wide text-[hsl(var(--ops-muted-fg))]">{label}</div>
+      <div className={`font-mono text-[13px] font-semibold ${color}`}>{value}</div>
+    </div>
+  );
+}
