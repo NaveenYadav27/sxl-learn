@@ -120,3 +120,47 @@ export default function ContainersList() {
     </div>
   );
 }
+
+function RuntimeLearningStrip() {
+  const m1 = K8S_INCIDENTS.filter((i) => i.module === "K8S-M1" && i.learning).slice(0, 4);
+  return (
+    <div className="px-4 pb-2">
+      <SectionCard
+        title="Runtime Learning Insights — M1 · Containerization Fundamentals"
+        description="Live runtime incidents on this host that teach a core Docker / Linux concept."
+        bodyClassName="p-3"
+      >
+        <div className="mb-2 flex flex-wrap items-center gap-3 text-[11px] text-[hsl(var(--ops-muted-fg))]">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-[hsl(var(--ops-success))]" /> dockerd · OK
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-[hsl(var(--ops-success))]" /> containerd · OK
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-2 w-2 rounded-full bg-[hsl(var(--ops-success))]" /> runc · OK
+          </span>
+          <span>· overlay2 storage 62% used</span>
+        </div>
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+          {m1.map((i) => (
+            <Link
+              key={i.id}
+              to={`/ops/k8s-incidents/${i.id}`}
+              className="block rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] p-2.5 text-[12px] hover:border-[hsl(var(--ops-accent)/0.5)]"
+            >
+              <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wide text-[hsl(var(--ops-accent))]">
+                <BookOpen className="h-3 w-3" /> {i.learning?.concept}
+              </div>
+              <div className="mt-1 font-semibold text-[hsl(var(--ops-fg))]">{i.title}</div>
+              <div className="mt-1 text-[11px] text-[hsl(var(--ops-muted-fg))]">{i.learning?.meaning}</div>
+              <div className="mt-1.5 inline-flex items-center gap-1 text-[10px] text-[hsl(var(--ops-accent))]">
+                Investigate <ExternalLink className="h-3 w-3" />
+              </div>
+            </Link>
+          ))}
+        </div>
+      </SectionCard>
+    </div>
+  );
+}
