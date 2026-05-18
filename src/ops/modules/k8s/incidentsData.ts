@@ -1810,6 +1810,8 @@ export const K8S_LAB_TO_INCIDENT: Record<string, string> = {
   "k8s-build-tag-image": "K8S-INC-1030",
   "k8s-container-lifecycle": "K8S-INC-1032",
   "k8s-pull-run-inspect": "K8S-INC-1033",
+  "k8s-docker-install-tour": "K8S-INC-1034",
+  "k8s-write-dockerfile": "K8S-INC-1043",
 };
 
 // Curriculum module index — used by the list page filter.
