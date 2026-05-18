@@ -118,6 +118,17 @@ export interface K8sIncident {
 
   // Lab cross-link
   lab_slug?: string;
+  // Optional deep-learning block (used by Module 1 & Module 2 incidents).
+  learning?: {
+    concept: string;
+    meaning: string;
+    enterprise_impact: string;
+    fresher_view: string;
+    engineer_view: string;
+    commands_bash: string[];
+    commands_powershell: string[];
+    recovery: string[];
+  };
 }
 
 const iso = (minsAgo: number) => new Date(Date.now() - minsAgo * 60_000).toISOString();
