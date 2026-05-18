@@ -46,7 +46,9 @@ export default function ClustersList() {
         <KpiCard label="Workloads" value={kpis.workloads} />
         <KpiCard label="Pods" value={kpis.pods} />
       </div>
+      <BuildLearningStrip />
       <div className="px-4 pb-6">
+
         <SectionCard title="Cluster fleet" description={`${CLUSTERS.length} clusters`} bodyClassName="p-0">
           <DataTable<Cluster>
             columns={columns} rows={CLUSTERS} rowKey={(r) => r.id}
