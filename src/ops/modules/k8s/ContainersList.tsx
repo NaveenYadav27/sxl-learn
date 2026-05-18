@@ -75,7 +75,9 @@ export default function ContainersList() {
         <KpiCard label="Exited / Dead" value={kpis.exited} hint="Stopped" />
         <KpiCard label="Restarting" value={kpis.restarting} intent="warning" />
       </div>
+      <RuntimeLearningStrip />
       <div className="px-4 pb-6">
+
         <SectionCard title="Containers" description={`${rows.length} of ${DOCKERS.length}`} bodyClassName="p-0">
           <DataTable<DockerContainer>
             columns={columns} rows={rows} rowKey={(r) => r.id} pageSize={25}
