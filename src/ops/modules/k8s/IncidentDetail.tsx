@@ -231,6 +231,9 @@ export default function K8sIncidentDetail() {
             </ol>
           </SectionCard>
 
+          {/* Deep learning block — only rendered for M1 / M2 incidents that ship a `learning` payload */}
+          {n.learning && <LearningBlock learning={n.learning} />}
+
           {/* Tool stack — explain every aligned tool */}
           <SectionCard bodyClassName="p-0">
             <div className="flex items-center justify-between border-b border-[hsl(var(--ops-border))] px-4 py-2.5">
