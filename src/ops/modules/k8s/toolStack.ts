@@ -145,6 +145,102 @@ export const TOOL_CATALOG: Record<AlignedTool, ToolDescriptor> = {
     why_it_matters:
       "Catches post-exploit behaviour the CI scanner missed — the last line of defence at the run stage.",
   },
+  "Docker Desktop": {
+    tool: "Docker Desktop",
+    category: "Build",
+    module: "K8S-M1",
+    module_title: "M1 · Containerization Fundamentals & Docker Architecture",
+    phases: ["code", "build", "run"],
+    purpose:
+      "Desktop client bundling the Docker daemon, CLI, Compose and a local Kubernetes — the developer's first window into the runtime.",
+    commands: ["docker info", "docker context use desktop-linux", "docker compose up"],
+    why_it_matters:
+      "Most learners meet Docker first through Desktop. Daemon-unreachable / socket errors and lab-environment quirks usually start here.",
+  },
+  runc: {
+    tool: "runc",
+    category: "Runtime",
+    module: "K8S-M1",
+    module_title: "M1 · Containerization Fundamentals & Docker Architecture",
+    phases: ["run"],
+    purpose:
+      "OCI low-level runtime that actually creates the Linux namespaces and cgroups for a container and exec()s its first process.",
+    commands: ["runc list", "runc state <id>", "runc kill <id> KILL"],
+    why_it_matters:
+      "When containerd reports a container failed to start, runc errors expose the real kernel-level cause (seccomp, capabilities, cgroup).",
+  },
+  crictl: {
+    tool: "crictl",
+    category: "Runtime",
+    module: "K8S-M1",
+    module_title: "M1 · Containerization Fundamentals & Docker Architecture",
+    phases: ["run", "observe"],
+    purpose:
+      "CRI-compatible CLI for talking to containerd/CRI-O directly — bypasses kubectl when the API server or kubelet is misbehaving.",
+    commands: ["crictl ps", "crictl images", "crictl logs <id>", "crictl inspect <id>"],
+    why_it_matters:
+      "Node-level triage tool: confirms whether the failure is in the cluster control plane or the container runtime itself.",
+  },
+  journalctl: {
+    tool: "journalctl",
+    category: "Observability",
+    module: "K8S-M1",
+    module_title: "M1 · Containerization Fundamentals & Docker Architecture",
+    phases: ["observe"],
+    purpose:
+      "systemd journal reader — surfaces dockerd, containerd, kubelet and kernel (OOM, seccomp) events on the host.",
+    commands: ["journalctl -u docker", "journalctl -u containerd -f", "journalctl -k | grep oom"],
+    why_it_matters:
+      "Runtime-level evidence (OOM kills, seccomp denials, daemon crashes) only appears in the host journal, not in kubectl.",
+  },
+  BuildKit: {
+    tool: "BuildKit",
+    category: "Build",
+    module: "K8S-M2",
+    module_title: "M2 · Building Docker Images & Containerized Apps",
+    phases: ["build"],
+    purpose:
+      "Modern Docker build engine — parallel stages, cache mounts, secret mounts and reproducible builds.",
+    commands: ["DOCKER_BUILDKIT=1 docker build .", "docker buildx build --platform linux/amd64,arm64"],
+    why_it_matters:
+      "Multi-stage and cached builds depend on BuildKit. Cache invalidation and large-image incidents trace back to BuildKit ordering.",
+  },
+  Snyk: {
+    tool: "Snyk",
+    category: "Security",
+    module: "K8S-M2",
+    module_title: "M2 · Building Docker Images & Containerized Apps",
+    phases: ["scan"],
+    purpose:
+      "Image and dependency scanner alternative to Trivy; integrates with CI and surfaces upgrade paths for vulnerable packages.",
+    commands: ["snyk container test app:1.0", "snyk monitor"],
+    why_it_matters:
+      "Second opinion on CVE severity; many enterprises gate the registry push on a clean Snyk report.",
+  },
+  "GitHub Actions": {
+    tool: "GitHub Actions",
+    category: "Delivery",
+    module: "K8S-M2",
+    module_title: "M2 · Building Docker Images & Containerized Apps",
+    phases: ["build", "scan", "push"],
+    purpose:
+      "CI runner that drives docker build / scan / push pipelines using GITHUB_TOKEN or a PAT for registry auth.",
+    commands: [".github/workflows/build.yml", "docker/login-action@v3", "docker/build-push-action@v6"],
+    why_it_matters:
+      "Most M2 incidents (apt 100, push denied, large image) surface as red Actions workflows — that is where the learner first sees them.",
+  },
+  Jenkins: {
+    tool: "Jenkins",
+    category: "Delivery",
+    module: "K8S-M2",
+    module_title: "M2 · Building Docker Images & Containerized Apps",
+    phases: ["build", "scan", "push"],
+    purpose:
+      "Long-running CI server still common in enterprises — Jenkinsfile pipelines invoke docker build/push and Trivy scans.",
+    commands: ["Jenkinsfile · agent { docker }", "sh 'docker build .'", "sh 'trivy image app:1.0'"],
+    why_it_matters:
+      "Same build/scan/push lifecycle as Actions but with shared executors — noisy-neighbor and credential-binding failures are common.",
+  },
 };
 
 // Default explanation for every DevOps phase. Used as a fallback when an
