@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useMemo } from "react";
 import { PageHeader } from "@/ops/components/PageHeader";
 import { KpiCard } from "@/ops/components/KpiCard";
@@ -7,8 +7,10 @@ import { DataTable, type Column } from "@/ops/components/DataTable";
 import { CLUSTERS } from "./clustersData";
 import { WORKLOADS } from "./workloadsData";
 import { PODS } from "./podsData";
+import { K8S_INCIDENTS } from "./incidentsData";
 import type { Cluster } from "./types";
 import { CLUSTER_TOKEN, pct } from "./lib";
+import { BookOpen, ExternalLink } from "lucide-react";
 
 export default function ClustersList() {
   const navigate = useNavigate();
