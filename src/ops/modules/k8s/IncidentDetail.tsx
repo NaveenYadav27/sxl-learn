@@ -231,6 +231,9 @@ export default function K8sIncidentDetail() {
             </ol>
           </SectionCard>
 
+          {/* Deep learning block — only rendered for M1 / M2 incidents that ship a `learning` payload */}
+          {n.learning && <LearningBlock learning={n.learning} />}
+
           {/* Tool stack — explain every aligned tool */}
           <SectionCard bodyClassName="p-0">
             <div className="flex items-center justify-between border-b border-[hsl(var(--ops-border))] px-4 py-2.5">
@@ -393,6 +396,94 @@ export default function K8sIncidentDetail() {
         </div>
       </div>
     </div>
+  );
+}
+
+type LearningPayload = NonNullable<ReturnType<typeof findK8sIncident>>["learning"];
+
+function LearningBlock({ learning }: { learning: NonNullable<LearningPayload> }) {
+  const [audience, setAudience] = useState<"fresher" | "engineer">("fresher");
+  const [shell, setShell] = useState<"bash" | "powershell">("bash");
+  const cmds = shell === "bash" ? learning.commands_bash : learning.commands_powershell;
+  return (
+    <>
+      <SectionCard
+        title={`Runtime Learning · ${learning.concept}`}
+        description="Plain-language meaning, enterprise impact, and a depth toggle for fresher vs experienced engineer."
+        bodyClassName="p-0"
+      >
+        <div className="grid gap-3 p-4 lg:grid-cols-[1fr_1fr] text-[12px] leading-relaxed">
+          <div className="rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] p-3">
+            <div className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-[hsl(var(--ops-muted-fg))]">Meaning</div>
+            <div className="text-[hsl(var(--ops-fg))]">{learning.meaning}</div>
+          </div>
+          <div className="rounded-sm border border-[hsl(var(--ops-accent)/0.4)] bg-[hsl(var(--ops-accent)/0.08)] p-3">
+            <div className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-[hsl(var(--ops-accent))]">Enterprise impact</div>
+            <div className="text-[hsl(var(--ops-fg))]">{learning.enterprise_impact}</div>
+          </div>
+        </div>
+        <div className="border-t border-[hsl(var(--ops-border))]">
+          <div className="flex items-center gap-1 border-b border-[hsl(var(--ops-border))] px-3 py-1.5 text-[11px]">
+            <span className="mr-1 uppercase tracking-wide text-[hsl(var(--ops-muted-fg))]">Audience:</span>
+            <ToggleBtn active={audience === "fresher"} onClick={() => setAudience("fresher")}>Fresher view</ToggleBtn>
+            <ToggleBtn active={audience === "engineer"} onClick={() => setAudience("engineer")}>Engineer view</ToggleBtn>
+          </div>
+          <div className="p-4 text-[12px] leading-relaxed text-[hsl(var(--ops-fg))]">
+            {audience === "fresher" ? learning.fresher_view : learning.engineer_view}
+          </div>
+        </div>
+      </SectionCard>
+
+      <SectionCard
+        title="Real commands"
+        description="Copy-paste these directly into a lab shell. Tabs switch between Bash (Linux/macOS) and PowerShell (Windows / Docker Desktop)."
+        bodyClassName="p-0"
+      >
+        <div className="flex items-center gap-1 border-b border-[hsl(var(--ops-border))] px-3 py-1.5 text-[11px]">
+          <ToggleBtn active={shell === "bash"} onClick={() => setShell("bash")}>Bash</ToggleBtn>
+          <ToggleBtn active={shell === "powershell"} onClick={() => setShell("powershell")}>PowerShell</ToggleBtn>
+        </div>
+        <ul className="divide-y divide-[hsl(var(--ops-border))]">
+          {cmds.map((c, i) => (
+            <li key={i} className="flex items-center justify-between gap-2 px-3 py-2">
+              <code className="overflow-x-auto rounded-sm bg-[hsl(var(--ops-panel-2))] px-2 py-1 font-mono text-[11.5px] text-[hsl(var(--ops-fg))]">{c}</code>
+              <button
+                onClick={() => navigator.clipboard?.writeText(c)}
+                className="rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] px-1.5 py-0.5 text-[10px] uppercase text-[hsl(var(--ops-muted-fg))] hover:text-[hsl(var(--ops-accent))]"
+              >
+                Copy
+              </button>
+            </li>
+          ))}
+        </ul>
+      </SectionCard>
+
+      <SectionCard title="Recovery guidance" bodyClassName="p-3 space-y-1.5">
+        {learning.recovery.map((r, i) => (
+          <div key={i} className="flex items-start gap-2 text-[12px] text-[hsl(var(--ops-fg))]">
+            <span className="mt-0.5 inline-flex h-4 w-4 items-center justify-center rounded-sm border border-[hsl(var(--ops-success)/0.5)] bg-[hsl(var(--ops-success)/0.15)] text-[10px] font-semibold text-[hsl(var(--ops-success))]">{i + 1}</span>
+            <span>{r}</span>
+          </div>
+        ))}
+      </SectionCard>
+    </>
+  );
+}
+
+function ToggleBtn({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={[
+        "rounded-sm border px-2 py-0.5 text-[11px] font-medium transition-colors",
+        active
+          ? "border-[hsl(var(--ops-accent)/0.6)] bg-[hsl(var(--ops-accent)/0.18)] text-[hsl(var(--ops-accent))]"
+          : "border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] text-[hsl(var(--ops-muted-fg))] hover:text-[hsl(var(--ops-fg))]",
+      ].join(" ")}
+    >
+      {children}
+    </button>
   );
 }
 
