@@ -1,14 +1,16 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { PageHeader } from "@/ops/components/PageHeader";
 import { KpiCard } from "@/ops/components/KpiCard";
 import { SectionCard } from "@/ops/components/SectionCard";
 import { DataTable, type Column } from "@/ops/components/DataTable";
 import { FilterBar } from "@/ops/components/FilterBar";
 import { DOCKERS } from "./dockersData";
+import { K8S_INCIDENTS } from "./incidentsData";
 import type { DockerContainer, DockerState } from "./types";
 import { DOCKER_TOKEN, rel } from "./lib";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Filter } from "lucide-react";
+import { Filter, BookOpen, ExternalLink } from "lucide-react";
 
 export default function ContainersList() {
   const [search, setSearch] = useState("");
