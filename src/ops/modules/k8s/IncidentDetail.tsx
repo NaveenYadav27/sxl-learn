@@ -7,7 +7,9 @@ import { EmptyState } from "@/ops/components/EmptyState";
 import { AssigneeChip } from "@/ops/components/AssigneeChip";
 import { findK8sIncident, K8S_PHASES, type K8sIncidentSeverity, type K8sPhaseId } from "./incidentsData";
 import { TOOL_CATALOG, PHASE_DEFAULTS } from "./toolStack";
-import { ArrowLeft, ChevronRight, ExternalLink, Lightbulb, ShieldAlert, Boxes, BookOpen, Wrench } from "lucide-react";
+import { getIncidentLab } from "./incidentLabs";
+import { IncidentLabConsole } from "./IncidentLabConsole";
+import { ArrowLeft, ChevronRight, ExternalLink, Lightbulb, ShieldAlert, Boxes, BookOpen, Wrench, Terminal } from "lucide-react";
 
 const SEV_TOKEN: Record<K8sIncidentSeverity, string> = {
   critical: "bg-[hsl(var(--ops-critical)/0.18)] text-[hsl(var(--ops-critical))] border-[hsl(var(--ops-critical)/0.5)]",
@@ -31,6 +33,7 @@ export default function K8sIncidentDetail() {
 
   const phaseIdx = useMemo(() => K8S_PHASES.findIndex((p) => p.id === n?.current_phase), [n]);
   const failedSet = useMemo(() => new Set(n?.failed_phases ?? []), [n]);
+  const lab = n ? getIncidentLab(n.id) : undefined;
 
   if (!n) {
     return (
@@ -88,11 +91,18 @@ export default function K8sIncidentDetail() {
           <span className="text-[hsl(var(--ops-muted-fg))]">Curriculum module:</span>
           <span className="font-semibold">{n.module_title}</span>
         </div>
-        {n.lab_slug && (
-          <Link to={`/lab/${n.lab_slug}/sim`} className="inline-flex items-center gap-1 text-[hsl(var(--ops-accent))] hover:underline">
-            Open the matching lab <ExternalLink className="h-3 w-3" />
-          </Link>
-        )}
+        <div className="flex flex-wrap items-center gap-3">
+          {lab && (
+            <a href="#incident-lab-console" className="inline-flex items-center gap-1 rounded-sm border border-[hsl(var(--ops-success)/0.5)] bg-[hsl(var(--ops-success)/0.15)] px-2 py-0.5 text-[11px] font-semibold text-[hsl(var(--ops-success))]">
+              <Terminal className="h-3 w-3" /> Interactive Lab · {lab.steps.length} steps · ~{lab.estimated_minutes} min
+            </a>
+          )}
+          {n.lab_slug && (
+            <Link to={`/lab/${n.lab_slug}/sim`} className="inline-flex items-center gap-1 text-[hsl(var(--ops-accent))] hover:underline">
+              Open the matching lab <ExternalLink className="h-3 w-3" />
+            </Link>
+          )}
+        </div>
       </div>
 
       <div className="grid gap-3 p-4 lg:grid-cols-[1fr_320px]">
@@ -230,6 +240,13 @@ export default function K8sIncidentDetail() {
               })}
             </ol>
           </SectionCard>
+
+          {/* Interactive step-by-step lab (M1 / M2 incidents) */}
+          {lab && (
+            <div id="incident-lab-console" className="scroll-mt-20">
+              <IncidentLabConsole lab={lab} incidentId={n.id} />
+            </div>
+          )}
 
           {/* Deep learning block — only rendered for M1 / M2 incidents that ship a `learning` payload */}
           {n.learning && <LearningBlock learning={n.learning} />}

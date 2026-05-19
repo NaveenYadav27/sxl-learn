@@ -1,98 +1,105 @@
-# ShadowXLab — K8s Foundations M1 & M2 Deep Learning Layer
+# M1/M2 Incidents → Interactive Step-by-Step Labs
 
-Enhance the **existing** Ops Console (K8s Incidents, Docker inventory, Cluster dashboard, DevOps pipeline, cross-tool enrichment) into a deep operational learning experience for **Module 1 (Containerization Fundamentals & Docker Architecture)** and **Module 2 (Building Docker Images)** — without redesigning the UI or touching other courses.
+Turn every Module 1 & Module 2 K8s incident into a full, console-driven lab inside the existing Ops Console — no new pages, no UI redesign. Each incident becomes a scripted walkthrough taking the student from **Plan → Build → Deploy → Observe → Triage → Fix → Verify → Postmortem**, with an interactive terminal that streams real expected output for every command.
 
 ## Scope guardrails
-- Reuse existing components: `SectionCard`, `PageHeader`, `OpsTabs`, `SeverityBadge`, `ActivityTimeline`, `HoverTerm`, `DOCKER_HOVER_TERMS`, `K8S_PHASES`, `TOOL_CATALOG`.
-- Only edit files under `src/ops/modules/k8s/**` plus `src/lib/dockerHoverTerms.ts` (extend), `src/components/HoverTerm.tsx` (only if a needed prop is missing).
-- No changes to SOC / ITSM / SRE / Cloud / DevOps / CCNA / CSA / Pen200 / CDL / Splunk / Auth / DB.
-- No new routes; uses existing `/ops/k8s-incidents`, `/ops/k8s-incidents/:id`, `/ops/k8s/containers`, `/ops/k8s/clusters`.
 
-## Module-locked incident catalog (`incidentsData.ts`)
-Replace the curated incident list so every incident maps to **M1** or **M2** exactly:
+- Only files under `src/ops/modules/k8s/**` + one new component `IncidentLabConsole.tsx`.
+- Reuse `SectionCard`, `OpsTabs`, `SeverityBadge`, `K8S_PHASES`, `TOOL_CATALOG`, `HoverTerm`.
+- No changes to other courses, no DB, no routes, no auth.
+- Existing incident list / dashboards untouched.
 
-**M1 — Runtime / Architecture (10 incidents)**
-1. Container exited 137 — OOMKilled (cgroups, host OOM killer)
-2. Docker daemon unreachable (Engine / API / client-server)
-3. Namespace quota exceeded (PID/user namespaces, multi-tenancy)
-4. Overlay filesystem full (overlayfs, writable layer)
-5. Detached container exited silently (fg vs -d, restart policy)
-6. containerd restart failure (Docker → containerd → runc hierarchy)
-7. Noisy-neighbor high CPU (CPU cgroups, cpu.shares)
-8. seccomp blocked syscall (Linux syscall filtering)
-9. Port-binding conflict (bridge net, -p host:container)
-10. Docker socket permission denied (/var/run/docker.sock perms)
+## 1. Data model — extend each M1/M2 incident with a `lab` block
 
-**M2 — Image build / registry / security (10 incidents)**
-11. `apt-get` exit 100 in RUN layer
-12. ImagePullBackOff — GHCR auth failed
-13. Registry push denied (write:packages RBAC)
-14. 1.4 GB image causing slow deploy (multi-stage missing)
-15. Secret leaked into image layer (Trivy secret scan)
-16. Trivy HIGH CVE in base image
-17. Build cache invalidation (COPY order)
-18. Wrong ENTRYPOINT — exit 127
-19. Docker Hub rate limiting (429 toomanyrequests)
-20. `:latest` tag drift in prod
+Add to `K8sIncident` interface in `incidentsData.ts`:
 
-Each incident object gains:
 ```ts
-learning: {
-  concept: string;          // "cgroups memory limits"
-  meaning: string;          // plain-language explanation
-  enterprise_impact: string;
-  fresher_view: string;     // simple
-  engineer_view: string;    // deep / kernel-level
-  commands_bash: string[];
-  commands_powershell: string[];
-  next_steps: string[];
-  recovery: string[];
-}
+lab?: {
+  objective: string;             // what the student will prove
+  prerequisites: string[];       // "Docker installed", "lab-docker-01 reachable"
+  estimated_minutes: number;
+  difficulty: "beginner" | "intermediate" | "advanced";
+  steps: LabStep[];              // 8–12 steps per incident
+};
+
+type LabStep = {
+  id: string;                    // "s1"
+  phase: K8sPhaseId;             // plan|code|build|test|deploy|run|observe|triage|fix|recover
+  tool: AlignedTool;             // which tool the student is using
+  title: string;                 // "Reproduce the OOM"
+  why: string;                   // teaching note
+  command: string;               // exact CLI to run
+  shell: "bash" | "powershell" | "kubectl" | "docker" | "crictl";
+  expected_output: string;       // multi-line block streamed by the console
+  success_check: string;         // "exit code 137 visible"
+  hint: string;                  // shown on Reveal
+  concept_ref?: string;          // HoverTerm key
+};
 ```
-Existing fields (`phase_walkthrough`, `tools`, `enrichment`, `module`, `affected_assets`) stay.
 
-## Incident detail enhancements (`IncidentDetail.tsx`)
-Add **inside the existing layout** (no redesign):
-- **Analyst Briefing** (exists) — augment with `learning.meaning`.
-- **Runtime Explanation** card — `fresher_view` / `engineer_view` toggle (simple tabs already available via `OpsTabs`).
-- **Real Commands** card — Bash / PowerShell tabs using `OpsTabs`, copy-on-click.
-- **Operational Impact + Recovery** card — bulleted lists.
-- Wrap every technical term (containerd, runc, overlayfs, cgroup, namespace, seccomp, Dockerfile keywords) with existing `<HoverTerm termKey="…">` from `DOCKER_HOVER_TERMS`.
+Populate **all 20 M1/M2 incidents** with a 10-step lab each, covering the full lifecycle:
 
-## Dashboard learning panels
-Two new compact panels (reuse `SectionCard` + `KpiCard`) — no new pages:
+| Phase | Typical step |
+|-------|--------------|
+| plan | Read the alert, identify the failing component |
+| code/build | Inspect Dockerfile / manifest |
+| deploy | `docker run` / `kubectl apply` to reproduce |
+| run | Watch container behavior with `docker stats` / `kubectl get pods -w` |
+| observe | Pull metrics (Prometheus / `docker stats`) and logs (`journalctl`, `kubectl logs`) |
+| triage | Inspect cgroups / namespaces / events / image layers |
+| fix | Apply the corrective command (`docker update`, edit Dockerfile, push v2) |
+| verify | Re-run health check |
+| recover | Document runbook entry |
+| postmortem | One-line learning takeaway |
 
-**`ContainersList.tsx`** — append **"Runtime Learning Insights"** strip:
-- Running / Exited / Paused / Restarting counts (already shown) + concept link
-- Engine + containerd + runc health row
-- Overlay storage usage bar
-- Insight cards generated from current incidents (e.g. "Container exited 137 → cgroups memory limits")
+Every step's `expected_output` is a realistic block (real kernel/docker/k8s formatting) so the console feels live.
 
-**`ClustersList.tsx`** (only the K8s clusters page) — append **"Build Learning Insights"** strip:
-- Image size trend, layer count, build success %, registry latency, CVE severity mix, cache hit ratio
-- Insight cards (e.g. "Image grew 210MB→1.4GB → use multi-stage")
+## 2. New component — `IncidentLabConsole.tsx`
 
-Both strips read from the M1/M2 incident catalog — no fake new data sources.
+A compact, dark, terminal-style panel rendered **inside the existing IncidentDetail page** (new tab "Lab"). No layout changes elsewhere.
 
-## Hover glossary extension (`dockerHoverTerms.ts`)
-Add missing terms used by the new incidents: `oom-killer`, `cpu-shares`, `pid-namespace`, `docker-socket`, `bridge-port`, `restart-policy`, `image-pull-secret`, `dockerhub-ratelimit`, `latest-tag`, `build-cache`, `dockerignore`, `distroless`, `trivy`, `cve`, `buildkit`, `image-signing`, `ghcr-pat`, `ecr`, `acr`. Each entry follows the existing `HoverTerm` schema (quick, definition, production, security, commonIssue).
+Features:
+- **Step list (left, 30%)** — numbered, phase chip, tool icon, status (pending / current / done). Click to jump.
+- **Terminal (right, 70%)** — monospace, shows the command at the prompt, a "Run" button. On click, the expected_output streams line-by-line (10ms/line) into the scrollback, then prints a green ✓ success_check line. "Reveal hint" button shows hint inline.
+- **Top bar** — objective, difficulty pill, ETA, progress bar (`x / n` steps), Reset button.
+- **Bottom bar** — "Why this step matters" (the `why` text) + tool descriptor pulled from `TOOL_CATALOG` + hover-term links to glossary.
+- **Phase rail** — horizontal strip of all 10 `K8S_PHASES`; current step's phase glows.
+- State held in component (no persistence). Reset re-arms all steps.
 
-## DevOps phase + tool alignment
-Already wired via `K8S_PHASES` + `TOOL_CATALOG`. Every new incident sets `phase_walkthrough` with the failing phase flagged FAILED/CURRENT, and `tools: AlignedTool[]` referencing the existing catalog. Extend `TOOL_CATALOG` only if a tool is missing (`Docker Desktop`, `crictl`, `journalctl`, `BuildKit`, `Snyk`, `GitHub Actions`, `Jenkins`).
+Visual: pure semantic ops tokens (`--ops-bg`, `--ops-panel`, `--ops-accent`, `--ops-success`). Already-imported CSS variables; no new tailwind colors.
+
+## 3. Wire into `IncidentDetail.tsx`
+
+- Add a fifth tab to the existing `OpsTabs`: `intel | logs | metrics | vuln | response` → **add `lab`** (label "Interactive Lab", icon `Terminal`). Only enabled when `n.lab` is present (so only M1/M2 incidents).
+- Tab body renders `<IncidentLabConsole lab={n.lab} incidentId={n.id} />`.
+- No other layout changes; existing Runtime Explanation / Real Commands cards stay in their current tabs.
+
+## 4. Tool catalog touch-up
+
+In `toolStack.ts`, ensure every tool referenced by lab steps has `command_example` and `why_it_matters` so the console bottom bar can render them. Add any missing one-liners — no new tools beyond those already added (Docker, containerd, runc, crictl, journalctl, kubectl, Helm, BuildKit, Trivy, Snyk, GitHub Actions, Jenkins, Prometheus, Grafana).
+
+## 5. Glossary
+
+Reuse existing `DOCKER_HOVER_TERMS`. Add 4 missing keys used by new lab steps: `pids-max`, `eagain`, `entrypoint`, `multistage`.
 
 ## Files touched
-**Edit**
-- `src/ops/modules/k8s/incidentsData.ts` — replace catalog with 20 M1/M2 incidents + `learning` field on the interface
-- `src/ops/modules/k8s/IncidentDetail.tsx` — add Runtime Explanation, Real Commands (Bash/PS), Impact+Recovery, hover-term wrapping
-- `src/ops/modules/k8s/IncidentsList.tsx` — module filter already exists; add M1/M2 grouping headers
-- `src/ops/modules/k8s/ContainersList.tsx` — append Runtime Learning Insights strip
-- `src/ops/modules/k8s/ClustersList.tsx` — append Build Learning Insights strip
-- `src/ops/modules/k8s/toolStack.ts` — add Docker Desktop, crictl, journalctl, BuildKit, Snyk, GitHub Actions, Jenkins
-- `src/lib/dockerHoverTerms.ts` — add ~20 new terms
 
-**No new routes, no new pages, no DB changes, no auth changes.**
+**Edit**
+- `src/ops/modules/k8s/incidentsData.ts` — add `lab` field on type + 20 lab blocks (10 steps each).
+- `src/ops/modules/k8s/IncidentDetail.tsx` — add "Lab" tab.
+- `src/ops/modules/k8s/toolStack.ts` — fill missing `command_example` / `why_it_matters`.
+- `src/lib/dockerHoverTerms.ts` — 4 new terms.
+
+**Create**
+- `src/ops/modules/k8s/IncidentLabConsole.tsx` — interactive console component.
 
 ## Out of scope
-- No edits to other courses, SOC, ITSM, SRE, Cloud, DevOps modules, CCNA, CSA, Pen200, CDL, Splunk pages, Auth, sidebar/topbar, dashboards outside K8s.
-- No M3/M4/M5 content changes.
-- No new shadcn components or layout overhauls.
+
+- M3 / M4 / M5 labs.
+- Other courses (SOC, ITSM, SRE, Cloud, DevOps, CCNA, CSA, Pen200, CDL, Splunk).
+- Persistence, scoring, backend, auth, new routes, sidebar/topbar changes.
+- Real shell execution — the console is a deterministic scripted player.
+
+## Out-the-door experience
+
+Student opens any M1 or M2 incident → clicks **Interactive Lab** tab → sees a 10-step scripted run through Plan → Recover with a real-looking terminal, per-step "why", tool reference, and hover-term glossary. By the end of M1 + M2 (20 labs) they have walked the full Docker + container-runtime lifecycle hands-on.
