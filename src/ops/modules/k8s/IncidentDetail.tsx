@@ -242,7 +242,11 @@ export default function K8sIncidentDetail() {
           </SectionCard>
 
           {/* Interactive step-by-step lab (M1 / M2 incidents) */}
-          {lab && <IncidentLabConsole lab={lab} incidentId={n.id} />}
+          {lab && (
+            <div id="incident-lab-console" className="scroll-mt-20">
+              <IncidentLabConsole lab={lab} incidentId={n.id} />
+            </div>
+          )}
 
           {/* Deep learning block — only rendered for M1 / M2 incidents that ship a `learning` payload */}
           {n.learning && <LearningBlock learning={n.learning} />}
