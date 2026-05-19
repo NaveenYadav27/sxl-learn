@@ -91,11 +91,18 @@ export default function K8sIncidentDetail() {
           <span className="text-[hsl(var(--ops-muted-fg))]">Curriculum module:</span>
           <span className="font-semibold">{n.module_title}</span>
         </div>
-        {n.lab_slug && (
-          <Link to={`/lab/${n.lab_slug}/sim`} className="inline-flex items-center gap-1 text-[hsl(var(--ops-accent))] hover:underline">
-            Open the matching lab <ExternalLink className="h-3 w-3" />
-          </Link>
-        )}
+        <div className="flex flex-wrap items-center gap-3">
+          {lab && (
+            <a href="#incident-lab-console" className="inline-flex items-center gap-1 rounded-sm border border-[hsl(var(--ops-success)/0.5)] bg-[hsl(var(--ops-success)/0.15)] px-2 py-0.5 text-[11px] font-semibold text-[hsl(var(--ops-success))]">
+              <Terminal className="h-3 w-3" /> Interactive Lab · {lab.steps.length} steps · ~{lab.estimated_minutes} min
+            </a>
+          )}
+          {n.lab_slug && (
+            <Link to={`/lab/${n.lab_slug}/sim`} className="inline-flex items-center gap-1 text-[hsl(var(--ops-accent))] hover:underline">
+              Open the matching lab <ExternalLink className="h-3 w-3" />
+            </Link>
+          )}
+        </div>
       </div>
 
       <div className="grid gap-3 p-4 lg:grid-cols-[1fr_320px]">
