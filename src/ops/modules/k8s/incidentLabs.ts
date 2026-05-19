@@ -38,7 +38,7 @@ export interface IncidentLab {
 // Compact builder so each lab declaration stays readable.
 const s = (
   id: string,
-  phase: K8sPhaseId,
+  phase: LabStage,
   tool: AlignedTool,
   shell: LabShell,
   title: string,
