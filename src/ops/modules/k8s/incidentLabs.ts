@@ -3,14 +3,20 @@
 // the IncidentLabConsole plays in a terminal-style panel. Pure seed data —
 // no network, no shell — so it's safe to import anywhere.
 
-import type { AlignedTool, K8sPhaseId } from "./incidentsData";
+import type { AlignedTool } from "./incidentsData";
 
 export type LabShell = "bash" | "powershell" | "kubectl" | "docker" | "crictl";
 export type LabDifficulty = "beginner" | "intermediate" | "advanced";
+// Lab stages map to the 10 DevOps phases but add `triage`, `fix`, `verify`
+// for the explicit incident-response steps a student walks through.
+export type LabStage =
+  | "plan" | "code" | "build" | "scan" | "push"
+  | "deploy" | "schedule" | "run" | "observe"
+  | "triage" | "fix" | "verify" | "recover";
 
 export interface LabStep {
   id: string;
-  phase: K8sPhaseId;
+  phase: LabStage;
   tool: AlignedTool;
   shell: LabShell;
   title: string;
