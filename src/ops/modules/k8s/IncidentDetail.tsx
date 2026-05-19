@@ -234,6 +234,9 @@ export default function K8sIncidentDetail() {
             </ol>
           </SectionCard>
 
+          {/* Interactive step-by-step lab (M1 / M2 incidents) */}
+          {lab && <IncidentLabConsole lab={lab} incidentId={n.id} />}
+
           {/* Deep learning block — only rendered for M1 / M2 incidents that ship a `learning` payload */}
           {n.learning && <LearningBlock learning={n.learning} />}
 
