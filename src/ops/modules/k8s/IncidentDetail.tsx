@@ -33,6 +33,7 @@ export default function K8sIncidentDetail() {
 
   const phaseIdx = useMemo(() => K8S_PHASES.findIndex((p) => p.id === n?.current_phase), [n]);
   const failedSet = useMemo(() => new Set(n?.failed_phases ?? []), [n]);
+  const lab = n ? getIncidentLab(n.id) : undefined;
 
   if (!n) {
     return (
