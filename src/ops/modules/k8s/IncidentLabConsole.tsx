@@ -114,12 +114,7 @@ export function IncidentLabConsole({ lab, incidentId }: { lab: IncidentLab; inci
   return (
     <SectionCard
       bodyClassName="p-0"
-      title={
-        <span className="inline-flex items-center gap-1.5">
-          <Terminal className="h-3.5 w-3.5 text-[hsl(var(--ops-accent))]" />
-          Interactive Lab Console — {incidentId}
-        </span>
-      }
+      title={`Interactive Lab Console — ${incidentId}`}
       description={lab.objective}
     >
       {/* Top bar */}
