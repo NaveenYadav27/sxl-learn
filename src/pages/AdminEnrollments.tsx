@@ -261,6 +261,7 @@ const AdminEnrollments = () => {
                   <Table>
                     <TableHeader>
                       <TableRow>
+                        <TableHead>User</TableHead>
                         <TableHead>User ID</TableHead>
                         <TableHead>Program</TableHead>
                         <TableHead>Granted</TableHead>
@@ -268,22 +269,33 @@ const AdminEnrollments = () => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {access.map((r) => (
-                        <TableRow key={r.id}>
-                          <TableCell className="font-mono text-xs">{r.user_id}</TableCell>
-                          <TableCell>
-                            <Badge variant="outline">{programLabels[r.program] ?? r.program}</Badge>
-                          </TableCell>
-                          <TableCell className="text-xs text-muted-foreground">
-                            {new Date(r.granted_at).toLocaleString()}
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button size="sm" variant="ghost" className="text-destructive" onClick={() => revoke(r.id)}>
-                              <Trash2 className="h-3.5 w-3.5 mr-1" /> Revoke
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {access.map((r) => {
+                        const p = profilesById[r.user_id];
+                        return (
+                          <TableRow key={r.id}>
+                            <TableCell>
+                              <div className="font-medium text-sm">
+                                {p?.display_name || <span className="text-muted-foreground italic">(unnamed)</span>}
+                              </div>
+                              {p?.email && (
+                                <div className="text-xs text-muted-foreground">{p.email}</div>
+                              )}
+                            </TableCell>
+                            <TableCell className="font-mono text-xs text-muted-foreground">{r.user_id}</TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{programLabels[r.program] ?? r.program}</Badge>
+                            </TableCell>
+                            <TableCell className="text-xs text-muted-foreground">
+                              {new Date(r.granted_at).toLocaleString()}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button size="sm" variant="ghost" className="text-destructive" onClick={() => revoke(r.id)}>
+                                <Trash2 className="h-3.5 w-3.5 mr-1" /> Revoke
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
                     </TableBody>
                   </Table>
                 )}
