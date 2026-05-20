@@ -454,8 +454,11 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           display_name: string | null
+          email: string | null
           id: string
           pdi_instance_url: string | null
+          ssid: string | null
+          suspended: boolean
           terms_accepted_at: string | null
           updated_at: string
         }
@@ -463,8 +466,11 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
+          email?: string | null
           id: string
           pdi_instance_url?: string | null
+          ssid?: string | null
+          suspended?: boolean
           terms_accepted_at?: string | null
           updated_at?: string
         }
@@ -472,8 +478,11 @@ export type Database = {
           avatar_url?: string | null
           created_at?: string
           display_name?: string | null
+          email?: string | null
           id?: string
           pdi_instance_url?: string | null
+          ssid?: string | null
+          suspended?: boolean
           terms_accepted_at?: string | null
           updated_at?: string
         }
