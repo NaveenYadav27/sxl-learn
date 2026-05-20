@@ -52,6 +52,10 @@ const AdminEnrollments = () => {
   const [resetPwd, setResetPwd] = useState("");
   const [resetting, setResetting] = useState(false);
 
+  const [profilesById, setProfilesById] = useState<
+    Record<string, { display_name: string | null; email: string | null }>
+  >({});
+
   async function refresh() {
     setLoading(true);
     const [{ data: e }, { data: a }] = await Promise.all([
@@ -59,7 +63,22 @@ const AdminEnrollments = () => {
       supabase.from("program_access").select("*").order("granted_at", { ascending: false }),
     ]);
     setEnrollments((e ?? []) as Enrollment[]);
-    setAccess((a ?? []) as AccessRow[]);
+    const accessRows = (a ?? []) as AccessRow[];
+    setAccess(accessRows);
+    const ids = Array.from(new Set(accessRows.map((r) => r.user_id)));
+    if (ids.length > 0) {
+      const { data: profs } = await supabase
+        .from("profiles")
+        .select("id, display_name, email")
+        .in("id", ids);
+      const map: Record<string, { display_name: string | null; email: string | null }> = {};
+      (profs ?? []).forEach((p: any) => {
+        map[p.id] = { display_name: p.display_name, email: p.email };
+      });
+      setProfilesById(map);
+    } else {
+      setProfilesById({});
+    }
     setLoading(false);
   }
 
