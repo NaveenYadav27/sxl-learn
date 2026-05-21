@@ -129,6 +129,8 @@ export interface K8sIncident {
     commands_powershell: string[];
     recovery: string[];
   };
+  // Module 3 concept payload (kube architecture panel). Optional.
+  k8s_concept?: import("./m3Incidents").K8sConcept;
 }
 
 const iso = (minsAgo: number) => new Date(Date.now() - minsAgo * 60_000).toISOString();
