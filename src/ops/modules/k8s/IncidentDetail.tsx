@@ -10,7 +10,9 @@ import { TOOL_CATALOG, PHASE_DEFAULTS } from "./toolStack";
 import { getIncidentLab } from "./incidentLabs";
 import { IncidentLabConsole } from "./IncidentLabConsole";
 import { K8sConceptPanel } from "./K8sConceptPanel";
-import { ArrowLeft, ChevronRight, ExternalLink, Lightbulb, ShieldAlert, Boxes, BookOpen, Wrench, Terminal } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { toast } from "@/hooks/use-toast";
+import { ArrowLeft, ChevronRight, ExternalLink, Lightbulb, ShieldAlert, Boxes, BookOpen, Wrench, Terminal, CheckCircle2, Circle, Copy, PlayCircle } from "lucide-react";
 
 const SEV_TOKEN: Record<K8sIncidentSeverity, string> = {
   critical: "bg-[hsl(var(--ops-critical)/0.18)] text-[hsl(var(--ops-critical))] border-[hsl(var(--ops-critical)/0.5)]",
