@@ -69,6 +69,7 @@ import PodsList from "./ops/modules/k8s/PodsList.tsx";
 import ContainersList from "./ops/modules/k8s/ContainersList.tsx";
 import K8sIncidentsList from "./ops/modules/k8s/IncidentsList.tsx";
 import K8sIncidentDetail from "./ops/modules/k8s/IncidentDetail.tsx";
+import K8sIncidentTriagePage from "./ops/modules/k8s/IncidentTriagePage.tsx";
 import PipelinesList from "./ops/modules/devops/PipelinesList.tsx";
 import DeploymentsList from "./ops/modules/devops/DeploymentsList.tsx";
 import RepositoriesList from "./ops/modules/devops/RepositoriesList.tsx";
