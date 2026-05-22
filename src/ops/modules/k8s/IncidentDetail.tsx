@@ -9,6 +9,7 @@ import { findK8sIncident, K8S_PHASES, type K8sIncidentSeverity, type K8sPhaseId 
 import { TOOL_CATALOG, PHASE_DEFAULTS } from "./toolStack";
 import { getIncidentLab } from "./incidentLabs";
 import { IncidentLabConsole } from "./IncidentLabConsole";
+import { K8sConceptPanel } from "./K8sConceptPanel";
 import { ArrowLeft, ChevronRight, ExternalLink, Lightbulb, ShieldAlert, Boxes, BookOpen, Wrench, Terminal } from "lucide-react";
 
 const SEV_TOKEN: Record<K8sIncidentSeverity, string> = {
@@ -241,7 +242,10 @@ export default function K8sIncidentDetail() {
             </ol>
           </SectionCard>
 
-          {/* Interactive step-by-step lab (M1 / M2 incidents) */}
+          {/* Module 3 — Kubernetes architecture concept panel */}
+          {n.k8s_concept && <K8sConceptPanel concept={n.k8s_concept} />}
+
+          {/* Interactive step-by-step lab (M1 / M2 / M3 incidents) */}
           {lab && (
             <div id="incident-lab-console" className="scroll-mt-20">
               <IncidentLabConsole lab={lab} incidentId={n.id} />
