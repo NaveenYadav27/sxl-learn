@@ -174,7 +174,10 @@ export default function K8sIncidentDetail() {
                   <span>{s.text}</span>
                 </div>
               ))}
-              <button className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-sm border border-[hsl(var(--ops-accent)/0.5)] bg-[hsl(var(--ops-accent)/0.15)] px-2.5 py-1.5 text-[12px] text-[hsl(var(--ops-accent))]">
+              <button
+                onClick={() => setTriageOpen(true)}
+                className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-sm border border-[hsl(var(--ops-accent)/0.5)] bg-[hsl(var(--ops-accent)/0.15)] px-2.5 py-1.5 text-[12px] text-[hsl(var(--ops-accent))] hover:bg-[hsl(var(--ops-accent)/0.25)]"
+              >
                 <ExternalLink className="h-3 w-3" /> Open Full Triage
               </button>
             </SectionCard>
