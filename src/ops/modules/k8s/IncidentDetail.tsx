@@ -10,7 +10,9 @@ import { TOOL_CATALOG, PHASE_DEFAULTS } from "./toolStack";
 import { getIncidentLab } from "./incidentLabs";
 import { IncidentLabConsole } from "./IncidentLabConsole";
 import { K8sConceptPanel } from "./K8sConceptPanel";
-import { ArrowLeft, ChevronRight, ExternalLink, Lightbulb, ShieldAlert, Boxes, BookOpen, Wrench, Terminal } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { toast } from "@/hooks/use-toast";
+import { ArrowLeft, ChevronRight, ExternalLink, Lightbulb, ShieldAlert, Boxes, BookOpen, Wrench, Terminal, CheckCircle2, Circle, Copy, PlayCircle } from "lucide-react";
 
 const SEV_TOKEN: Record<K8sIncidentSeverity, string> = {
   critical: "bg-[hsl(var(--ops-critical)/0.18)] text-[hsl(var(--ops-critical))] border-[hsl(var(--ops-critical)/0.5)]",
@@ -31,6 +33,17 @@ export default function K8sIncidentDetail() {
   const navigate = useNavigate();
   const n = findK8sIncident(id);
   const [tab, setTab] = useState<"intel" | "logs" | "metrics" | "vuln" | "response">("intel");
+  const [triageOpen, setTriageOpen] = useState(false);
+  const [doneSteps, setDoneSteps] = useState<Record<string, boolean>>({});
+  const toggleStep = (k: string) => setDoneSteps((s) => ({ ...s, [k]: !s[k] }));
+  const copyCmd = (c: string) => {
+    navigator.clipboard?.writeText(c);
+    toast({ title: "Copied", description: c });
+  };
+  const scrollToLab = () => {
+    setTriageOpen(false);
+    setTimeout(() => document.getElementById("incident-lab-console")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+  };
 
   const phaseIdx = useMemo(() => K8S_PHASES.findIndex((p) => p.id === n?.current_phase), [n]);
   const failedSet = useMemo(() => new Set(n?.failed_phases ?? []), [n]);
@@ -161,7 +174,10 @@ export default function K8sIncidentDetail() {
                   <span>{s.text}</span>
                 </div>
               ))}
-              <button className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-sm border border-[hsl(var(--ops-accent)/0.5)] bg-[hsl(var(--ops-accent)/0.15)] px-2.5 py-1.5 text-[12px] text-[hsl(var(--ops-accent))]">
+              <button
+                onClick={() => setTriageOpen(true)}
+                className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-sm border border-[hsl(var(--ops-accent)/0.5)] bg-[hsl(var(--ops-accent)/0.15)] px-2.5 py-1.5 text-[12px] text-[hsl(var(--ops-accent))] hover:bg-[hsl(var(--ops-accent)/0.25)]"
+              >
                 <ExternalLink className="h-3 w-3" /> Open Full Triage
               </button>
             </SectionCard>
@@ -416,6 +432,156 @@ export default function K8sIncidentDetail() {
           </SectionCard>
         </div>
       </div>
+
+      <Dialog open={triageOpen} onOpenChange={setTriageOpen}>
+        <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto bg-[hsl(var(--ops-panel))] border-[hsl(var(--ops-border))] text-[hsl(var(--ops-fg))]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-[hsl(var(--ops-fg))]">
+              <ShieldAlert className="h-4 w-4 text-[hsl(var(--ops-warning))]" />
+              Full Triage · {n.id}
+            </DialogTitle>
+            <DialogDescription className="text-[hsl(var(--ops-muted-fg))]">
+              {n.title} — guided checklist with copyable commands and direct lab handoff.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 text-[12px]">
+            {/* Summary strip */}
+            <div className="grid gap-2 sm:grid-cols-3">
+              <div className="rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] p-2.5">
+                <div className="text-[10px] uppercase tracking-wide text-[hsl(var(--ops-muted-fg))]">Failure chain</div>
+                <div className="mt-0.5 font-semibold">{n.failure_chain}</div>
+              </div>
+              <div className="rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] p-2.5">
+                <div className="text-[10px] uppercase tracking-wide text-[hsl(var(--ops-muted-fg))]">Current phase</div>
+                <div className="mt-0.5 font-semibold">{K8S_PHASES[phaseIdx]?.label ?? "—"}</div>
+              </div>
+              <div className="rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] p-2.5">
+                <div className="text-[10px] uppercase tracking-wide text-[hsl(var(--ops-muted-fg))]">Affected</div>
+                <div className="mt-0.5 font-semibold">{n.affected.length} asset{n.affected.length === 1 ? "" : "s"}</div>
+              </div>
+            </div>
+
+            {/* Triage checklist */}
+            <div>
+              <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-[hsl(var(--ops-muted-fg))]">
+                Triage checklist · {Object.values(doneSteps).filter(Boolean).length}/{n.next_steps.length} done
+              </div>
+              <ul className="space-y-1.5">
+                {n.next_steps.map((s, i) => {
+                  const k = `step-${i}`;
+                  const done = !!doneSteps[k];
+                  return (
+                    <li key={k}>
+                      <button
+                        onClick={() => toggleStep(k)}
+                        className={[
+                          "flex w-full items-start gap-2 rounded-sm border px-2.5 py-2 text-left transition-colors",
+                          done
+                            ? "border-[hsl(var(--ops-success)/0.5)] bg-[hsl(var(--ops-success)/0.10)]"
+                            : "border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] hover:border-[hsl(var(--ops-accent)/0.5)]",
+                        ].join(" ")}
+                      >
+                        {done ? (
+                          <CheckCircle2 className="mt-0.5 h-4 w-4 text-[hsl(var(--ops-success))]" />
+                        ) : (
+                          <Circle className="mt-0.5 h-4 w-4 text-[hsl(var(--ops-muted-fg))]" />
+                        )}
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <span className="rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel))] px-1.5 py-0.5 text-[10px] font-semibold uppercase text-[hsl(var(--ops-muted-fg))]">{s.level}</span>
+                            <span className={done ? "line-through text-[hsl(var(--ops-muted-fg))]" : "text-[hsl(var(--ops-fg))]"}>{s.text}</span>
+                          </div>
+                        </div>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            {/* Quick commands from aligned tools */}
+            {n.aligned_tools.length > 0 && (
+              <div>
+                <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-[hsl(var(--ops-muted-fg))]">Quick triage commands</div>
+                <ul className="space-y-1">
+                  {n.aligned_tools.flatMap((t) => {
+                    const d = TOOL_CATALOG[t];
+                    if (!d) return [];
+                    return d.commands.slice(0, 2).map((c) => (
+                      <li key={`${t}-${c}`} className="flex items-center justify-between gap-2 rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] px-2 py-1.5">
+                        <div className="flex min-w-0 items-center gap-2">
+                          <span className="rounded-sm border border-[hsl(var(--ops-accent)/0.4)] bg-[hsl(var(--ops-accent)/0.15)] px-1.5 py-0.5 text-[10px] font-semibold text-[hsl(var(--ops-accent))]">{d.tool}</span>
+                          <code className="truncate font-mono text-[11px] text-[hsl(var(--ops-fg))]">{c}</code>
+                        </div>
+                        <button
+                          onClick={() => copyCmd(c)}
+                          className="inline-flex items-center gap-1 rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel))] px-1.5 py-0.5 text-[10px] uppercase text-[hsl(var(--ops-muted-fg))] hover:text-[hsl(var(--ops-accent))]"
+                        >
+                          <Copy className="h-3 w-3" /> Copy
+                        </button>
+                      </li>
+                    ));
+                  })}
+                </ul>
+              </div>
+            )}
+
+            {/* Affected assets recap */}
+            <div>
+              <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-[hsl(var(--ops-muted-fg))]">Affected assets</div>
+              <ul className="space-y-1">
+                {n.affected.map((a) => (
+                  <li key={a.kind + a.name} className="flex items-start justify-between gap-2 rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] px-2.5 py-2">
+                    <div>
+                      <div className="font-mono text-[hsl(var(--ops-fg))]">{a.name}</div>
+                      <div className="text-[11px] text-[hsl(var(--ops-muted-fg))]">{a.kind} · {a.detail}</div>
+                      <div className="mt-0.5 text-[11px] text-[hsl(var(--ops-fg))]">→ {a.action}</div>
+                    </div>
+                    <span className={`shrink-0 rounded-sm border px-1.5 py-0.5 text-[10px] font-semibold uppercase ${SEV_TOKEN[a.severity]}`}>{a.severity}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-[hsl(var(--ops-border))] pt-3">
+            <button
+              onClick={() => setTriageOpen(false)}
+              className="rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] px-3 py-1.5 text-[12px] hover:border-[hsl(var(--ops-accent)/0.5)]"
+            >
+              Close
+            </button>
+            <div className="flex flex-wrap gap-2">
+              {lab && (
+                <button
+                  onClick={scrollToLab}
+                  className="inline-flex items-center gap-1.5 rounded-sm border border-[hsl(var(--ops-success)/0.5)] bg-[hsl(var(--ops-success)/0.15)] px-3 py-1.5 text-[12px] text-[hsl(var(--ops-success))]"
+                >
+                  <PlayCircle className="h-3.5 w-3.5" /> Jump to interactive lab
+                </button>
+              )}
+              {n.lab_slug && (
+                <Link
+                  to={`/lab/${n.lab_slug}/sim`}
+                  className="inline-flex items-center gap-1.5 rounded-sm border border-[hsl(var(--ops-accent)/0.5)] bg-[hsl(var(--ops-accent)/0.15)] px-3 py-1.5 text-[12px] text-[hsl(var(--ops-accent))]"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" /> Open simulator
+                </Link>
+              )}
+              <button
+                onClick={() => {
+                  toast({ title: "Triage acknowledged", description: `${n.id} marked as actively triaged.` });
+                  setTriageOpen(false);
+                }}
+                className="inline-flex items-center gap-1.5 rounded-sm border border-[hsl(var(--ops-warning)/0.5)] bg-[hsl(var(--ops-warning)/0.15)] px-3 py-1.5 text-[12px] text-[hsl(var(--ops-warning))]"
+              >
+                Acknowledge & start
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
