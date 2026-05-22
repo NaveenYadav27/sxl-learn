@@ -33,6 +33,17 @@ export default function K8sIncidentDetail() {
   const navigate = useNavigate();
   const n = findK8sIncident(id);
   const [tab, setTab] = useState<"intel" | "logs" | "metrics" | "vuln" | "response">("intel");
+  const [triageOpen, setTriageOpen] = useState(false);
+  const [doneSteps, setDoneSteps] = useState<Record<string, boolean>>({});
+  const toggleStep = (k: string) => setDoneSteps((s) => ({ ...s, [k]: !s[k] }));
+  const copyCmd = (c: string) => {
+    navigator.clipboard?.writeText(c);
+    toast({ title: "Copied", description: c });
+  };
+  const scrollToLab = () => {
+    setTriageOpen(false);
+    setTimeout(() => document.getElementById("incident-lab-console")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+  };
 
   const phaseIdx = useMemo(() => K8S_PHASES.findIndex((p) => p.id === n?.current_phase), [n]);
   const failedSet = useMemo(() => new Set(n?.failed_phases ?? []), [n]);
