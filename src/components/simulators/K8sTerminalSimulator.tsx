@@ -583,17 +583,13 @@ function runCommand(cmd: string): Line[] {
   }
 
   // ---------- fallback ----------
-  push(`${os === "windows" ? "PS> " : "bash: "}command not found (simulated): ${c.split(" ")[0]}`, "err");
+  push(`command not found (simulated): ${c.split(" ")[0]}`, "err");
   push("Tip: this terminal recognises docker, kubectl, kind, minikube, helm,", "info");
   push("     plus M3 troubleshooting: kubectl describe node | top node | drain | cordon | taint,", "info");
   push("     systemctl status kubelet, journalctl -u kubelet, crictl ps, swapon, iptables,", "info");
   push("     and Windows: Get-Service kubelet, ipconfig, Get-NetAdapter, Get-WindowsFeature.", "info");
   return out;
 }
-
-// NOTE: `os` is read from the component scope when used in the fallback above.
-// To keep runCommand pure we pass it in via closure — see component below.
-let os: OS = "linux";
 
 // ------------------------------------------------------------------
 // Validation
