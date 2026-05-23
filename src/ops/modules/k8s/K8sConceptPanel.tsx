@@ -12,8 +12,9 @@ import {
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion";
-import { GraduationCap, Network, Wrench, BookOpen, Terminal, ChevronRight } from "lucide-react";
+import { GraduationCap, Network, Wrench, BookOpen, Terminal, ChevronRight, Apple, Square } from "lucide-react";
 import type { K8sConcept, K8sArchNode, K8sToolCard } from "./m3Incidents";
+import { K8sTerm } from "@/components/K8sTerm";
 
 export function K8sConceptPanel({ concept }: { concept: K8sConcept }) {
   return (
@@ -21,9 +22,63 @@ export function K8sConceptPanel({ concept }: { concept: K8sConcept }) {
       <ConceptCard concept={concept} />
       <AudienceCard beginner={concept.beginner} engineer={concept.engineer} />
       <ArchitectureFlow flow={concept.architecture_flow} failedId={concept.failure_stage_id} />
+      <OsComparisonCard concept={concept} />
       <ToolCards tools={concept.tools} />
       <LearnMore items={concept.learn_more} />
     </div>
+  );
+}
+
+/* -------------------- Linux vs Windows comparison -------------------- */
+// Derived from the architecture flow: any node whose canonical glossary entry
+// has both `linux` and `windows` notes gets a side-by-side row. Lets engineers
+// see, at a glance, how the same component behaves on a Linux worker vs a
+// Windows worker — critical for hybrid cluster operators.
+import { lookupK8sTerm } from "@/lib/k8sGlossary";
+function OsComparisonCard({ concept }: { concept: K8sConcept }) {
+  const rows = concept.architecture_flow
+    .map((n) => {
+      const entry = lookupK8sTerm(n.id) ?? lookupK8sTerm(n.label);
+      if (!entry || (!entry.linux && !entry.windows)) return null;
+      return { id: n.id, label: entry.term, linux: entry.linux, windows: entry.windows };
+    })
+    .filter(Boolean) as { id: string; label: string; linux?: string; windows?: string }[];
+
+  if (rows.length === 0) return null;
+
+  return (
+    <SectionCard bodyClassName="p-0">
+      <div className="flex items-center gap-2 border-b border-[hsl(var(--ops-border))] px-4 py-2.5">
+        <Apple className="h-4 w-4 text-[hsl(var(--ops-accent))]" />
+        <span className="text-[13px] font-semibold text-[hsl(var(--ops-fg))]">
+          Linux vs Windows — same component, different mechanics
+        </span>
+        <span className="ml-auto text-[11px] text-[hsl(var(--ops-muted-fg))]">
+          Hybrid-cluster operators: how each piece behaves on a Linux worker vs a Windows worker.
+        </span>
+      </div>
+      <div className="divide-y divide-[hsl(var(--ops-border))]">
+        {rows.map((r) => (
+          <div key={r.id} className="grid gap-2 px-4 py-2.5 text-[12px] md:grid-cols-[140px_1fr_1fr]">
+            <div className="font-semibold text-[hsl(var(--ops-fg))]">
+              <K8sTerm term={r.id}>{r.label}</K8sTerm>
+            </div>
+            <div className="rounded-sm border border-[hsl(210_70%_55%/0.35)] bg-[hsl(210_70%_55%/0.06)] p-2">
+              <div className="mb-0.5 inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-[hsl(210_70%_75%)]">
+                <Square className="h-3 w-3" /> Linux
+              </div>
+              <div className="text-[hsl(var(--ops-fg))]">{r.linux ?? "—"}</div>
+            </div>
+            <div className="rounded-sm border border-[hsl(265_60%_60%/0.35)] bg-[hsl(265_60%_60%/0.06)] p-2">
+              <div className="mb-0.5 inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-[hsl(265_70%_78%)]">
+                <Square className="h-3 w-3" /> Windows
+              </div>
+              <div className="text-[hsl(var(--ops-fg))]">{r.windows ?? "Not applicable on Windows worker nodes."}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </SectionCard>
   );
 }
 
