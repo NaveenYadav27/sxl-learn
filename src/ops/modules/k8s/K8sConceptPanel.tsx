@@ -88,7 +88,9 @@ function ConceptCard({ concept }: { concept: K8sConcept }) {
     <SectionCard bodyClassName="p-0">
       <div className="flex items-center gap-2 border-b border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-accent)/0.08)] px-4 py-2.5">
         <GraduationCap className="h-4 w-4 text-[hsl(var(--ops-accent))]" />
-        <span className="text-[13px] font-semibold text-[hsl(var(--ops-fg))]">Kubernetes Concept · {concept.concept}</span>
+        <span className="text-[13px] font-semibold text-[hsl(var(--ops-fg))]">
+          Kubernetes Concept · <K8sTerm term={concept.concept}>{concept.concept}</K8sTerm>
+        </span>
       </div>
       <div className="grid gap-3 p-4 text-[12px] leading-relaxed lg:grid-cols-3">
         <Field label="Definition" body={concept.definition} />
