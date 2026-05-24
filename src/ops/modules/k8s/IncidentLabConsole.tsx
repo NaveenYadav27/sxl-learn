@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { SectionCard } from "@/ops/components/SectionCard";
 import { TOOL_CATALOG } from "./toolStack";
 import type { IncidentLab, LabStage, LabStep } from "./incidentLabs";
+import { K8sAutoText } from "@/components/K8sAutoText";
 import {
   Terminal, Play, RotateCcw, Lightbulb, CheckCircle2, Circle, ChevronRight, Clock, Wrench,
 } from "lucide-react";
