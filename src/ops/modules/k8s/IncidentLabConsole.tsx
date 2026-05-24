@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { SectionCard } from "@/ops/components/SectionCard";
 import { TOOL_CATALOG } from "./toolStack";
 import type { IncidentLab, LabStage, LabStep } from "./incidentLabs";
+import { K8sAutoText } from "@/components/K8sAutoText";
 import {
   Terminal, Play, RotateCcw, Lightbulb, CheckCircle2, Circle, ChevronRight, Clock, Wrench,
 } from "lucide-react";
@@ -243,7 +244,7 @@ export function IncidentLabConsole({ lab, incidentId }: { lab: IncidentLab; inci
               <div className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-[hsl(var(--ops-muted-fg))]">
                 Why this step matters
               </div>
-              <div className="leading-relaxed text-[hsl(var(--ops-fg))]">{step.why}</div>
+              <div className="leading-relaxed text-[hsl(var(--ops-fg))]"><K8sAutoText text={step.why} /></div>
               <div className="mt-2 text-[11px] text-[hsl(var(--ops-success))]">
                 Success check: <span className="font-mono">{step.success_check}</span>
               </div>
