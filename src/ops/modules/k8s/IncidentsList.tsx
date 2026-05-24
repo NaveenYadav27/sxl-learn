@@ -56,7 +56,7 @@ export default function K8sIncidentsList() {
       <div className="grid gap-3 p-4">
         {/* M3 Learning Hub banner */}
         {(() => {
-          const m3 = K8S_INCIDENTS.filter((i) => i.module === "M3" && (i as any).k8s_concept);
+          const m3 = K8S_INCIDENTS.filter((i) => i.module === "K8S-M3" && (i as any).k8s_concept);
           if (m3.length === 0) return null;
           return (
             <div className="rounded-md border border-[hsl(var(--ops-accent)/0.4)] bg-[hsl(var(--ops-accent)/0.08)] p-3">
@@ -81,7 +81,7 @@ export default function K8sIncidentsList() {
                   ))}
                   {m3.length > 4 && (
                     <button
-                      onClick={() => setMod("M3")}
+                      onClick={() => setMod("K8S-M3")}
                       className="rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] px-2 py-1 text-[11px] text-[hsl(var(--ops-muted-fg))] hover:text-[hsl(var(--ops-fg))]"
                     >
                       +{m3.length - 4} more
