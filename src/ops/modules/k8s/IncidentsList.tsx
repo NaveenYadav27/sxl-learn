@@ -54,7 +54,45 @@ export default function K8sIncidentsList() {
       />
 
       <div className="grid gap-3 p-4">
-        {/* Live feed strip */}
+        {/* M3 Learning Hub banner */}
+        {(() => {
+          const m3 = K8S_INCIDENTS.filter((i) => i.module === "M3" && (i as any).k8s_concept);
+          if (m3.length === 0) return null;
+          return (
+            <div className="rounded-md border border-[hsl(var(--ops-accent)/0.4)] bg-[hsl(var(--ops-accent)/0.08)] p-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-[hsl(var(--ops-accent))]">
+                    <BookOpen className="h-4 w-4" /> Module 3 · Kubernetes Fundamentals — Interactive Learning Hub
+                  </div>
+                  <div className="mt-1 text-[11px] text-[hsl(var(--ops-muted-fg))]">
+                    {m3.length} concept-driven incidents · hoverable glossary · Linux ↔ Windows comparison · scripted lab console · troubleshooting terminal
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {m3.slice(0, 4).map((i) => (
+                    <Link
+                      key={i.id}
+                      to={`/ops/k8s-incidents/${i.id}`}
+                      className="rounded-sm border border-[hsl(var(--ops-accent)/0.5)] bg-[hsl(var(--ops-bg))] px-2 py-1 text-[11px] text-[hsl(var(--ops-accent))] hover:bg-[hsl(var(--ops-accent)/0.15)]"
+                    >
+                      {i.id} · {i.title.length > 38 ? i.title.slice(0, 38) + "…" : i.title}
+                    </Link>
+                  ))}
+                  {m3.length > 4 && (
+                    <button
+                      onClick={() => setMod("M3")}
+                      className="rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] px-2 py-1 text-[11px] text-[hsl(var(--ops-muted-fg))] hover:text-[hsl(var(--ops-fg))]"
+                    >
+                      +{m3.length - 4} more
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel))] px-4 py-2.5">
           <div className="flex items-center gap-3 text-[12px]">
             <span className="inline-flex items-center gap-1.5">
