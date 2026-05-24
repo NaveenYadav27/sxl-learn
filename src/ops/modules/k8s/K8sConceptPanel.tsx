@@ -15,11 +15,13 @@ import {
 import { GraduationCap, Network, Wrench, BookOpen, Terminal, ChevronRight, Apple, Square } from "lucide-react";
 import type { K8sConcept, K8sArchNode, K8sToolCard } from "./m3Incidents";
 import { K8sTerm } from "@/components/K8sTerm";
+import { K8sArchitectureVisual } from "@/components/K8sArchitectureVisual";
 
 export function K8sConceptPanel({ concept }: { concept: K8sConcept }) {
   return (
     <div className="flex flex-col gap-3">
       <ConceptCard concept={concept} />
+      <K8sArchitectureVisual />
       <AudienceCard beginner={concept.beginner} engineer={concept.engineer} />
       <ArchitectureFlow flow={concept.architecture_flow} failedId={concept.failure_stage_id} />
       <OsComparisonCard concept={concept} />
