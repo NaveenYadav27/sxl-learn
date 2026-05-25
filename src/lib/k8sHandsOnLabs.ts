@@ -1341,6 +1341,498 @@ kubectl get pods -A --field-selector=status.phase!=Running | wc -l`,
       viva: [{ q: "Walk me through your last (or hypothetical) P1.", a: "Use the loop: triage → hypothesis → test → recover → validate → postmortem." }],
     },
   },
+
+  /* ============ LAB 13 — Windows Containers Fundamentals ============ */
+  {
+    id: "K8S-LAB-13",
+    slug: "windows-containers-fundamentals",
+    number: 13,
+    title: "Windows Containers Fundamentals (Docker Desktop & Windows Server)",
+    category: "Windows",
+    level: "Beginner",
+    durationMin: 60,
+    focus: ["Windows containers", "Docker Desktop", "process isolation", "Hyper-V isolation", "ltsc2022"],
+    objective:
+      "Run your first Windows container on Windows Server 2022 / Docker Desktop, understand process vs Hyper-V isolation, and inspect the Windows container runtime.",
+    conceptsCovered: [
+      "Process isolation vs Hyper-V isolation",
+      "Why Windows host build must match container base image (ltsc2019 vs ltsc2022)",
+      "nanoserver vs servercore base images",
+      "Docker Desktop Windows-containers mode vs Linux-containers mode",
+    ],
+    prerequisites: [
+      "Windows 10/11 Pro or Windows Server 2022",
+      "Docker Desktop installed (or containerd + docker CLI on Server)",
+      "Virtualization enabled in BIOS (for Hyper-V isolation)",
+    ],
+    architecture: {
+      ascii: `Windows Host (Server 2022 / Win11)
+  |
+  +-- Docker Engine (Windows mode)
+        |
+        +-- Process-isolated container  (shares host kernel - fast, same OS build req'd)
+        |
+        +-- Hyper-V isolated container  (tiny utility VM - strong boundary, slower start)`,
+      narrative:
+        "Windows containers are NOT Linux containers. They require a Windows kernel. Process isolation reuses the host kernel (must match build), Hyper-V isolation spins a lightweight VM per container for stronger boundary.",
+    },
+    steps: [
+      {
+        title: "Switch Docker Desktop to Windows containers",
+        command:
+`# Right-click the Docker tray icon > "Switch to Windows containers"
+# Or from PowerShell (admin):
+& 'C:\\Program Files\\Docker\\Docker\\DockerCli.exe' -SwitchDaemon
+docker version`,
+        explanation: "Docker Desktop runs Linux containers by default via WSL2; you must switch the engine to talk to the Windows runtime.",
+        expectedOutput: "`Server: OS/Arch: windows/amd64` in `docker version` output.",
+        internals: "Switching swaps the named-pipe the CLI talks to and starts dockerd.exe instead of the Linux VM.",
+      },
+      {
+        title: "Pull and run nanoserver",
+        command:
+`docker pull mcr.microsoft.com/windows/nanoserver:ltsc2022
+docker run --rm mcr.microsoft.com/windows/nanoserver:ltsc2022 cmd /c "ver && hostname"`,
+        explanation: "nanoserver is the minimal (~100 MB) Windows base — no GUI, no PowerShell, just cmd + .NET Core.",
+        expectedOutput: "Microsoft Windows version + container hostname.",
+        internals: "First pull writes layers under C:\\ProgramData\\docker\\windowsfilter using the windowsfilter graph driver.",
+      },
+      {
+        title: "Run with Hyper-V isolation",
+        command:
+`docker run --rm --isolation=hyperv mcr.microsoft.com/windows/nanoserver:ltsc2022 cmd /c "ver"`,
+        explanation: "Forces a Hyper-V utility VM for the container — works even when host build doesn't match the image build.",
+        expectedOutput: "Same output, but ~3-5s slower to start.",
+        internals: "Each Hyper-V container gets its own kernel inside a UVM — true VM-level isolation with container ergonomics.",
+      },
+      {
+        title: "Inspect the running engine",
+        command:
+`docker info | findstr /i "isolation osversion"
+Get-Service docker
+Get-ComputerInfo | Select-Object WindowsBuildLabEx`,
+        explanation: "Confirms default isolation mode + Windows build (must match image for process isolation).",
+        expectedOutput: "Default Isolation: process, OSVersion: 10.0.20348.x (Server 2022).",
+        internals: "Mismatch between host build (e.g. 20348) and image build (e.g. 17763 for ltsc2019) forces hyperv isolation or fails.",
+      },
+    ],
+    commonErrors: [
+      { error: "`hcsshim::CreateComputeSystem: The container operating system does not match`", cause: "Image base build differs from host build (e.g. ltsc2019 image on Server 2022)", fix: "Use --isolation=hyperv OR pull the matching ltsc tag" },
+      { error: "Docker Desktop hangs on switch", cause: "Hyper-V or Containers feature not installed", fix: "Enable-WindowsOptionalFeature -Online -FeatureName Containers,Microsoft-Hyper-V -All" },
+      { error: "Slow first run", cause: "Multi-GB Windows base image pull", fix: "Pre-pull base images on golden hosts" },
+    ],
+    troubleshooting: [
+      "`docker events` shows runtime errors as they happen",
+      "`Get-WinEvent -LogName Microsoft-Windows-Hyper-V-Compute-Admin`",
+      "`docker system info` — verify default isolation and storage driver",
+    ],
+    enterpriseRelevance:
+      "Windows containers underpin all .NET Framework modernization. Knowing isolation modes lets you decide between density (process) and tenant isolation (hyperv) — a cost vs security tradeoff platform teams own.",
+    validation: [
+      "`docker version` shows windows/amd64 server",
+      "Both process and hyperv containers run on the same host",
+    ],
+    relatedIncidents: ["K8S-INC-3002"],
+    relatedGuideSections: ["Windows containers basics", "Isolation modes"],
+    questions: {
+      beginner: [{ q: "Can a Windows container run a Linux binary?", a: "No — the kernel ABI is different. You'd need WSL or a Linux node." }],
+      intermediate: [{ q: "When do you choose Hyper-V isolation?", a: "Multi-tenant hosts, untrusted images, or when host/image builds don't match." }],
+      advanced: [{ q: "Why is nanoserver preferred over servercore in production?", a: "Smaller attack surface, ~10x smaller image, faster pulls — only choose servercore if you need full Win32/PowerShell." }],
+      scenario: [{ q: "Image pulls succeed but `docker run` fails with `operating system does not match`. Fix?", a: "Add --isolation=hyperv or pull the ltsc tag that matches the host build." }],
+      viva: [{ q: "Difference between Docker Desktop's Linux mode and Windows mode?", a: "Linux mode uses a WSL2 VM; Windows mode talks to native dockerd.exe + Windows container runtime." }],
+    },
+  },
+
+  /* ============ LAB 14 — Build & Push a Windows Container Image ============ */
+  {
+    id: "K8S-LAB-14",
+    slug: "windows-build-push-image",
+    number: 14,
+    title: "Build & Push a Windows .NET Container Image",
+    category: "Windows",
+    level: "Engineer",
+    durationMin: 75,
+    focus: ["Dockerfile (Windows)", "ASP.NET", "multi-stage build", "ACR/GHCR push", "image hygiene"],
+    objective:
+      "Author a Windows Dockerfile for an ASP.NET app, build with multi-stage, tag semantically, and push to a registry the cluster can pull from.",
+    conceptsCovered: [
+      "Multi-stage builds on Windows (sdk to runtime)",
+      "ESCAPE directive and PowerShell RUN steps",
+      "Semantic image tagging for Windows artifacts",
+      "Registry auth on Windows (`docker login` + Windows Credential Manager)",
+    ],
+    prerequisites: ["Lab 13 complete", "Registry account (ACR, GHCR, or Docker Hub)"],
+    architecture: {
+      ascii: `Dev workstation (Win11 + Docker Desktop, Windows mode)
+        |
+        | docker build -t myacr.azurecr.io/web:1.0.0 .
+        v
++--------------------+        +--------------------------+
+| Stage 1: sdk image | -----> | Stage 2: runtime image   |
+| dotnet publish     |  COPY  | aspnet:8.0-ltsc2022      |
++--------------------+        +--------------------------+
+                                        |
+                                        | docker push
+                                        v
+                                 Container registry  --> pulled by Windows worker node`,
+      narrative:
+        "Multi-stage keeps the SDK (~3 GB) out of the final image. The runtime image carries only the published app + ASP.NET runtime — typically 400-700 MB.",
+    },
+    steps: [
+      {
+        title: "Scaffold a minimal ASP.NET app",
+        command:
+`mkdir winweb; cd winweb
+dotnet new webapi -n WinWeb -o .
+# (or copy an existing ASP.NET Framework / Core app)`,
+        explanation: "Any compilable .NET project works; we just need something to containerize.",
+        expectedOutput: "Project files created.",
+        internals: "Requires the .NET SDK locally only if you want to test outside the container — the Dockerfile builds inside the SDK image.",
+      },
+      {
+        title: "Author the Windows Dockerfile",
+        command:
+`@'
+# escape=\`
+FROM mcr.microsoft.com/dotnet/sdk:8.0-windowsservercore-ltsc2022 AS build
+WORKDIR C:\\src
+COPY . .
+RUN dotnet restore && dotnet publish -c Release -o C:\\out
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-windowsservercore-ltsc2022
+WORKDIR C:\\app
+COPY --from=build C:\\out .
+EXPOSE 8080
+ENTRYPOINT ["dotnet", "WinWeb.dll"]
+'@ | Set-Content Dockerfile`,
+        explanation: "Two stages: build with the SDK, then copy the publish output into the slim runtime image.",
+        expectedOutput: "Dockerfile written.",
+        internals: "The `escape` directive flips the line-continuation character from `\\` to backtick so Windows paths don't need escaping.",
+      },
+      {
+        title: "Build, tag, and inspect",
+        command:
+`docker build -t winweb:1.0.0 .
+docker images winweb
+docker history winweb:1.0.0`,
+        explanation: "Tag semantically from the start (`1.0.0`, not `latest`).",
+        expectedOutput: "Image ~500-700 MB; layers visible in history.",
+        internals: "Each RUN/COPY produces a new windowsfilter layer; rebuild reuses cached layers if context hash matches.",
+      },
+      {
+        title: "Push to a registry",
+        command:
+`docker login myacr.azurecr.io   # or ghcr.io / docker.io
+docker tag winweb:1.0.0 myacr.azurecr.io/winweb:1.0.0
+docker push myacr.azurecr.io/winweb:1.0.0`,
+        explanation: "Tag with the registry hostname, then push. Windows credentials are stored via Credential Manager.",
+        expectedOutput: "Layers uploaded; digest printed.",
+        internals: "Push is parallel per layer; large Windows base layers are skipped if the registry already has them (cross-repo mount).",
+      },
+      {
+        title: "Deploy on the Windows worker",
+        command:
+`kubectl create deploy winweb --image=myacr.azurecr.io/winweb:1.0.0
+kubectl patch deploy winweb -p '{"spec":{"template":{"spec":{"nodeSelector":{"kubernetes.io/os":"windows"}}}}}'
+kubectl get pods -o wide`,
+        explanation: "Quick deploy pinned to a Windows node (uses the hybrid cluster from Lab 11).",
+        expectedOutput: "Pod scheduled on the Windows node and Running.",
+        internals: "kubelet on the Windows node calls containerd-windows via named pipe to pull from the registry.",
+      },
+    ],
+    commonErrors: [
+      { error: "Build fails: `no matching manifest for windows/amd64`", cause: "Pulled a Linux-only base image", fix: "Use `mcr.microsoft.com/dotnet/*` Windows tags (suffix `-windowsservercore-ltsc2022`)" },
+      { error: "Push: `denied: requested access to the resource is denied`", cause: "Wrong registry login or repo permission", fix: "`docker login <registry>` and check ACR role assignment / GHCR PAT scopes" },
+      { error: "Massive image size", cause: "Single-stage build keeps the SDK", fix: "Multi-stage; only the runtime image is shipped" },
+    ],
+    troubleshooting: [
+      "`docker build --progress=plain` to see every command's output",
+      "`docker scan` / `trivy image` to check CVEs before push",
+      "Verify base image build matches target nodes (ltsc2022 ↔ Server 2022)",
+    ],
+    enterpriseRelevance:
+      "Windows image hygiene drives cluster cost: every extra 500 MB times N nodes times frequent redeploys = real bandwidth + storage spend. Multi-stage + nanoserver where possible is table stakes.",
+    validation: [
+      "Image < 1 GB",
+      "Image runs on Windows node from the registry",
+      "No SDK layers in the runtime image (verified via `docker history`)",
+    ],
+    relatedIncidents: ["K8S-INC-3002"],
+    relatedGuideSections: ["Windows image build", "Registry strategy"],
+    questions: {
+      beginner: [{ q: "Why multi-stage builds?", a: "Strip build-time tooling so the runtime image is smaller and safer." }],
+      intermediate: [{ q: "Why does the Windows Dockerfile use the escape directive?", a: "Backslash is a path separator on Windows; backtick avoids escaping every path." }],
+      advanced: [{ q: "What happens during cross-repo mount on push?", a: "Registry copies an existing layer blob by digest instead of re-uploading — huge win for shared Windows base layers." }],
+      scenario: [{ q: "CI builds a 6 GB Windows image. What two fixes have biggest impact?", a: "1) Multi-stage with `aspnet` runtime image, 2) switch base to nanoserver if app supports it." }],
+      viva: [{ q: "Why prefer ACR over Docker Hub for Windows images in enterprise?", a: "Geo-replication, private endpoint, RBAC, integrated CVE scanning, and Azure AD auth." }],
+    },
+  },
+
+  /* ============ LAB 15 — Windows Pod Networking (HNS & Calico-Windows) ============ */
+  {
+    id: "K8S-LAB-15",
+    slug: "windows-pod-networking-hns-calico",
+    number: 15,
+    title: "Windows Pod Networking Deep-Dive — HNS & Calico for Windows",
+    category: "Windows",
+    level: "Engineer",
+    durationMin: 90,
+    focus: ["HNS", "Calico-Windows", "VFP", "Windows kube-proxy", "PodCIDR", "DNS"],
+    objective:
+      "Inspect HNS networks/endpoints, install Calico for Windows, validate Pod-to-Pod and Pod-to-Service traffic across Linux and Windows nodes.",
+    conceptsCovered: [
+      "HNS networks (l2bridge, overlay) and HNS endpoints",
+      "VFP (Virtual Filtering Platform) — the Windows equivalent of iptables/eBPF",
+      "How kube-proxy on Windows programs VFP rules",
+      "PodCIDR allocation differences (Windows reserves IPs differently)",
+    ],
+    prerequisites: ["Lab 11 (Windows worker joined)", "Cluster CIDR known (e.g. 10.244.0.0/16)"],
+    architecture: {
+      ascii: `Linux node                    Windows node
++--------------+              +------------------------+
+| cni0 bridge  |              | HNS network (overlay)  |
+|   |  |  |    |              |   |   |   |            |
+|  veth pairs  |              |   HNS endpoints        |
+|   |  |  |    |              |   |   |   |            |
+|  Pods        |   <------>   |  Pods (VFP filters)    |
++--------------+   overlay    +------------------------+
+        \\         (VXLAN)         /
+         \\                       /
+          +--- kube-proxy ------+
+            (iptables / VFP)`,
+      narrative:
+        "Linux Pods sit behind veth + cni0; Windows Pods sit behind HNS endpoints inside an HNS network. Cross-node traffic flows over the VXLAN overlay programmed by Calico-Windows or Flannel host-gw.",
+    },
+    steps: [
+      {
+        title: "Install Calico for Windows",
+        command:
+`# On the Windows node (PowerShell admin):
+Invoke-WebRequest https://github.com/projectcalico/calico/releases/latest/download/install-calico-windows.ps1 -OutFile install-calico-windows.ps1
+.\\install-calico-windows.ps1 -KubeVersion 1.30.0 -ServiceCidr 10.96.0.0/12 -DNSServerIPs 10.96.0.10`,
+        explanation: "Installs calico-node.exe + felix.exe + kube-proxy.exe as Windows services and creates the HNS overlay network.",
+        expectedOutput: "Services CalicoNode, CalicoFelix, kube-proxy Running.",
+        internals: "Calico-Windows uses VXLAN by default; Felix programs VFP rules from NetworkPolicy + IPAM.",
+      },
+      {
+        title: "Inspect HNS objects",
+        command:
+`Get-HnsNetwork | Select Name,Type,AddressPrefix
+Get-HnsEndpoint | Select Name,IPAddress,MacAddress | Format-Table
+Get-HnsPolicyList | Select PolicyType,Resources`,
+        explanation: "HNS is the source of truth on Windows — anything Pods do networking-wise shows up here.",
+        expectedOutput: "Overlay network present; one endpoint per Pod; policies for SNAT/LB.",
+        internals: "HNS is a singleton service (`hns`); restarting it tears down all Pod networking — handle with care.",
+      },
+      {
+        title: "Validate Pod-to-Pod across OS",
+        command:
+`kubectl run linbox --image=nicolaka/netshoot --restart=Never --command -- sleep 3600
+kubectl run winbox --image=mcr.microsoft.com/windows/nanoserver:ltsc2022 --overrides='{"spec":{"nodeSelector":{"kubernetes.io/os":"windows"}}}' --restart=Never --command -- cmd /c ping -t 127.0.0.1
+kubectl get pods -o wide
+kubectl exec -it linbox -- ping <winbox-pod-ip>`,
+        explanation: "Proves the overlay forwards across OS families.",
+        expectedOutput: "Replies in both directions.",
+        internals: "Encap is VXLAN UDP/4789; if it fails, firewall on the Windows host is the usual suspect.",
+      },
+      {
+        title: "Validate Service DNS from Windows",
+        command:
+`kubectl expose pod linbox --port=80 --name=linbox-svc
+kubectl exec -it winbox -- cmd /c "nslookup linbox-svc.default.svc.cluster.local 10.96.0.10"`,
+        explanation: "CoreDNS (on Linux) must be reachable from Windows Pods via the cluster Service CIDR.",
+        expectedOutput: "Resolves to the ClusterIP.",
+        internals: "kube-proxy.exe programs VFP DNAT rules so that Service VIP traffic from a Windows Pod lands on a backend endpoint.",
+      },
+    ],
+    commonErrors: [
+      { error: "Windows Pods get IPs but can't reach Linux Pods", cause: "VXLAN UDP/4789 blocked by Windows firewall", fix: "`New-NetFirewallRule -Name CalicoVxlan -DisplayName CalicoVxlan -Protocol UDP -LocalPort 4789 -Action Allow`" },
+      { error: "Pod stuck ContainerCreating with HNS error", cause: "Stale HNS endpoint from a previous Pod", fix: "`Get-HnsEndpoint | ? IsRemoteEndpoint -eq $false | Remove-HnsEndpoint` (then re-create Pod)" },
+      { error: "DNS lookups fail only from Windows", cause: "kube-proxy.exe not running or wrong DNS server IP passed to Calico installer", fix: "Re-run installer with correct -DNSServerIPs" },
+    ],
+    troubleshooting: [
+      "`Get-HnsNetwork | ConvertTo-Json -Depth 10` for full network state",
+      "`vfpctrl.exe /list-vmswitch-port` to dump VFP rules",
+      "`crictl --runtime-endpoint npipe:////./pipe/containerd-containerd logs <pod>`",
+    ],
+    enterpriseRelevance:
+      "HNS/VFP knowledge is the difference between a Windows node that 'mostly works' and one that survives upgrades + node reboots. Pod networking is also the #1 source of P1s on hybrid clusters.",
+    validation: [
+      "Linux Pod <-> Windows Pod ping works both ways",
+      "Windows Pod resolves Linux Service via cluster DNS",
+      "Calico services healthy and HNS network present after a node reboot",
+    ],
+    relatedIncidents: ["K8S-INC-3002", "K8S-INC-3004"],
+    relatedGuideSections: ["Windows CNI", "Calico for Windows", "HNS internals"],
+    questions: {
+      beginner: [{ q: "What's the Linux equivalent of an HNS endpoint?", a: "A veth pair plugged into the CNI bridge (cni0)." }],
+      intermediate: [{ q: "What does VFP do?", a: "Programs L3/L4 filtering, NAT and load-balancing rules inside the Hyper-V virtual switch." }],
+      advanced: [{ q: "Why is `Restart-Service hns` dangerous?", a: "It tears down every Pod's networking on the host; Pods must be recreated." }],
+      scenario: [{ q: "After a Windows node reboot, all Pods stay ContainerCreating. Where do you look first?", a: "`Get-HnsNetwork` — if the overlay network is missing, the Calico service didn't reattach." }],
+      viva: [{ q: "How does kube-proxy work on Windows?", a: "kube-proxy.exe watches Services/Endpoints and programs VFP DNAT/LB rules instead of iptables." }],
+    },
+  },
+
+  /* ============ LAB 16 — Windows .NET App with gMSA + IIS on Kubernetes ============ */
+  {
+    id: "K8S-LAB-16",
+    slug: "windows-gmsa-iis-deployment",
+    number: 16,
+    title: "Deploy a .NET Framework App on Windows Pods with gMSA + IIS",
+    category: "Windows",
+    level: "Enterprise",
+    durationMin: 120,
+    focus: ["IIS", ".NET Framework", "gMSA", "Active Directory", "Windows secrets"],
+    objective:
+      "Containerize a legacy .NET Framework app on IIS, run it on a Windows node, and authenticate to SQL Server using a Group Managed Service Account (gMSA) — no plaintext credentials.",
+    conceptsCovered: [
+      "Group Managed Service Accounts and how Kubernetes maps them via CRD",
+      "Windows GMSACredentialSpec CRD",
+      "IIS as a container entrypoint (ServiceMonitor.exe)",
+      "Why .NET Framework must use Windows containers (not .NET Core)",
+    ],
+    prerequisites: [
+      "Hybrid cluster from Lab 11",
+      "Active Directory domain reachable from Windows nodes",
+      "AD admin to create a gMSA + KDS root key",
+      "Windows nodes domain-joined OR using ccg-plugin",
+    ],
+    architecture: {
+      ascii: `Active Directory  <--Kerberos--+
+                                  |
++------------------------- Windows worker node (domain-joined) -+
+|  kubelet.exe  ->  containerd-windows                          |
+|         |                                                     |
+|         +-- IIS Pod  (gMSA: webapp$)                          |
+|                |                                              |
+|                | uses gMSA ticket                             |
+|                v                                              |
+|         SQL Server (Windows Auth, no password in pod)         |
++---------------------------------------------------------------+`,
+      narrative:
+        "The pod gets a Kerberos ticket for the gMSA at startup via the Windows credential spec; the app authenticates to SQL Server with Integrated Security and zero secrets in YAML.",
+    },
+    steps: [
+      {
+        title: "Create the gMSA in AD",
+        command:
+`# On a Domain Controller (PowerShell as Domain Admin):
+Add-KdsRootKey -EffectiveTime ((Get-Date).AddHours(-10))
+New-ADGroup -Name "WebAppHosts" -GroupScope Global
+Add-ADGroupMember WebAppHosts -Members "WIN-NODE-1$","WIN-NODE-2$"
+New-ADServiceAccount -Name "webapp" -DNSHostName "webapp.corp.local" \\
+  -PrincipalsAllowedToRetrieveManagedPassword "WebAppHosts"`,
+        explanation: "KDS root key is required once per domain. Only members of WebAppHosts can fetch the gMSA password.",
+        expectedOutput: "gMSA `webapp$` created.",
+        internals: "gMSA passwords rotate automatically (default 30 days); AD synthesises them from the KDS root key.",
+      },
+      {
+        title: "Install the GMSACredentialSpec CRD & webhook",
+        command:
+`kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/windows-gmsa/master/admission-webhook/deploy/gmsa-crd.yml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/windows-gmsa/master/admission-webhook/deploy/gmsa-webhook.yml`,
+        explanation: "The CRD lets you reference a credential spec; the webhook validates Pods are allowed to use it.",
+        expectedOutput: "CRD `gmsacredentialspecs.windows.k8s.io` established.",
+        internals: "Webhook checks the ServiceAccount has `use` verb on the named credspec — RBAC, not magic.",
+      },
+      {
+        title: "Generate and register the credential spec",
+        command:
+`# On a Windows node:
+Install-Module CredentialSpec -Force
+New-CredentialSpec -AccountName webapp
+Get-CredentialSpec   # note the path; convert JSON to a CRD object and:
+kubectl apply -f webapp-credspec.yaml`,
+        explanation: "Converts the on-disk JSON spec into a cluster-wide CRD object.",
+        expectedOutput: "`gmsacredentialspec.windows.k8s.io/webapp` created.",
+        internals: "kubelet reads the spec at Pod start and passes it to HCS so the container session can request gMSA tickets.",
+      },
+      {
+        title: "RBAC: allow the ServiceAccount to use the credspec",
+        command:
+`cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata: {name: webapp-credspec-user}
+rules:
+- apiGroups: ["windows.k8s.io"]
+  resources: ["gmsacredentialspecs"]
+  verbs: ["use"]
+  resourceNames: ["webapp"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata: {name: webapp-binds-credspec, namespace: default}
+roleRef: {kind: ClusterRole, name: webapp-credspec-user, apiGroup: rbac.authorization.k8s.io}
+subjects: [{kind: ServiceAccount, name: default, namespace: default}]
+EOF`,
+        explanation: "Without this, the webhook rejects the Pod.",
+        expectedOutput: "Role + binding created.",
+        internals: "This is the actual security boundary — the AD group only gates which nodes; RBAC gates which Pods.",
+      },
+      {
+        title: "Deploy the IIS app referencing the gMSA",
+        command:
+`cat <<EOF | kubectl apply -f -
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: legacy-webapp}
+spec:
+  replicas: 2
+  selector: {matchLabels: {app: legacy-webapp}}
+  template:
+    metadata: {labels: {app: legacy-webapp}}
+    spec:
+      nodeSelector: {kubernetes.io/os: windows}
+      securityContext:
+        windowsOptions:
+          gmsaCredentialSpecName: webapp
+      containers:
+      - name: app
+        image: myacr.azurecr.io/legacy-webapp:1.0.0
+        ports: [{containerPort: 80}]
+EOF
+kubectl get pods -l app=legacy-webapp -o wide`,
+        explanation: "`gmsaCredentialSpecName: webapp` is the only Pod-spec change required.",
+        expectedOutput: "Pods Running on the Windows node.",
+        internals: "Inside the container, `whoami /user` returns the host machine, but `klist` shows tickets for webapp$ — that's the gMSA at work.",
+      },
+      {
+        title: "Validate SQL Integrated Auth from the Pod",
+        command:
+`kubectl exec -it deploy/legacy-webapp -- powershell -c "Invoke-Sqlcmd -ServerInstance sql.corp.local -Database master -Query 'SELECT SUSER_SNAME()'"`,
+        explanation: "Should return `CORP\\webapp$` — proves the app authenticated to SQL with no password.",
+        expectedOutput: "`CORP\\webapp$`",
+        internals: "SQL Server validates the Kerberos service ticket presented by the container session.",
+      },
+    ],
+    commonErrors: [
+      { error: "`failed to create credential spec`", cause: "Node not a member of the AD group that can retrieve the gMSA password", fix: "Add the computer account to `WebAppHosts` and reboot the node" },
+      { error: "Pod rejected by webhook", cause: "ServiceAccount lacks `use` on the credspec", fix: "Apply the ClusterRole + RoleBinding from step 4" },
+      { error: "App starts but SQL auth fails as `ANONYMOUS LOGON`", cause: "SPN missing on the SQL service account", fix: "Register SPN `MSSQLSvc/sql.corp.local:1433`" },
+    ],
+    troubleshooting: [
+      "Inside Pod: `nltest /sc_verify:corp.local` — confirms the secure channel",
+      "Inside Pod: `klist` — shows Kerberos tickets",
+      "On node: `Get-ADServiceAccount webapp -Properties *` — last password retrieval timestamp",
+    ],
+    enterpriseRelevance:
+      "Most enterprise Windows workloads are legacy .NET Framework apps tied to AD + SQL. gMSA is the *only* supported way to give containers Windows identities — every Windows-on-Kubernetes adoption hits this lab eventually.",
+    validation: [
+      "Pod runs on Windows node",
+      "`klist` inside Pod shows webapp$ TGT",
+      "App queries SQL using Integrated Auth with zero secrets in manifests",
+    ],
+    relatedIncidents: ["K8S-INC-3002"],
+    relatedGuideSections: ["gMSA + Kubernetes", "Windows AD integration", "Legacy app modernization"],
+    questions: {
+      beginner: [{ q: "Why can't a .NET Framework app run in a Linux container?", a: ".NET Framework requires the Windows API; only .NET Core / .NET 5+ is cross-platform." }],
+      intermediate: [{ q: "What does gMSA solve that a regular service account doesn't?", a: "Automatic password rotation managed by AD, and multiple hosts can share one identity safely." }],
+      advanced: [{ q: "Where is the gMSA password actually stored on the node?", a: "Nowhere — the node fetches it on demand from AD using its own machine account." }],
+      scenario: [{ q: "Pod runs, but SQL logs `Login failed for user CORP\\WIN-NODE-1$`. What changed?", a: "gMSA spec not applied (node identity leaked instead of gMSA). Re-check `gmsaCredentialSpecName` and webhook acceptance." }],
+      viva: [{ q: "Can the same gMSA be used by Pods on multiple nodes?", a: "Yes — that's the whole point. Add every node's computer account to the AD group that's allowed to retrieve the password." }],
+    },
+  },
 ];
 
 /* ----------------------------- Helpers ----------------------------- */
