@@ -33,6 +33,7 @@ import ItsmProgram from "./pages/ItsmProgram.tsx";
 import Pen200Program from "./pages/Pen200Program.tsx";
 import CsaProgram from "./pages/CsaProgram.tsx";
 import K8sProgram from "./pages/K8sProgram.tsx";
+import K8sResources from "./pages/K8sResources.tsx";
 import CdlProgram from "./pages/CdlProgram.tsx";
 import CcnaProgram from "./pages/CcnaProgram.tsx";
 import Pending from "./pages/Pending.tsx";
@@ -94,6 +95,7 @@ const App = () => (
             <Route path="/pen200" element={<Pen200Program />} />
             <Route path="/csa" element={<CsaProgram />} />
             <Route path="/k8s" element={<K8sProgram />} />
+            <Route path="/k8s/resources" element={<K8sResources />} />
             <Route path="/cdl" element={<CdlProgram />} />
             <Route path="/ccna" element={<CcnaProgram />} />
             <Route path="/auth" element={<Auth />} />

@@ -13,6 +13,7 @@ import { K8sConceptPanel } from "./K8sConceptPanel";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
 import { ArrowLeft, ChevronRight, ExternalLink, Lightbulb, ShieldAlert, Boxes, BookOpen, Wrench, Terminal, CheckCircle2, Circle, Copy, PlayCircle } from "lucide-react";
+import { RelatedGuideSections } from "./RelatedGuideSections";
 
 const SEV_TOKEN: Record<K8sIncidentSeverity, string> = {
   critical: "bg-[hsl(var(--ops-critical)/0.18)] text-[hsl(var(--ops-critical))] border-[hsl(var(--ops-critical)/0.5)]",
@@ -262,6 +263,9 @@ export default function K8sIncidentDetail() {
 
           {/* Module 3 — Kubernetes architecture concept panel */}
           {n.k8s_concept && <K8sConceptPanel concept={n.k8s_concept} />}
+
+          {/* Cross-links into the downloadable Resource Center */}
+          <RelatedGuideSections incidentId={n.id} />
 
           {/* Interactive step-by-step lab (M1 / M2 / M3 incidents) */}
           {lab && (

@@ -88,6 +88,11 @@ const K8sProgram = () => (
                   Start free 2-hour preview <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
+              <Link to="/k8s/resources">
+                <Button size="lg" variant="outline" className="gap-2 font-semibold border-shadowx-azure/50 text-shadowx-azure hover:bg-shadowx-azure/10">
+                  Resource Center · 7 PDFs
+                </Button>
+              </Link>
               <a href="#enroll">
                 <Button size="lg" variant="outline" className="gap-2 font-semibold">
                   Reserve seat for ₹199
