@@ -104,6 +104,24 @@ export const K8S_RESOURCES: K8sResource[] = [
     sections: ["Concepts", "Join Windows node", "Schedule IIS pod", "HNS & kube-proxy.exe", "Windows troubleshooting matrix"],
   },
   {
+    id: "handsOnWorkbook",
+    title: "Hands-On Labs Workbook (12 enterprise labs)",
+    file: "/resources/labs/Kubernetes_HandsOn_Labs_Workbook.pdf",
+    size: "~80 KB",
+    pages: 60,
+    readingTime: "8h hands-on",
+    level: "Engineer",
+    tag: "Workbook",
+    blurb:
+      "The complete Module 3 lab system in one downloadable workbook — kubeadm install, SRE troubleshooting, Flannel/CNI, RBAC, monitoring, Windows worker nodes and a full enterprise incident investigation capstone.",
+    sections: [
+      "Install Kubernetes on Ubuntu", "Troubleshooting fundamentals", "Lifecycle & architecture",
+      "Pods & Deployments", "Services & networking", "Flannel & CNI",
+      "Resources & OOMKilled", "Storage", "Security",
+      "Monitoring & observability", "Windows worker node", "Enterprise incident capstone",
+    ],
+  },
+  {
     id: "incidents",
     title: "Enterprise Incident Guide",
     file: "/resources/Enterprise_Incident_Guide.pdf",

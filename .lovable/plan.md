@@ -1,105 +1,90 @@
-# M1/M2 Incidents → Interactive Step-by-Step Labs
+## Goal
 
-Turn every Module 1 & Module 2 K8s incident into a full, console-driven lab inside the existing Ops Console — no new pages, no UI redesign. Each incident becomes a scripted walkthrough taking the student from **Plan → Build → Deploy → Observe → Triage → Fix → Verify → Postmortem**, with an interactive terminal that streams real expected output for every command.
+Add a comprehensive **Kubernetes Hands-On Labs** system inside Module 3 of the existing ShadowXLab K8s course — 12 enterprise labs spanning Beginner → Enterprise → Windows, each with the full 16-section structure you specified, and each downloadable as PDF + Markdown. No existing UI gets redesigned; this is purely additive inside the current Module 3 view.
 
-## Scope guardrails
+## What gets built
 
-- Only files under `src/ops/modules/k8s/**` + one new component `IncidentLabConsole.tsx`.
-- Reuse `SectionCard`, `OpsTabs`, `SeverityBadge`, `K8S_PHASES`, `TOOL_CATALOG`, `HoverTerm`.
-- No changes to other courses, no DB, no routes, no auth.
-- Existing incident list / dashboards untouched.
+### 1. Lab content data layer (`src/lib/k8sHandsOnLabs.ts`)
 
-## 1. Data model — extend each M1/M2 incident with a `lab` block
+A single typed catalog of 12 labs, each shaped as:
 
-Add to `K8sIncident` interface in `incidentsData.ts`:
-
-```ts
-lab?: {
-  objective: string;             // what the student will prove
-  prerequisites: string[];       // "Docker installed", "lab-docker-01 reachable"
-  estimated_minutes: number;
-  difficulty: "beginner" | "intermediate" | "advanced";
-  steps: LabStep[];              // 8–12 steps per incident
-};
-
-type LabStep = {
-  id: string;                    // "s1"
-  phase: K8sPhaseId;             // plan|code|build|test|deploy|run|observe|triage|fix|recover
-  tool: AlignedTool;             // which tool the student is using
-  title: string;                 // "Reproduce the OOM"
-  why: string;                   // teaching note
-  command: string;               // exact CLI to run
-  shell: "bash" | "powershell" | "kubectl" | "docker" | "crictl";
-  expected_output: string;       // multi-line block streamed by the console
-  success_check: string;         // "exit code 137 visible"
-  hint: string;                  // shown on Reveal
-  concept_ref?: string;          // HoverTerm key
-};
+```text
+{
+  id, slug, title, category, level (Beginner|Engineer|Enterprise),
+  durationMin, focus[], 
+  objective, conceptsCovered[], prerequisites[],
+  architecture: { ascii, narrative },
+  steps: [{ command, explanation, expectedOutput, internals }],
+  commonErrors[], troubleshooting[], enterpriseRelevance,
+  validation[], relatedIncidents[], relatedGuideSections[],
+  questions: { beginner[], intermediate[], advanced[], scenario[], viva[] },
+  downloads: { pdf, markdown }
+}
 ```
 
-Populate **all 20 M1/M2 incidents** with a 10-step lab each, covering the full lifecycle:
+The 12 labs:
+1. Install Kubernetes on Ubuntu (kubeadm)
+2. Troubleshooting Fundamentals (SRE workflow)
+3. Lifecycle & Architecture (API → kubelet → containerd → runc)
+4. Pods & Deployments (self-healing, rollback)
+5. Services & Networking (ClusterIP/NodePort/DNS)
+6. Flannel & CNI
+7. Resource Management (requests/limits/OOMKilled)
+8. Storage (PV/PVC/StorageClass)
+9. Security (RBAC/Secrets/NetworkPolicy)
+10. Monitoring (Prometheus/Grafana/Loki)
+11. Windows Worker Node
+12. Enterprise Incident Investigation
 
-| Phase | Typical step |
-|-------|--------------|
-| plan | Read the alert, identify the failing component |
-| code/build | Inspect Dockerfile / manifest |
-| deploy | `docker run` / `kubectl apply` to reproduce |
-| run | Watch container behavior with `docker stats` / `kubectl get pods -w` |
-| observe | Pull metrics (Prometheus / `docker stats`) and logs (`journalctl`, `kubectl logs`) |
-| triage | Inspect cgroups / namespaces / events / image layers |
-| fix | Apply the corrective command (`docker update`, edit Dockerfile, push v2) |
-| verify | Re-run health check |
-| recover | Document runbook entry |
-| postmortem | One-line learning takeaway |
+### 2. UI components (inside Module 3, additive)
 
-Every step's `expected_output` is a realistic block (real kernel/docker/k8s formatting) so the console feels live.
+- `src/ops/modules/k8s/HandsOnLabsSection.tsx` — collapsible section rendered inside the existing Module 3 view, with category filter chips (Beginner / Runtime / Core / Networking / Troubleshooting / Investigation / Enterprise / Windows) and a level filter (Beginner / Engineer / Enterprise).
+- `src/ops/modules/k8s/LabCard.tsx` — card per lab: title, level badge, duration, focus tags, "Open Lab" + "Download PDF" + "Download MD" buttons.
+- `src/pages/K8sLabDetail.tsx` — full lab page route `/k8s/labs/:slug` rendering all 16 sections with:
+  - copy-to-clipboard on every command
+  - expected-output console panels
+  - hover-explanations on key terms (reuses existing `HoverTerm` / `K8sTerm`)
+  - mode toggle: Beginner / Engineer / Enterprise (filters depth of internals + questions shown)
+  - inline architecture ASCII diagrams styled as terminal blocks
+  - "Related incidents" cross-links to existing `IncidentDetail`
+  - "Related guide sections" cross-links to existing K8s Resource Center PDFs
+  - Questions accordion with all 5 question types
 
-## 2. New component — `IncidentLabConsole.tsx`
+### 3. Downloadable resources
 
-A compact, dark, terminal-style panel rendered **inside the existing IncidentDetail page** (new tab "Lab"). No layout changes elsewhere.
+A Python generation script (`/tmp/build_labs.py`) produces, per lab:
+- `public/resources/labs/lab-{n}-{slug}.pdf` (reportlab, enterprise-navy theme matching existing PDFs)
+- `public/resources/labs/lab-{n}-{slug}.md`
+Plus a combined `public/resources/labs/Kubernetes_HandsOn_Labs_Workbook.pdf` (all 12 labs in one workbook).
 
-Features:
-- **Step list (left, 30%)** — numbered, phase chip, tool icon, status (pending / current / done). Click to jump.
-- **Terminal (right, 70%)** — monospace, shows the command at the prompt, a "Run" button. On click, the expected_output streams line-by-line (10ms/line) into the scrollback, then prints a green ✓ success_check line. "Reveal hint" button shows hint inline.
-- **Top bar** — objective, difficulty pill, ETA, progress bar (`x / n` steps), Reset button.
-- **Bottom bar** — "Why this step matters" (the `why` text) + tool descriptor pulled from `TOOL_CATALOG` + hover-term links to glossary.
-- **Phase rail** — horizontal strip of all 10 `K8S_PHASES`; current step's phase glows.
-- State held in component (no persistence). Reset re-arms all steps.
+The catalog references these paths so the download buttons just link to `/resources/labs/...`.
 
-Visual: pure semantic ops tokens (`--ops-bg`, `--ops-panel`, `--ops-accent`, `--ops-success`). Already-imported CSS variables; no new tailwind colors.
+### 4. Integration points (minimal, additive)
 
-## 3. Wire into `IncidentDetail.tsx`
+- `src/App.tsx` — add route `/k8s/labs/:slug` → `K8sLabDetail`.
+- `src/pages/Module.tsx` — when current module is `k8s-fundamentals` (Module 3), render `<HandsOnLabsSection />` below existing content. No removal, no restyle.
+- `src/lib/k8sResources.ts` — add the new workbook to `K8S_RESOURCES` so it appears in the existing Resource Center.
+- `src/ops/modules/k8s/RelatedGuideSections.tsx` — extend `INCIDENT_GUIDE_LINKS` so existing incidents link back to the matching new labs.
 
-- Add a fifth tab to the existing `OpsTabs`: `intel | logs | metrics | vuln | response` → **add `lab`** (label "Interactive Lab", icon `Terminal`). Only enabled when `n.lab` is present (so only M1/M2 incidents).
-- Tab body renders `<IncidentLabConsole lab={n.lab} incidentId={n.id} />`.
-- No other layout changes; existing Runtime Explanation / Real Commands cards stay in their current tabs.
+## What does NOT change
 
-## 4. Tool catalog touch-up
+- No edits to operational UI shell, sidebar, topbar, ops layout.
+- No removal of any existing incident, module, lab simulator, or page.
+- No theme/design-token changes.
+- Existing `M3` incidents, simulators, and Resource Center remain exactly as they are — the new labs section sits alongside them.
 
-In `toolStack.ts`, ensure every tool referenced by lab steps has `command_example` and `why_it_matters` so the console bottom bar can render them. Add any missing one-liners — no new tools beyond those already added (Docker, containerd, runc, crictl, journalctl, kubectl, Helm, BuildKit, Trivy, Snyk, GitHub Actions, Jenkins, Prometheus, Grafana).
+## Technical notes
 
-## 5. Glossary
+- Lab content authored in TypeScript so the same source feeds both the in-app pages and the PDF/MD generator (the script reads via a tiny `tsx` shim or a JSON dump generated at build-time from the TS source).
+- PDFs use the same reportlab styling as the existing K8s guide pack for visual consistency.
+- All command blocks use the existing `K8sTerminalSimulator`-style monospace panel styling (`bg-[hsl(var(--ops-panel))]`, mono font) — no new design tokens introduced.
+- Mode toggle is local component state; no backend/schema changes.
+- No database migrations required.
 
-Reuse existing `DOCKER_HOVER_TERMS`. Add 4 missing keys used by new lab steps: `pids-max`, `eagain`, `entrypoint`, `multistage`.
+## Deliverables
 
-## Files touched
+- 1 catalog file, 2 new components, 1 new page, 1 generation script
+- 12 PDF + 12 MD lab files + 1 combined workbook PDF under `public/resources/labs/`
+- 4 surgical edits to existing files (App.tsx route, Module.tsx mount, k8sResources.ts entry, RelatedGuideSections.tsx mapping)
 
-**Edit**
-- `src/ops/modules/k8s/incidentsData.ts` — add `lab` field on type + 20 lab blocks (10 steps each).
-- `src/ops/modules/k8s/IncidentDetail.tsx` — add "Lab" tab.
-- `src/ops/modules/k8s/toolStack.ts` — fill missing `command_example` / `why_it_matters`.
-- `src/lib/dockerHoverTerms.ts` — 4 new terms.
-
-**Create**
-- `src/ops/modules/k8s/IncidentLabConsole.tsx` — interactive console component.
-
-## Out of scope
-
-- M3 / M4 / M5 labs.
-- Other courses (SOC, ITSM, SRE, Cloud, DevOps, CCNA, CSA, Pen200, CDL, Splunk).
-- Persistence, scoring, backend, auth, new routes, sidebar/topbar changes.
-- Real shell execution — the console is a deterministic scripted player.
-
-## Out-the-door experience
-
-Student opens any M1 or M2 incident → clicks **Interactive Lab** tab → sees a 10-step scripted run through Plan → Recover with a real-looking terminal, per-step "why", tool reference, and hover-term glossary. By the end of M1 + M2 (20 labs) they have walked the full Docker + container-runtime lifecycle hands-on.
+Shall I proceed?
