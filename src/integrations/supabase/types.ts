@@ -552,6 +552,13 @@ export type Database = {
             referencedRelation: "lab_questions"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "question_responses_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "lab_questions_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       step_progress: {
@@ -1254,7 +1261,41 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      lab_questions_safe: {
+        Row: {
+          id: string | null
+          lab_id: string | null
+          options: Json | null
+          points: number | null
+          question: string | null
+          question_number: number | null
+        }
+        Insert: {
+          id?: string | null
+          lab_id?: string | null
+          options?: Json | null
+          points?: number | null
+          question?: string | null
+          question_number?: number | null
+        }
+        Update: {
+          id?: string | null
+          lab_id?: string | null
+          options?: Json | null
+          points?: number | null
+          question?: string | null
+          question_number?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lab_questions_lab_id_fkey"
+            columns: ["lab_id"]
+            isOneToOne: false
+            referencedRelation: "labs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       admin_get_user_email: { Args: { _user_id: string }; Returns: string }
@@ -1264,6 +1305,19 @@ export type Database = {
           _program: Database["public"]["Enums"]["program_code"]
         }
         Returns: string
+      }
+      check_quiz_answer: {
+        Args: {
+          _attempt_id: string
+          _question_id: string
+          _selected_index: number
+        }
+        Returns: {
+          correct_index: number
+          explanation: string
+          is_correct: boolean
+          points: number
+        }[]
       }
       get_learner_progress: {
         Args: { _user_id: string }
