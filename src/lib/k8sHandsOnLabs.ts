@@ -1197,9 +1197,7 @@ curl.exe -LO https://raw.githubusercontent.com/kubernetes-sigs/sig-windows-tools
       {
         title: "Join the node",
         command:
-`# Re-run the `kubeadm token create --print-join-command` on the LINUX control plane,
-# then on Windows in an elevated shell:
-kubeadm.exe join <CP_IP>:6443 --token <t> --discovery-token-ca-cert-hash sha256:<h>`,
+"# Re-run `kubeadm token create --print-join-command` on the LINUX control plane,\n# then on Windows in an elevated shell:\nkubeadm.exe join <CP_IP>:6443 --token <t> --discovery-token-ca-cert-hash sha256:<h>",
         explanation: "Same join command as Linux, just kubeadm.exe.",
         expectedOutput: "`This node has joined the cluster`",
         internals: "TLS bootstrap is identical; only the kubelet binary differs.",
