@@ -34,6 +34,7 @@ import { COURSE_LIST } from "@/lib/courses";
 import { courseCodeToProgram } from "@/lib/programMap";
 import { ProgramGate } from "@/components/ProgramGate";
 import { ListChecks as ProcessIcon, Workflow, Database, GitBranch } from "lucide-react";
+import { HandsOnLabsSection } from "@/components/k8s/HandsOnLabsSection";
 
 type DomainStyle = { icon: any; bar: string; soft: string; chip: string; label: string };
 
@@ -681,6 +682,9 @@ export default function Module() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Module 3 (K8s Fundamentals) — Hands-On Labs section */}
+        {slug === "k8s-fundamentals" && <HandsOnLabsSection />}
 
         {/* Further reading */}
         {explanation.furtherReading.length > 0 && (
