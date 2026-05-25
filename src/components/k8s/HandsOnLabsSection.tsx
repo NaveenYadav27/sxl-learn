@@ -53,7 +53,7 @@ export function HandsOnLabsSection() {
               </div>
               <h2 className="text-xl font-bold">Kubernetes Hands-On Labs</h2>
               <p className="text-sm text-muted-foreground max-w-2xl mt-1">
-                12 enterprise-grade labs — beginner installation through SRE incident investigation.
+                16 enterprise-grade labs — beginner installation through Windows gMSA and SRE incident investigation.
                 Every lab ships with commands, expected output, troubleshooting and viva questions,
                 plus PDF + Markdown downloads.
               </p>
