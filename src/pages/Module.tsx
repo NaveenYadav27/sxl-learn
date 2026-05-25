@@ -372,6 +372,28 @@ export default function Module() {
         )}
         {slug === "k8s-containerization-fundamentals" && <RuntimeVisualizations />}
 
+        {/* Kubernetes Resource Center promo — surfaced on every K8s module */}
+        {slug?.startsWith("k8s-") && (
+          <Card className="shadow-card border-shadowx-azure/40 bg-gradient-to-br from-shadowx-azure/10 to-transparent">
+            <CardContent className="pt-5 pb-5 flex flex-col md:flex-row md:items-center gap-3">
+              <div className="flex-1">
+                <div className="text-xs font-mono uppercase tracking-widest text-shadowx-azure mb-1">
+                  Kubernetes Resource Center
+                </div>
+                <div className="font-semibold">7 downloadable PDFs — master guide, labs, troubleshooting, Windows, interview prep</div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  Beginner → Engineer → Enterprise. Cross-linked from every incident page.
+                </div>
+              </div>
+              <a href="/k8s/resources">
+                <Button className="gap-2 bg-shadowx-gold text-black hover:bg-shadowx-gold/90">
+                  Open Resource Center
+                </Button>
+              </a>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Concept Labs — every concept as its own interactive lab */}
         <Card className="shadow-card border-primary/30">
           <CardContent className="pt-5">
