@@ -16,9 +16,10 @@ interface Question {
   question_number: number;
   question: string;
   options: string[] | any;
-  correct_index: number;
-  explanation: string | null;
   points: number;
+  /** Populated only after the learner answers (returned by the server). */
+  correct_index?: number;
+  explanation?: string | null;
 }
 
 interface Props {
@@ -31,13 +32,15 @@ export function QuizPanel({ labId, attemptId, onComplete }: Props) {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [revealed, setRevealed] = useState<Record<string, boolean>>({});
+  const [correctMap, setCorrectMap] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
 
   useEffect(() => {
     (async () => {
+      // Use the safe view which does NOT expose correct_index / explanation.
       const { data } = await supabase
-        .from("lab_questions")
+        .from("lab_questions_safe" as any)
         .select("*")
         .eq("lab_id", labId)
         .order("question_number");
@@ -53,28 +56,39 @@ export function QuizPanel({ labId, attemptId, onComplete }: Props) {
     if (revealed[q.id]) return;
     setAnswers((a) => ({ ...a, [q.id]: idx }));
     setRevealed((r) => ({ ...r, [q.id]: true }));
-    const correct = idx === q.correct_index;
-    await supabase.from("question_responses").upsert(
-      {
-        attempt_id: attemptId,
-        question_id: q.id,
-        selected_index: idx,
-        is_correct: correct,
-      },
-      { onConflict: "attempt_id,question_id" }
+    // Server validates the answer and records the response.
+    const { data, error } = await supabase.rpc("check_quiz_answer" as any, {
+      _attempt_id: attemptId,
+      _question_id: q.id,
+      _selected_index: idx,
+    });
+    if (error) {
+      toast.error("Could not record answer");
+      return;
+    }
+    const row = Array.isArray(data) ? data[0] : data;
+    const correct = !!row?.is_correct;
+    setCorrectMap((m) => ({ ...m, [q.id]: correct }));
+    setQuestions((qs) =>
+      qs.map((qq) =>
+        qq.id === q.id
+          ? { ...qq, correct_index: row?.correct_index, explanation: row?.explanation }
+          : qq,
+      ),
     );
     if (correct) toast.success(`+${q.points} pts`);
   }
 
   async function submit() {
     const earned = questions.reduce(
-      (s, q) => s + (answers[q.id] === q.correct_index ? q.points : 0),
+      (s, q) => s + (correctMap[q.id] ? q.points : 0),
       0
     );
     setScore(earned);
     setSubmitted(true);
     onComplete(earned, questions.reduce((s, q) => s + q.points, 0));
   }
+
 
   if (questions.length === 0) {
     return (
