@@ -749,6 +749,7 @@ Status: Downloaded newer image for nginx:alpine`, check: "pull succeeds", hint: 
 const LAB_1035_REAL: IncidentLab = LAB_1034;
 
 import { M3_LABS } from "./m3Labs";
+import { M4_LABS } from "./m4Labs";
 
 export const INCIDENT_LABS: Record<string, IncidentLab> = {
   "K8S-INC-1032": LAB_1032,
