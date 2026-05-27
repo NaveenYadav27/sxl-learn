@@ -773,6 +773,7 @@ export const INCIDENT_LABS: Record<string, IncidentLab> = {
   "K8S-INC-1047": LAB_1047,
   "K8S-INC-1048": LAB_1048,
   ...M3_LABS,
+  ...M4_LABS,
 };
 
 export function getIncidentLab(id: string): IncidentLab | undefined {
