@@ -352,7 +352,7 @@ web-7c8b       3        3        3      18d
 web-9d4f       1        1        0      11m`,
   affected: [
     { kind: "Deployment", name: "web", detail: "ProgressDeadlineExceeded · 1/3 new ready", action: "Inspect probe + rollback if needed.", severity: "high" },
-    { kind: "ReplicaSet", name: "web-9d4f", detail: "1 pod · 0 Ready", action: "Read probe failure events.", severity: "high" },
+    { kind: "Deployment", name: "web-9d4f", detail: "1 pod · 0 Ready", action: "Read probe failure events.", severity: "high" },
   ],
   aligned_tools: ["kubectl", "Prometheus", "Grafana"],
   data_sources: ["kube-controller-manager", "kubelet", "prom"],
@@ -628,7 +628,7 @@ $ kubectl get svc web -n shop -o yaml | grep -A4 ports:
     port: 80
     targetPort: 3000    # was 8080`,
   affected: [
-    { kind: "Ingress", name: "shop", detail: "Backend returning 502", action: "Align Service targetPort with pod containerPort.", severity: "critical" },
+    { kind: "Service", name: "shop", detail: "Backend returning 502", action: "Align Service targetPort with pod containerPort.", severity: "critical" },
     { kind: "Service", name: "web", detail: "targetPort=3000 but pods listen on 8080", action: "Revert targetPort or update pod port.", severity: "critical" },
   ],
   aligned_tools: ["kubectl", "Prometheus"],
@@ -699,7 +699,7 @@ $ kubectl describe hpa web -n shop | grep -A2 ScalingActive
   ScalingActive   False   FailedGetResourceMetric
   Message:        unable to get metrics for resource cpu: no metrics returned from resource metrics API`,
   affected: [
-    { kind: "HPA", name: "web", detail: "<unknown> current metric · not scaling", action: "Restore metrics-server.", severity: "high" },
+    { kind: "Deployment", name: "web", detail: "<unknown> current metric · not scaling", action: "Restore metrics-server.", severity: "high" },
     { kind: "Deployment", name: "metrics-server", detail: "CrashLoopBackOff in kube-system", action: "Raise memory limit; restart.", severity: "high" },
   ],
   aligned_tools: ["kubectl", "Prometheus", "Grafana"],
@@ -902,7 +902,7 @@ $ kubectl get deploy fraud-engine -n payments
 NAME            READY   UP-TO-DATE   AVAILABLE   AGE
 fraud-engine    2/2     2            2           400d`,
   affected: [
-    { kind: "PodDisruptionBudget", name: "fraud-engine", detail: "minAvailable=2 with replicas=2 ⇒ 0 disruptions allowed", action: "Scale up before drain, or relax PDB.", severity: "high" },
+    { kind: "Deployment", name: "fraud-engine", detail: "minAvailable=2 with replicas=2 ⇒ 0 disruptions allowed", action: "Scale up before drain, or relax PDB.", severity: "high" },
   ],
   aligned_tools: ["kubectl"],
   data_sources: ["kube-controller-manager"],
@@ -1040,8 +1040,8 @@ $ openssl s_client -connect shop.acme.com:443 -servername shop.acme.com </dev/nu
 notBefore=Feb 23 00:00:00 2026 GMT
 notAfter=May 24 23:59:59 2026 GMT`,
   affected: [
-    { kind: "Certificate", name: "shop-tls", detail: "READY=False · expired", action: "Restore ACME path or import new cert.", severity: "critical" },
-    { kind: "Ingress", name: "shop", detail: "TLS rejected by browsers", action: "Hotfix cert + investigate subnet.", severity: "critical" },
+    { kind: "Service", name: "shop-tls", detail: "READY=False · expired", action: "Restore ACME path or import new cert.", severity: "critical" },
+    { kind: "Service", name: "shop", detail: "TLS rejected by browsers", action: "Hotfix cert + investigate subnet.", severity: "critical" },
   ],
   aligned_tools: ["kubectl"],
   data_sources: ["cert-manager", "ingress-nginx"],
@@ -1111,7 +1111,7 @@ Replicas:
   Desired:       10
   Current:       10  (stable 2, canary 8)`,
   affected: [
-    { kind: "Rollout", name: "web", detail: "SetWeight=20 but ActualWeight=80", action: "Fix stable/canary Service split or abort.", severity: "high" },
+    { kind: "Deployment", name: "web", detail: "SetWeight=20 but ActualWeight=80", action: "Fix stable/canary Service split or abort.", severity: "high" },
   ],
   aligned_tools: ["kubectl", "Prometheus", "Grafana"],
   data_sources: ["argo-rollouts", "ingress-nginx", "prom"],
