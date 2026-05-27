@@ -1,0 +1,1 @@
+GRANT EXECUTE ON FUNCTION public.admin_grant_access_by_email(text, program_code) TO authenticated;
