@@ -1801,6 +1801,9 @@ kube_pod_container_info{image="...@sha256:f2b3..."} 1`,
 import { M3_INCIDENTS } from "./m3Incidents";
 K8S_INCIDENTS.push(...(M3_INCIDENTS as K8sIncident[]));
 
+import { M4_INCIDENTS } from "./m4Incidents";
+K8S_INCIDENTS.push(...(M4_INCIDENTS as K8sIncident[]));
+
 export function findK8sIncident(id: string) {
   return K8S_INCIDENTS.find((i) => i.id === id);
 }
