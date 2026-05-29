@@ -2,8 +2,8 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { PageHeader } from "@/ops/components/PageHeader";
 import { SectionCard } from "@/ops/components/SectionCard";
-import { PEN_INCIDENTS, type PentestSeverity, type PentestStatus, type PenModuleCode } from "./types";
-import { PEN_MODULES } from "./types";
+import { PEN_INCIDENTS, type PentestSeverity, type PentestStatus, type PenModuleCode } from "./incidentsData";
+import { PEN_MODULES } from "./incidentsData";
 import { AlertOctagon, BookOpen, ExternalLink, Skull } from "lucide-react";
 
 const SEV: Record<PentestSeverity, string> = {

@@ -2,7 +2,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { PageHeader } from "@/ops/components/PageHeader";
 import { SectionCard } from "@/ops/components/SectionCard";
 import { EmptyState } from "@/ops/components/EmptyState";
-import { findPentestIncident, PENTEST_PHASES, type PentestSeverity } from "./types";
+import { findPentestIncident, PENTEST_PHASES, type PentestSeverity } from "./incidentsData";
 import { TOOL_CATALOG, PHASE_DEFAULTS } from "./toolStack";
 import { getPentestLab } from "./incidentLabs";
 import { PentestLabConsole } from "./PentestLabConsole";
