@@ -78,6 +78,8 @@ import RepositoriesList from "./ops/modules/devops/RepositoriesList.tsx";
 import AccountsList from "./ops/modules/cloud/AccountsList.tsx";
 import ResourcesList from "./ops/modules/cloud/ResourcesList.tsx";
 import CostsList from "./ops/modules/cloud/CostsList.tsx";
+import PentestIncidentsList from "./ops/modules/pen200/IncidentsList.tsx";
+import PentestIncidentDetail from "./ops/modules/pen200/IncidentDetail.tsx";
 
 const queryClient = new QueryClient();
 
