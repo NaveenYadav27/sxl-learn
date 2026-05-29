@@ -167,6 +167,8 @@ const App = () => (
               <Route path="cloud/accounts" element={<AccountsList />} />
               <Route path="cloud/resources" element={<ResourcesList />} />
               <Route path="cloud/costs" element={<CostsList />} />
+              <Route path="pen-incidents" element={<PentestIncidentsList />} />
+              <Route path="pen-incidents/:id" element={<PentestIncidentDetail />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
