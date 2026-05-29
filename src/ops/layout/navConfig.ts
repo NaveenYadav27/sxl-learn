@@ -79,6 +79,12 @@ export const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
+    label: "Offensive Security",
+    items: [
+      { label: "Pentest Incidents", to: "/ops/pen-incidents", icon: ShieldAlert, enabled: true, badge: "PEN-200" },
+    ],
+  },
+  {
     label: "DevOps",
     items: [
       { label: "Pipelines", to: "/ops/devops/pipelines", icon: Workflow, enabled: true },
