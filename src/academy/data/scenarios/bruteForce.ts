@@ -45,7 +45,8 @@ function build(): Scenario {
       "The attacker connects to the VPN from Moldova, which is an unusual location for this user.",
       "They RDP to j.doe's workstation ws-fin-12 over the VPN — the intrusion is now inside the network.",
     ],
-    events: ev.all(),
+    // Authentication events live in index=auth so Lesson 3 can start from `index=auth`.
+    events: ev.all().map((e) => (e.fields.EventCode === 4624 || e.fields.EventCode === 4625 ? { ...e, index: "auth" } : e)),
     notables: [{
       id: "ACAD-NOT-1001", title: "Access - Brute Force Detected on j.doe", urgency: "critical",
       rule: "Access - Brute Force Detected", entity: "j.doe",
