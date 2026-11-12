@@ -28,7 +28,7 @@ function build(): Scenario {
     fields: { EventCode: 13, user: "a.kumar", process: "powershell.exe", TargetObject: "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows Defender\\DisableAntiSpyware", Details: "DWORD (0x00000001)" },
     mitre: ["T1562.001"], risk: { object: "ws-hr-07", objectType: "system", score: 50, rule: "Endpoint - Defender Disabled via Registry" } });
   // Benign PowerShell by IT for contrast
-  const benignPs = ev.add({ time: "2026-05-07 10:20:05", index: "sysmon", sourcetype: "XmlWinEventLog:Sysmon", host: "ws-eng-04",
+  ev.add({ time: "2026-05-07 10:20:05", index: "sysmon", sourcetype: "XmlWinEventLog:Sysmon", host: "ws-eng-04",
     fields: { EventCode: 1, user: "m.lee", process: "powershell.exe", parent_process: "explorer.exe", CommandLine: "powershell.exe Get-ChildItem C:\\Projects" } });
 
   return {
@@ -76,7 +76,6 @@ function build(): Scenario {
     ],
     patientZero: { entity: "ws-hr-07", explanation: "ws-hr-07 is the first machine that executed attacker code, after a.kumar opened the attachment." },
   };
-  void benignPs;
 }
 
 export const PHISH_POWERSHELL = build();
