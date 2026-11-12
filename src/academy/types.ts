@@ -153,7 +153,11 @@ export type ConceptBlock =
   | { kind: "table"; title?: string; cols: string[]; rows: string[][] }
   | { kind: "callout"; tone: "info" | "tip" | "warn"; title: string; text: string }
   | { kind: "layers"; title: string; lanes: { label: string; items: string[] }[] }
-  | { kind: "code"; title?: string; code: string; explain?: string[] };
+  | { kind: "code"; title?: string; code: string; explain?: string[] }
+  | { kind: "funnel"; title?: string; stages: { label: string; value: string; note?: string }[] }
+  | { kind: "timeline"; title?: string; items: { time: string; label: string; tone?: "info" | "warn" | "danger" | "ok" }[] }
+  | { kind: "compare"; title?: string; left: { title: string; points: string[] }; right: { title: string; points: string[] } }
+  | { kind: "stats"; title?: string; items: { label: string; value: string; note?: string }[] };
 
 export interface DemoStep {
   id: string;
@@ -174,17 +178,35 @@ export interface LabObjective {
   action: ExpectedAction;                      // matched against simulator / lab component actions
   hints: string[];                             // 5 levels: nudge → concept → where → how → exact
   why: string;                                 // why a real analyst does this
+  skill: ReadinessKey;                         // which readiness dimension this objective trains
   termRefs?: string[];
 }
 
 export type LabKind = "console" | "spl" | "investigation" | "risk" | "mitre" | "ir" | "capstone";
+
+export interface IrOption {
+  id: string;
+  label: string;
+  correct: boolean;
+  consequence: string;                         // what happens if chosen (shown after choosing)
+}
+
+export interface IrNode {
+  id: string;
+  phase: "identification" | "containment" | "eradication" | "recovery" | "lessons-learned";
+  situation: string;                           // supports [[term]] refs
+  question: string;
+  options: IrOption[];
+}
 
 export interface LessonLab {
   kind: LabKind;
   scenarioId?: ScenarioId;
   intro: string;
   objectives: LabObjective[];
-  splExercises?: SplExercise[];
+  splExercises?: SplExercise[];                // spl labs: each exercise is graded like an objective
+  irNodes?: IrNode[];                          // ir labs: ordered decision points
+  riskThreshold?: number;                      // risk labs: default risk-notable threshold
 }
 
 export type ReadinessKey =
@@ -221,6 +243,20 @@ export interface Lesson {
   assessment: AssessmentQuestion[];
   reflection: ReflectionPrompt[];
   mentorBriefing: string;                      // what the mentor says when asked "explain this lesson"
+  visual: ConceptBlock[];                      // VISUAL EXPLANATION tab — diagrams, flows, funnels
+  challenges: string[];                        // Socratic questions the mentor asks in "challenge" mode
+}
+
+export type LessonStep =
+  | "concept" | "definitions" | "visual" | "demo" | "lab" | "mentor" | "assessment" | "reflection";
+
+/** One action emitted by the simulator or an Academy lab component. */
+export interface LabActionEvent {
+  action: string;                              // "navigate" | "click:<target>" | "select:<target>" | "run-spl"
+  view?: string;
+  value?: string;
+  detail: string;
+  at: number;
 }
 
 /* ---------------- Mentor ---------------- */
@@ -237,10 +273,11 @@ export interface MentorMessage {
 export interface LessonProgress {
   status: "in_progress" | "completed";
   tabsSeen: string[];
-  objectivesDone: string[];
-  splDone: string[];
-  assessmentScore: number | null;              // 0-100
+  objectivesDone: string[];                    // includes completed spl exercise ids
+  objectiveHintLevel: Record<string, number>;  // highest hint level (0-5) revealed per objective
+  assessmentScore: number | null;              // best score 0-100
   assessmentAttempts: number;
+  assessmentAnswers: Record<string, boolean>;  // best-attempt correctness per question id
   hintsUsed: number;
   deepHintsUsed: number;                       // level >= 3
   reflections: Record<string, string>;
@@ -249,6 +286,8 @@ export interface LessonProgress {
 }
 
 export interface SkillSignal { earned: number; possible: number }
+
+export interface RubricLine { label: string; score: number; max: number; note: string; skill: ReadinessKey }
 
 export interface CapstoneReport {
   summary: string;
@@ -260,9 +299,9 @@ export interface CapstoneReport {
 }
 
 export interface AcademyState {
+  version: 1;
   lessons: Record<string, LessonProgress>;
-  signals: Partial<Record<ReadinessKey, SkillSignal>>;
   dictionaryViewed: string[];
   mentorQuestions: number;
-  capstone: { report: CapstoneReport | null; grade: number | null; rubric: { label: string; score: number; max: number; note: string }[] };
+  capstone: { report: CapstoneReport | null; grade: number | null; rubric: RubricLine[]; submittedAt?: number };
 }
