@@ -519,7 +519,84 @@ export const SOC_TERMS: SocTerm[] = [
     "The laminated emergency card in an aircraft cockpit — steps in order, no improvising.",
     "The phishing playbook: verify sender → detonate attachment in sandbox → search recipients → purge mailboxes.",
     ["triage", "ir-lifecycle"]),
+  /* ---------- Added for Lesson 1 vocabulary ---------- */
+  t("event", "Event", "data",
+    "One thing that happened, recorded with a timestamp — a login, a DNS lookup, a process start.",
+    "An event is a single record of activity. Logs are made of many events. In Splunk each event has a time (_time), where it came from (host, sourcetype, index) and fields like user or src_ip.",
+    "One line in a diary: 'At 09:12 j.doe failed to log in.'",
+    "EventCode=4625 user=j.doe src_ip=203.0.113.5 action=failure is one Windows failed-logon event.",
+    ["log", "field", "raw-event"]),
+  t("ndr", "NDR (Network Detection & Response)", "foundations",
+    "A tool that watches network traffic for attacker behaviour.",
+    "NDR sensors analyse traffic flowing between machines and to the internet — spotting beacons, scans, tunnels and data leaving. It complements EDR, which watches inside each machine.",
+    "CCTV on the roads between buildings, while EDR is a camera inside each room.",
+    "NDR flags ws-eng-04 sending 412-byte HTTPS sessions to the same IP every 60 seconds.",
+    ["edr", "beaconing", "c2"]),
+  t("soar", "SOAR", "foundations",
+    "Software that automates SOC playbook steps — enrich, block, ticket — so analysts move faster.",
+    "Security Orchestration, Automation and Response platforms run playbooks: when a phishing alert fires they can pull the email headers, check URLs against threat intel, open a ticket and quarantine the mailbox automatically.",
+    "A kitchen with pre-programmed appliances: press one button and the oven, timer and fan all start.",
+    "On a brute-force notable, SOAR auto-enriches the IP with AbuseIPDB and opens a ServiceNow incident.",
+    ["playbook", "siem", "containment"]),
+  t("correlation", "Correlation", "detection",
+    "Connecting several events into one meaningful story — e.g. many failures + one success from the same IP.",
+    "Correlation is the SIEM's superpower: a single failed login means nothing, but 42 failures followed by a success from the same IP is a brute-force takeover. Correlation searches run on a schedule and create notables when the pattern appears.",
+    "A detective linking a broken window, missing jewellery and a stranger's footprints into one burglary.",
+    "Rule: count of 4625 by src_ip > 20 AND a 4624 from the same src_ip within 10 minutes → notable.",
+    ["correlation-search", "notable", "threshold"]),
+  t("detection", "Detection", "detection",
+    "A rule or logic that recognises suspicious activity and raises an alert.",
+    "A detection describes what bad looks like in data — a search plus a threshold plus context. Good detections catch real attacks (true positives) without drowning the SOC in noise (false positives).",
+    "A smoke detector: tuned to notice smoke, not burnt toast every morning.",
+    "Detection: Office application spawning powershell.exe with -enc → high-urgency notable.",
+    ["detection-engineering", "correlation-search", "false-positive"]),
+  t("risk", "Risk (in RBA)", "risk",
+    "Points added to a user or host each time something suspicious involves it.",
+    "Instead of alerting on every small signal, risk-based alerting adds a score to the risk object (user or system). When the total crosses a threshold, one high-quality notable fires that tells the whole story.",
+    "A credit score in reverse — each late payment adds points; past a limit, the bank calls you.",
+    "j.doe: +40 brute force, +50 success after failures, +30 unusual VPN geo = 120 → over the 100 threshold.",
+    ["rba", "risk-score", "risk-object"]),
 ];
+];
+
+/** "Why it matters" for the core vocabulary — shown on dictionary cards and term popovers. */
+export const TERM_WHY: Record<string, string> = {
+  event: "Every investigation is built from events. If you can't read one event, you can't investigate anything.",
+  log: "Logs are the SOC's only memory of what happened. Missing logs = blind spots attackers love.",
+  alert: "Alerts are where your shift starts — knowing that most alerts are not incidents keeps you calm and methodical.",
+  notable: "Notables are the work queue in Splunk ES. Triage quality here decides whether attacks get caught.",
+  incident: "Declaring an incident triggers people, process and sometimes legal duties. Calling it right matters.",
+  ioc: "IOCs let you search the whole estate in seconds for something you saw once.",
+  ttp: "IOCs change daily, behaviour doesn't. Detecting TTPs catches attackers even with new infrastructure.",
+  siem: "The SIEM is where you'll spend most of your day: searching, triaging and investigating.",
+  edr: "EDR shows what actually ran on a machine — and lets you isolate it in one click.",
+  correlation: "Correlation turns thousands of meaningless events into one alert worth a human's time.",
+  risk: "Risk scoring cuts alert fatigue: fewer, richer alerts that show the whole attack chain.",
+  detection: "Every alert you triage is the output of a detection. Understanding them tells you what an alert really means.",
+  "false-positive": "Most alerts are false positives. Closing them quickly and correctly frees time for real attacks.",
+  triage: "Triage decides what gets attention first. A missed critical alert can cost millions.",
+  pivot: "Attacks are chains. Pivoting is how you follow the chain from one clue to the next.",
+  c2: "If you find C2, the attacker is active right now — containment becomes urgent.",
+  beaconing: "Beacons are regular and repetitive, which makes them one of the easiest attacker behaviours to spot in data.",
+  tactic: "Tactics tell you where in the attack you are — and therefore what the attacker will try next.",
+  technique: "Mapping to techniques lets you measure detection coverage and speak a common language with other teams.",
+};
+
+/** Lesson whose lab practises each term category (dictionary "Practice in lab" link). */
+export const CATEGORY_LESSON: Record<TermCategory, string> = {
+  foundations: "l01", data: "l02", spl: "l03", detection: "l04", triage: "l05",
+  risk: "l07", intel: "l08", mitre: "l08", response: "l09",
+};
+
+export const TERM_LESSON: Record<string, string> = {
+  beaconing: "l06", c2: "l06", pivot: "l06", "threat-hunting": "l06", evidence: "l06", ioc: "l08", ttp: "l08",
+  ransomware: "l09", "lateral-movement": "l07", "brute-force": "l04", "correlation-search": "l04",
+};
+
+export function termLesson(id: string): string {
+  const t = TERMS_BY_ID[id];
+  return TERM_LESSON[id] ?? (t ? CATEGORY_LESSON[t.category] : "l01");
+}
 
 export const TERMS_BY_ID: Record<string, SocTerm> = Object.fromEntries(SOC_TERMS.map((x) => [x.id, x]));
 

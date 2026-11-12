@@ -13,6 +13,10 @@
  *   { type: "any" }
  */
 import { useEffect, useMemo, useState } from "react";
+import type { Scenario } from "@/academy/types";
+import { riskRollup } from "@/academy/data/scenarios";
+import { MITRE_TACTICS, MITRE_TECHNIQUES, findTechnique } from "@/academy/data/mitre";
+import { SplWorkbench } from "@/academy/components/SplWorkbench";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,7 +26,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Search, Activity, CheckCircle2, AlertTriangle, ShieldCheck, Gauge,
   ListChecks, FlaskConical, Layers, Database, Users, Globe, Workflow,
-  ChevronRight, Play, Bug, FileSearch, Tag,
+  ChevronRight, Play, Bug, FileSearch, Tag, Grid3x3,
 } from "lucide-react";
 
 interface Action {
@@ -35,9 +39,18 @@ interface Action {
   [key: string]: any;
 }
 
+export interface SimulatorActionEvent { action: string; view: string; value?: string; detail: string }
+
 interface Props {
   expectedAction: Action;
   onValidate: (ok: boolean) => void;
+  /** Optional: observe every analyst action (used by SOC Academy labs and the mentor). */
+  onAction?: (e: SimulatorActionEvent) => void;
+  /** Optional: load a deterministic Academy scenario into Search, Incident Review, Risk, Intel, Assets, Investigations and ATT&CK. */
+  scenario?: Scenario;
+  /** Show the expected-action hint badge in the top bar (default true). */
+  showObjectiveHint?: boolean;
+  initialView?: string;
 }
 
 interface AuditEntry { at: string; action: string; detail: string; }
@@ -81,6 +94,7 @@ const NAV_GROUPS: { label: string; items: { id: string; label: string; icon: any
       { id: "risk-analysis", label: "Risk Analysis", icon: ShieldCheck },
       { id: "investigation", label: "Investigations", icon: FileSearch },
       { id: "glass-tables", label: "Glass Tables", icon: Layers },
+      { id: "mitre-attack", label: "MITRE ATT&CK", icon: Grid3x3 },
     ],
   },
   {
@@ -93,8 +107,8 @@ const NAV_GROUPS: { label: string; items: { id: string; label: string; icon: any
   },
 ];
 
-export function SplunkEsSimulator({ expectedAction, onValidate }: Props) {
-  const [view, setView] = useState<string>("search");
+export function SplunkEsSimulator({ expectedAction, onValidate, onAction, scenario, showObjectiveHint = true, initialView }: Props) {
+  const [view, setView] = useState<string>(initialView ?? "search");
   const [audit, setAudit] = useState<AuditEntry[]>([
     { at: ts(), action: "splunkes.session.start", detail: "Opened Splunk Enterprise Security as analyst.shadowx" },
   ]);
@@ -104,6 +118,7 @@ export function SplunkEsSimulator({ expectedAction, onValidate }: Props) {
 
   function emit(action: string, detail: string, value?: string) {
     setAudit((a) => [...a, { at: ts(), action, detail }]);
+    onAction?.({ action, view, value, detail });
     if (!solved && matches({ view, action, value }, expectedAction)) {
       setSolved(true);
       setAudit((a) => [...a, { at: ts(), action: "lab.step.complete", detail: "✔ Step objective met." }]);
@@ -114,6 +129,7 @@ export function SplunkEsSimulator({ expectedAction, onValidate }: Props) {
   function navigate(v: string, label: string) {
     setView(v);
     setAudit((a) => [...a, { at: ts(), action: "navigate", detail: `Opened ${label}` }]);
+    onAction?.({ action: "navigate", view: v, detail: `Opened ${label}` });
     if (!solved && matches({ view: v, action: "navigate" }, expectedAction)) {
       setSolved(true);
       setAudit((a) => [...a, { at: ts(), action: "lab.step.complete", detail: "✔ Step objective met." }]);
@@ -141,7 +157,10 @@ export function SplunkEsSimulator({ expectedAction, onValidate }: Props) {
         <Badge variant="outline" className="text-[10px] font-mono">Splunk · ES 7.x</Badge>
         <span className="text-[10px] text-muted-foreground hidden md:inline ml-1">SPL · Notables · RBA · Investigations</span>
         <div className="flex-1" />
-        {expectedHint && (
+        {scenario && (
+          <Badge variant="outline" className="text-[10px] max-w-[240px] truncate">Scenario: {scenario.name}</Badge>
+        )}
+        {showObjectiveHint && expectedHint && (
           <Badge variant="outline" className="text-[10px] gap-1 max-w-[320px] truncate">
             <Activity className="h-3 w-3" /> {expectedHint}
           </Badge>
@@ -186,7 +205,7 @@ export function SplunkEsSimulator({ expectedAction, onValidate }: Props) {
 
         {/* CENTER view */}
         <main className="overflow-auto p-4">
-          <View view={view} emit={emit} />
+          <View view={view} emit={emit} scenario={scenario} />
         </main>
 
         {/* RIGHT audit */}
@@ -257,20 +276,41 @@ function Kpi({ label, value, tone }: { label: string; value: string | number; to
 }
 
 /* ---------- Views ---------- */
-function View({ view, emit }: { view: string; emit: Emit }) {
+function View({ view, emit, scenario }: { view: string; emit: Emit; scenario?: Scenario }) {
   switch (view) {
-    case "search":               return <SearchView emit={emit} />;
+    case "search":               return scenario ? <ScenarioSearchView emit={emit} scenario={scenario} /> : <SearchView emit={emit} />;
     case "dashboards":           return <DashboardsView emit={emit} />;
     case "security-posture":     return <PostureView emit={emit} />;
-    case "incident-review":      return <IncidentReviewView emit={emit} />;
-    case "risk-analysis":        return <RiskAnalysisView emit={emit} />;
-    case "investigation":        return <InvestigationView emit={emit} />;
+    case "incident-review":      return <IncidentReviewView emit={emit} scenario={scenario} />;
+    case "risk-analysis":        return <RiskAnalysisView emit={emit} scenario={scenario} />;
+    case "investigation":        return <InvestigationView emit={emit} scenario={scenario} />;
     case "glass-tables":         return <GlassTablesView emit={emit} />;
     case "correlation-searches": return <CorrelationView emit={emit} />;
-    case "assets-identities":    return <AssetsView emit={emit} />;
-    case "threat-intel":         return <ThreatIntelView emit={emit} />;
+    case "assets-identities":    return <AssetsView emit={emit} scenario={scenario} />;
+    case "threat-intel":         return <ThreatIntelView emit={emit} scenario={scenario} />;
+    case "mitre-attack":         return <MitreView emit={emit} scenario={scenario} />;
     default: return null;
   }
+}
+
+/* SEARCH (scenario) — deterministic SPL over the loaded Academy scenario */
+function ScenarioSearchView({ emit, scenario }: { emit: Emit; scenario: Scenario }) {
+  const firstIndex = scenario.events.find((e) => e.risk)?.index ?? scenario.events[0]?.index ?? "main";
+  const [spl, setSpl] = useState(`index=${firstIndex}`);
+  return (
+    <div className="space-y-3">
+      <PageHeader icon={Search} title="Search & Reporting" subtitle={`Educational SPL simulator · ${scenario.name}`} />
+      <SplWorkbench
+        events={scenario.events}
+        value={spl}
+        onChange={setSpl}
+        datasetLabel={scenario.name}
+        compact
+        onTimeRange={(v) => emit("select:time-range", `Time range → ${v}`, v)}
+        onRun={(q, r) => emit("run-spl", `Ran SPL (${r.error ? "error" : `${r.rows.length} rows`}): ${q.slice(0, 80)}`, q)}
+      />
+    </div>
+  );
 }
 
 /* SEARCH — SPL editor with sample tables */
@@ -436,13 +476,20 @@ function urgencyTone(u: string) {
   return "text-muted-foreground";
 }
 
-function IncidentReviewView({ emit }: { emit: Emit }) {
+function IncidentReviewView({ emit, scenario }: { emit: Emit; scenario?: Scenario }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState("all");
   const [comment, setComment] = useState("");
+  const [statusById, setStatusById] = useState<Record<string, string>>({});
+  const [dispositionById, setDispositionById] = useState<Record<string, string>>({});
 
-  const rows = NOTABLES.filter((n) => statusFilter === "all" || n.status.toLowerCase() === statusFilter);
-  const sel = NOTABLES.find((n) => n.id === selected);
+  const source = useMemo(() => scenario
+    ? scenario.notables.map((n) => ({ id: n.id, t: n.title, urgency: n.urgency, status: "New", entity: n.entity, rule: n.rule }))
+    : NOTABLES, [scenario]);
+  const withStatus = source.map((n) => ({ ...n, status: statusById[n.id] ?? n.status }));
+  const rows = withStatus.filter((n) => statusFilter === "all" || n.status.toLowerCase() === statusFilter);
+  const sel = withStatus.find((n) => n.id === selected);
+  const selScenario = scenario?.notables.find((n) => n.id === selected);
 
   return (
     <div className="space-y-3">
@@ -504,16 +551,33 @@ function IncidentReviewView({ emit }: { emit: Emit }) {
             <div><span className="text-muted-foreground">Entity:</span> <span className="font-mono">{sel.entity}</span></div>
             <div><span className="text-muted-foreground">Status:</span> <span className="font-mono">{sel.status}</span></div>
           </div>
-          <div className="text-[11px] text-muted-foreground">
-            Adjacent events (3) · Contributing events (12) · Risk score impact: +45
-          </div>
+          {selScenario ? (
+            <div className="space-y-1.5 text-[11px]">
+              <p className="text-foreground/90">{selScenario.description}</p>
+              <div className="text-muted-foreground">Contributing events: {selScenario.eventIds.length} · Disposition: <span className="font-mono">{dispositionById[selScenario.id] ?? "undetermined"}</span></div>
+              <div><span className="text-muted-foreground">Recommended:</span> {selScenario.recommendedActions.join(" · ")}</div>
+            </div>
+          ) : (
+            <div className="text-[11px] text-muted-foreground">
+              Adjacent events (3) · Contributing events (12) · Risk score impact: +45
+            </div>
+          )}
           <div className="flex flex-wrap gap-1.5 pt-1">
             <Button size="sm" variant="outline" onClick={() => emit(`click:assign-to-me`, `Assigned ${sel.id} to analyst.shadowx`)}>Assign to me</Button>
-            <Button size="sm" variant="outline" onClick={() => emit(`click:change-status:in-progress`, `${sel.id} → In Progress`)}>Mark In Progress</Button>
+            <Button size="sm" variant="outline" onClick={() => { setStatusById((m) => ({ ...m, [sel.id]: "In Progress" })); emit(`click:change-status:in-progress`, `${sel.id} → In Progress`); }}>Mark In Progress</Button>
             <Button size="sm" variant="outline" onClick={() => emit(`click:suppress-notable`, `Suppressed ${sel.id} for 24h`)}>Suppress 24h</Button>
             <Button size="sm" variant="outline" onClick={() => emit(`click:run-adaptive-response`, `Ran adaptive response on ${sel.id}`)}>Run Adaptive Response</Button>
             <Button size="sm" variant="outline" onClick={() => emit(`click:add-to-investigation`, `Added ${sel.id} to investigation INV-220`)}>Add to Investigation</Button>
-            <Button size="sm" onClick={() => emit(`click:resolve-notable`, `Resolved ${sel.id}`)}>Resolve</Button>
+            <Button size="sm" onClick={() => { setStatusById((m) => ({ ...m, [sel.id]: "Resolved" })); emit(`click:resolve-notable`, `Resolved ${sel.id}`); }}>Resolve</Button>
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-[10px] uppercase tracking-wider text-muted-foreground">Disposition</span>
+            {[["true-positive", "True positive"], ["false-positive", "False positive"], ["benign", "Benign / expected"]].map(([k, l]) => (
+              <Button key={k} size="sm" variant={dispositionById[sel.id] === k ? "default" : "outline"} className="h-7 text-[11px]"
+                onClick={() => { setDispositionById((m) => ({ ...m, [sel.id]: k })); emit(`click:set-disposition:${k}`, `${sel.id} disposition → ${l}`, sel.id); }}>
+                {l}
+              </Button>
+            ))}
           </div>
           <Textarea
             placeholder="Add comment…"
@@ -521,7 +585,7 @@ function IncidentReviewView({ emit }: { emit: Emit }) {
             onChange={(e) => setComment(e.target.value)}
             className="text-xs"
           />
-          <Button size="sm" variant="ghost" onClick={() => emit(`click:add-comment`, `Added comment to ${sel.id}`)}>Save comment</Button>
+          <Button size="sm" variant="ghost" onClick={() => emit(`click:add-comment`, `Added comment to ${sel.id}${comment ? `: ${comment.slice(0, 60)}` : ""}`, comment)}>Save comment</Button>
         </Card>
       )}
     </div>
@@ -536,14 +600,17 @@ const RISK_OBJECTS = [
   { name: "10.0.4.21", type: "other", score: 54, sources: 3, attck: 2 },
 ];
 
-function RiskAnalysisView({ emit }: { emit: Emit }) {
+function RiskAnalysisView({ emit, scenario }: { emit: Emit; scenario?: Scenario }) {
+  const objects = useMemo(() => scenario
+    ? riskRollup(scenario).map((r) => ({ name: r.object, type: r.objectType, score: r.score, sources: r.sources, attck: r.techniques.length }))
+    : RISK_OBJECTS, [scenario]);
   return (
     <div className="space-y-3">
       <PageHeader icon={ShieldCheck} title="Risk Analysis" subtitle="Risk-Based Alerting (RBA) overview" />
       <div className="grid grid-cols-3 gap-2">
-        <Kpi label="Risk Notables (24h)" value={9} tone="text-shadowx-gold" />
-        <Kpi label="Risk Objects > 80" value={3} tone="text-destructive" />
-        <Kpi label="Avg ATT&CK breadth" value="2.8" />
+        <Kpi label="Risk Notables (24h)" value={scenario ? objects.filter((o) => o.score >= 100).length : 9} tone="text-shadowx-gold" />
+        <Kpi label="Risk Objects > 80" value={scenario ? objects.filter((o) => o.score > 80).length : 3} tone="text-destructive" />
+        <Kpi label="Avg ATT&CK breadth" value={scenario ? (objects.reduce((x, o) => x + o.attck, 0) / Math.max(1, objects.length)).toFixed(1) : "2.8"} />
       </div>
       <Card className="p-0 overflow-hidden">
         <table className="w-full text-xs">
@@ -558,7 +625,7 @@ function RiskAnalysisView({ emit }: { emit: Emit }) {
             </tr>
           </thead>
           <tbody>
-            {RISK_OBJECTS.map((r) => (
+            {objects.map((r) => (
               <tr key={r.name} className="border-t border-border">
                 <td className="px-2 py-1.5 font-mono">{r.name}</td>
                 <td className="px-2 py-1.5">{r.type}</td>
@@ -584,17 +651,23 @@ function RiskAnalysisView({ emit }: { emit: Emit }) {
 }
 
 /* INVESTIGATION WORKBENCH */
-function InvestigationView({ emit }: { emit: Emit }) {
-  const events = [
+function InvestigationView({ emit, scenario }: { emit: Emit; scenario?: Scenario }) {
+  const staticEvents = [
     { at: "09:12", type: "notable", text: "NOT-1042 Brute Force on j.doe" },
     { at: "09:18", type: "artifact", text: "Added artifact: 203.0.113.5 (src_ip)" },
     { at: "09:21", type: "note",     text: "Confirmed VPN logs corroborate burst pattern" },
     { at: "09:30", type: "action",   text: "Adaptive response: disabled user j.doe in AD" },
     { at: "09:42", type: "artifact", text: "Added artifact: ws-fin-12 (host)" },
   ];
+  const events = scenario
+    ? scenario.timeline.map((t) => {
+        const first = scenario.events.find((e) => e.id === t.eventIds[0]);
+        return { at: first?.time.slice(11, 16) ?? "--:--", type: t.phase, text: t.summary };
+      })
+    : staticEvents;
   return (
     <div className="space-y-3">
-      <PageHeader icon={FileSearch} title="Investigation Workbench" subtitle="INV-220 · Brute force → account compromise" />
+      <PageHeader icon={FileSearch} title="Investigation Workbench" subtitle={scenario ? `INV-ACAD · ${scenario.name}` : "INV-220 · Brute force → account compromise"} />
       <div className="grid grid-cols-3 gap-2">
         <Kpi label="Artifacts" value={7} />
         <Kpi label="Notes" value={4} />
@@ -721,7 +794,8 @@ function CorrelationView({ emit }: { emit: Emit }) {
 }
 
 /* ASSETS & IDENTITIES */
-function AssetsView({ emit }: { emit: Emit }) {
+function AssetsView({ emit, scenario }: { emit: Emit; scenario?: Scenario }) {
+  if (scenario) return <ScenarioAssetsView emit={emit} scenario={scenario} />;
   const assets = [
     ["10.0.0.10",  "win-dc01",   "DC",        "production", "high"],
     ["10.0.4.21",  "ws-fin-12",  "endpoint",  "finance",    "medium"],
@@ -754,7 +828,8 @@ function AssetsView({ emit }: { emit: Emit }) {
 }
 
 /* THREAT INTEL */
-function ThreatIntelView({ emit }: { emit: Emit }) {
+function ThreatIntelView({ emit, scenario }: { emit: Emit; scenario?: Scenario }) {
+  const [looked, setLooked] = useState<string | null>(null);
   const feeds = [
     ["MISP - corp-intel",  "TAXII 2.1", "active",   "12 432"],
     ["AlienVault OTX",     "TAXII 2.0", "active",   "84 110"],
@@ -776,6 +851,31 @@ function ThreatIntelView({ emit }: { emit: Emit }) {
         </div>
         <DataTable cols={["Feed", "Type", "Status", "Indicators"]} rows={feeds} />
       </Card>
+      {scenario && (
+        <Card className="p-3">
+          <div className="text-xs font-semibold mb-2">Scenario intel matches · {scenario.name}</div>
+          {scenario.intel.length === 0 ? (
+            <div className="text-[11px] text-muted-foreground">No threat-intel matches for this scenario — not every attack uses known-bad infrastructure.</div>
+          ) : (
+            <table className="w-full text-xs">
+              <thead className="text-muted-foreground"><tr><th className="text-left py-1 px-1">Indicator</th><th className="text-left py-1 px-1">Type</th><th className="text-left py-1 px-1">Threat</th><th className="text-left py-1 px-1">Source</th><th className="text-left py-1 px-1">Confidence</th><th /></tr></thead>
+              <tbody>
+                {scenario.intel.map((i) => (
+                  <tr key={i.indicator} className="border-t border-border">
+                    <td className="py-1.5 px-1 font-mono">{i.indicator}</td><td className="px-1">{i.type}</td><td className="px-1">{i.threat}</td><td className="px-1">{i.source}</td>
+                    <td className={`px-1 font-mono ${i.confidence >= 80 ? "text-destructive" : "text-shadowx-gold"}`}>{i.confidence}</td>
+                    <td className="px-1"><Button size="sm" variant="ghost" onClick={() => { setLooked(i.indicator); emit(`click:lookup-intel:${i.indicator}`, `Looked up ${i.indicator}: ${i.threat} (${i.confidence}%)`, i.indicator); }}>Lookup</Button></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {looked && (() => { const i = scenario.intel.find((x) => x.indicator === looked); return i ? (
+            <div className="mt-2 rounded bg-muted/50 p-2 text-[11px]">
+              <span className="font-mono font-semibold">{i.indicator}</span> — {i.threat}. Seen in {i.eventIds.length} scenario event(s). Confidence {i.confidence}/100 from {i.source}: {i.confidence >= 80 ? "high — treat as malicious and block." : "medium — corroborate with behaviour before acting."}
+            </div>) : null; })()}
+        </Card>
+      )}
       <Card className="p-3">
         <div className="text-xs font-semibold mb-2">Threat Activity (last 24h)</div>
         <DataTable cols={["Match", "Type", "Threat", "Source", "Severity"]} rows={matches} />
@@ -784,6 +884,75 @@ function ThreatIntelView({ emit }: { emit: Emit }) {
           <Button size="sm" onClick={() => emit(`click:create-notable-from-match`, "Created notable from intel match")}>Create notable</Button>
         </div>
       </Card>
+    </div>
+  );
+}
+
+/* ASSETS & IDENTITIES (scenario) */
+function ScenarioAssetsView({ emit, scenario }: { emit: Emit; scenario: Scenario }) {
+  const [sel, setSel] = useState<string | null>(null);
+  const ent = scenario.entities.find((e) => e.value === sel);
+  return (
+    <div className="space-y-3">
+      <PageHeader icon={Users} title="Assets & Identities" subtitle={`Entities involved in ${scenario.name}`} />
+      <Card className="p-0 overflow-hidden">
+        <table className="w-full text-xs">
+          <thead className="bg-muted/40 text-muted-foreground"><tr><th className="text-left px-2 py-1.5">Entity</th><th className="text-left px-2 py-1.5">Type</th><th className="text-left px-2 py-1.5">Events</th><th /></tr></thead>
+          <tbody>
+            {scenario.entities.map((e) => (
+              <tr key={e.value} className={`border-t border-border ${sel === e.value ? "bg-primary-soft" : ""}`}>
+                <td className="px-2 py-1.5 font-mono">{e.value}</td>
+                <td className="px-2 py-1.5">{e.type}</td>
+                <td className="px-2 py-1.5 font-mono">{scenario.events.filter((x) => x.raw.toLowerCase().includes(e.value.toLowerCase())).length}</td>
+                <td className="px-2 py-1.5"><Button size="sm" variant="ghost" onClick={() => { setSel(e.value); emit(`click:open-asset:${e.value}`, `Opened ${e.type} ${e.value}`, e.value); }}>Open</Button></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </Card>
+      {ent && (
+        <Card className="p-3 text-xs space-y-1">
+          <div className="font-semibold font-mono">{ent.value} <span className="font-sans text-muted-foreground font-normal">· {ent.type}</span></div>
+          <div className="text-muted-foreground">Appears in {scenario.events.filter((x) => x.raw.toLowerCase().includes(ent.value.toLowerCase())).length} events. Decide its role yourself from the evidence — asset context tells you how important it is, not whether it is guilty.</div>
+        </Card>
+      )}
+    </div>
+  );
+}
+
+/* MITRE ATT&CK — tactic columns, scenario techniques highlighted */
+function MitreView({ emit, scenario }: { emit: Emit; scenario?: Scenario }) {
+  const [sel, setSel] = useState<string | null>(null);
+  const seen = new Set((scenario?.mitreMap ?? []).map((m) => m.techniqueId));
+  const t = sel ? findTechnique(sel) : undefined;
+  const ev = scenario?.mitreMap.find((m) => m.techniqueId === sel);
+  return (
+    <div className="space-y-3">
+      <PageHeader icon={Grid3x3} title="MITRE ATT&CK" subtitle={scenario ? `Techniques observed in ${scenario.name} are highlighted` : "Tactics (why) and techniques (how) used by attackers"} />
+      <div className="overflow-x-auto">
+        <div className="grid min-w-[900px] grid-cols-[repeat(13,minmax(0,1fr))] gap-1">
+          {[...MITRE_TACTICS].sort((a, b) => a.order - b.order).map((tac) => (
+            <div key={tac.id} className="space-y-1">
+              <div className="rounded bg-muted px-1 py-1 text-[9px] font-semibold leading-tight" title={tac.question}>{tac.name}</div>
+              {MITRE_TECHNIQUES.filter((x) => x.tacticIds[0] === tac.id).map((x) => (
+                <button key={x.id} type="button"
+                  onClick={() => { setSel(x.id); emit(`click:open-technique:${x.id}`, `Opened ${x.id} ${x.name}`, x.id); }}
+                  className={`w-full rounded border px-1 py-1 text-left text-[9px] leading-tight transition-colors ${seen.has(x.id) ? "border-destructive/60 bg-destructive/15" : "border-border bg-card hover:bg-muted"} ${sel === x.id ? "ring-1 ring-primary" : ""}`}>
+                  <div className="font-mono opacity-70">{x.id}</div>{x.name}
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+      {t && (
+        <Card className="p-3 text-xs space-y-1">
+          <div className="font-semibold">{t.id} · {t.name}</div>
+          <p>{t.description}</p>
+          <p className="text-muted-foreground">Log sources: {t.logSources.join(", ")} · Detection idea: {t.detectionIdea}</p>
+          {ev && <p className="text-destructive">Observed in this scenario: {ev.evidence}</p>}
+        </Card>
+      )}
     </div>
   );
 }

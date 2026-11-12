@@ -182,7 +182,26 @@ export interface LabObjective {
   termRefs?: string[];
 }
 
-export type LabKind = "console" | "spl" | "investigation" | "risk" | "mitre" | "ir" | "capstone";
+export type LabKind = "console" | "logs" | "spl" | "investigation" | "risk" | "mitre" | "ir" | "capstone";
+
+/** Lesson 1 style triage board: classify alerts by priority. */
+export interface TriageAlert {
+  id: string;
+  title: string;
+  source: string;
+  detail: string;
+  answer: "critical" | "high" | "medium" | "low";
+  why: string;
+}
+
+/** Lesson 2 style log-analysis question answered from a set of raw events. */
+export interface LogQuestion {
+  id: string;                                  // also the objective id it satisfies
+  prompt: string;
+  kind: "choice" | "pick-event" | "order";
+  options?: string[];                          // choice
+  answer: string | string[];                   // choice value | event id | ordered event ids
+}
 
 export interface IrOption {
   id: string;
@@ -207,11 +226,14 @@ export interface LessonLab {
   splExercises?: SplExercise[];                // spl labs: each exercise is graded like an objective
   irNodes?: IrNode[];                          // ir labs: ordered decision points
   riskThreshold?: number;                      // risk labs: default risk-notable threshold
+  triageAlerts?: TriageAlert[];                // console labs: optional triage board after the tour
+  logEventIds?: string[];                      // logs labs: curated raw events shown to the learner
+  logQuestions?: LogQuestion[];                // logs labs
 }
 
 export type ReadinessKey =
-  | "detection" | "investigation" | "evidence" | "mitre"
-  | "severity" | "containment" | "reporting" | "independence";
+  | "foundations" | "logs" | "spl" | "detection" | "triage"
+  | "investigation" | "risk" | "intel" | "mitre" | "response";
 
 export interface AssessmentQuestion {
   id: string;
@@ -280,6 +302,8 @@ export interface LessonProgress {
   assessmentAnswers: Record<string, boolean>;  // best-attempt correctness per question id
   hintsUsed: number;
   deepHintsUsed: number;                       // level >= 3
+  labAttempts: number;                         // lab starts / resets
+  mistakes: number;                            // wrong answers / failed validations
   reflections: Record<string, string>;
   startedAt: number;
   completedAt?: number;
