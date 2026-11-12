@@ -110,6 +110,7 @@ interface Ctx {
 }
 
 const AcademyCtx = createContext<Ctx | null>(null);
+export const AcademyCtxExport = AcademyCtx;
 
 export function AcademyProgressProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
