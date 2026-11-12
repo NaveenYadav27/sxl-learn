@@ -408,7 +408,7 @@ function parseAggs(s: string): Agg[] {
 function splitBy(arg: string): { left: string; by: string[] } {
   const m = /^(.*?)(?:\s+by\s+(.+))?$/is.exec(arg.trim());
   const left = (m?.[1] ?? "").trim();
-  const by = m?.[2] ? m[2].split(/[\s,]+/).map((x) => x.trim()).filter(Boolean) : [];
+  const by = m?.[2] ? (m[2].match(/"[^"]+"|[^\s,]+/g) ?? []).map((x) => unquote(x)).filter(Boolean) : [];
   return { left, by };
 }
 
@@ -626,7 +626,7 @@ export function runSpl(spl: string, events: SimEvent[], opts: RunOptions = {}): 
           break;
         }
         case "table": {
-          const fields = arg.split(/[\s,]+/).filter(Boolean);
+          const fields = (arg.match(/"[^"]+"|[^\s,]+/g) ?? []).map((x) => unquote(x)).filter(Boolean);
           if (!fields.length) throw new Error("table needs field names, e.g. | table _time user src_ip");
           const avail = new Set<string>(); rows.forEach((r) => Object.keys(r).forEach((k) => avail.add(k)));
           const expanded: string[] = [];
