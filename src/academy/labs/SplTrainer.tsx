@@ -60,8 +60,8 @@ export function SplTrainer() {
           <Button size="sm" variant="outline" className="h-7 gap-1 text-[11px]" disabled={level >= 5} onClick={() => rt.revealHint(ex.id)}>
             <Lightbulb className="h-3 w-3" /> {level === 0 ? "Hint" : `Next hint (${Math.min(level + 1, 5)}/5)`}
           </Button>
-          <Button size="sm" variant="outline" className="h-7 gap-1 text-[11px]" onClick={() => { setShowExample(true); while (rt.hintLevel(ex.id) < 4 && false) { /* noop */ } if (level < 4) { rt.revealHint(ex.id); } }}>
-            <Eye className="h-3 w-3" /> Show example
+          <Button size="sm" variant="outline" className="h-7 gap-1 text-[11px]" onClick={() => { setShowExample(true); for (let i = level; i < 4; i++) rt.revealHint(ex.id); }}>
+            <Eye className="h-3 w-3" /> Show example{level < 4 ? " (uses hints)" : ""}
           </Button>
           <Button size="sm" className="h-7 text-[11px]" onClick={check}>Check my answer</Button>
         </div>
