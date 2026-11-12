@@ -557,7 +557,6 @@ export const SOC_TERMS: SocTerm[] = [
     "j.doe: +40 brute force, +50 success after failures, +30 unusual VPN geo = 120 → over the 100 threshold.",
     ["rba", "risk-score", "risk-object"]),
 ];
-];
 
 /** "Why it matters" for the core vocabulary — shown on dictionary cards and term popovers. */
 export const TERM_WHY: Record<string, string> = {
