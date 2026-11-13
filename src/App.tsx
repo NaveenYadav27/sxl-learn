@@ -87,6 +87,7 @@ import { AcademyDictionary } from "./academy/pages/AcademyDictionary.tsx";
 import { AcademyMentor } from "./academy/pages/AcademyMentor.tsx";
 import { AcademyMitre } from "./academy/pages/AcademyMitre.tsx";
 import { AcademyProgress } from "./academy/pages/AcademyProgress.tsx";
+import { AcademyProgressProvider } from "./academy/engine/progress.tsx";
 
 const queryClient = new QueryClient();
 
@@ -98,7 +99,8 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <CourseProvider>
-          <Routes>
+            <AcademyProgressProvider>
+              <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/soc" element={<SocProgram />} />
             <Route path="/itsm" element={<ItsmProgram />} />
@@ -186,6 +188,7 @@ const App = () => (
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
+            </AcademyProgressProvider>
           </CourseProvider>
         </AuthProvider>
       </BrowserRouter>
