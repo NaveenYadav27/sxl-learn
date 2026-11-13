@@ -23,7 +23,7 @@ export function OpsLayout() {
 
   if (loading) {
     return (
-      <div className="ops-theme min-h-screen bg-[hsl(var(--ops-bg))] p-8">
+      <div className="ops-theme dark min-h-screen bg-[hsl(var(--ops-bg))] p-8">
         <Skeleton className="h-12 w-1/3" />
       </div>
     );
@@ -42,7 +42,7 @@ export function OpsLayout() {
   }
 
   return (
-    <div className="ops-theme flex h-screen w-full overflow-hidden bg-[hsl(var(--ops-bg))] text-[hsl(var(--ops-fg))]">
+    <div className="ops-theme dark flex h-screen w-full overflow-hidden bg-[hsl(var(--ops-bg))] text-[hsl(var(--ops-fg))]">
       <OpsSidebar collapsed={collapsed} />
       <div className="flex min-w-0 flex-1 flex-col">
         <OpsTopbar onToggleSidebar={() => setCollapsed((c) => !c)} />

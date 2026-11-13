@@ -208,6 +208,26 @@
      Dark graphite enterprise palette. Does NOT affect rest of app.
      =========================================================== */
   .ops-theme {
+    /* Map all standard Tailwind/shadcn surface & text tokens to the dark ops palette */
+    --background: 222 18% 9%;
+    --foreground: 220 14% 94%;
+    --card: 222 16% 12%;
+    --card-foreground: 220 14% 94%;
+    --popover: 222 16% 12%;
+    --popover-foreground: 220 14% 94%;
+    --border: 222 12% 20%;
+    --input: 222 12% 20%;
+    --muted: 222 14% 15%;
+    --muted-foreground: 220 10% 64%;
+    --secondary: 222 14% 16%;
+    --secondary-foreground: 220 14% 94%;
+    --accent: 204 70% 16%;
+    --accent-foreground: 200 100% 82%;
+    --primary: 204 92% 54%;
+    --primary-foreground: 222 30% 6%;
+    --ring: 204 92% 58%;
+    --gradient-shadowx: linear-gradient(90deg, hsl(204 92% 58%) 0%, hsl(38 92% 58%) 50%, hsl(14 85% 58%) 100%);
+
     --ops-bg: 222 18% 9%;
     --ops-panel: 222 16% 12%;
     --ops-panel-2: 222 14% 15%;
