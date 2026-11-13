@@ -100,11 +100,11 @@ const CsaProgram = () => (
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <a href="#enroll">
                 <Button size="lg" className="gap-2 font-semibold">
-                  Reserve seat for ₹199 <ArrowRight className="h-4 w-4" />
+                  Apply for Cohort <ArrowRight className="h-4 w-4" />
                 </Button>
               </a>
               <div className="text-sm text-muted-foreground">
-                <span className="text-shadowx-gold font-semibold">1hr Intro Batch · ₹199</span> · full program pricing TBA
+                <span className="text-shadowx-azure font-semibold">Advanced Blue Team Cohort</span> · Real SIEM & Threat Hunting Simulation
               </div>
             </div>
             <div className="mt-8 grid grid-cols-3 gap-4 max-w-md">
@@ -171,22 +171,25 @@ const CsaProgram = () => (
       </div>
     </section>
 
-    {/* Pricing */}
+    {/* Admissions */}
     <section className="bg-secondary/40 border-y border-border">
       <div className="container py-16 text-center">
-        <h2 className="text-2xl md:text-3xl font-bold">Pricing</h2>
+        <h2 className="text-2xl md:text-3xl font-bold">Admissions & Cohort Schedule</h2>
+        <p className="mt-2 text-muted-foreground max-w-xl mx-auto">
+          Deep Blue Team training across SIEM, threat hunting, and IR. Batches are limited to ensure hands-on mentorship.
+        </p>
         <Card className="mt-8 max-w-md mx-auto border-primary/30 shadow-elevated">
           <CardContent className="p-8">
-            <div className="text-xs font-mono uppercase tracking-widest text-shadowx-azure">1hr Intro Batch</div>
-            <div className="mt-2 flex items-baseline justify-center gap-2">
-              <span className="font-display text-5xl font-bold text-shadowx-gradient">₹199</span>
+            <div className="text-xs font-mono uppercase tracking-widest text-shadowx-azure">Next Available Cohort</div>
+            <div className="mt-2">
+              <span className="font-display text-2xl font-bold text-foreground">Upcoming Live Batch</span>
             </div>
-            <div className="mt-1 text-sm text-muted-foreground">1 hour live · CSA taster · seats limited</div>
+            <div className="mt-2 text-sm text-muted-foreground">8 Modules · EC-Council Aligned · Hands-on Blue Team Lab Exercises</div>
             <div className="mt-4 text-xs text-muted-foreground border-t border-border pt-3">
-              Full multi-day program pricing will be announced soon.
+              Applications are reviewed on a rolling basis. Onboarding credentials delivered upon enrollment acceptance.
             </div>
             <a href="#enroll" className="block mt-6">
-              <Button size="lg" className="w-full font-semibold">Reserve seat for ₹199</Button>
+              <Button size="lg" className="w-full font-semibold">Apply for Cohort</Button>
             </a>
           </CardContent>
         </Card>

@@ -67,11 +67,11 @@ const CcnaProgram = () => (
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <a href="#enroll">
                 <Button size="lg" className="gap-2 font-semibold">
-                  Reserve a seat <ArrowRight className="h-4 w-4" />
+                  Apply for Cohort <ArrowRight className="h-4 w-4" />
                 </Button>
               </a>
               <div className="text-sm text-muted-foreground">
-                <span className="text-shadowx-gold font-semibold">Cohort pricing announced soon</span> · ~1h–1.5h per day
+                <span className="text-shadowx-azure font-semibold">30-Day Structured Live Cohort</span> · Packet Tracer & WLC Simulations
               </div>
             </div>
             <div className="mt-8 grid grid-cols-3 gap-4 max-w-md">

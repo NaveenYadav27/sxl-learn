@@ -38,7 +38,7 @@ export function Logo({
         </span>
         {showTagline && (
           <div className="text-[9px] uppercase tracking-[0.2em] text-shadowx-gold/80 mt-0.5">
-            Empower · Illuminate · Uphold
+            Empower · Illuminate · Uphold · Defend
           </div>
         )}
       </div>
@@ -73,7 +73,7 @@ export function Logo({
             </div>
             {showTagline && (
               <div className="text-[9px] uppercase tracking-[0.2em] text-shadowx-gold/80 mt-0.5">
-                Empower · Illuminate · Uphold
+                Empower · Illuminate · Uphold · Defend
               </div>
             )}
           </div>
@@ -92,7 +92,7 @@ export function Logo({
           </div>
           {showTagline && (
             <div className="text-[9px] uppercase tracking-[0.2em] text-shadowx-gold/80 mt-0.5">
-              Empower · Illuminate · Uphold
+              Empower · Illuminate · Uphold · Defend
             </div>
           )}
         </div>

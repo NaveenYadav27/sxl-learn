@@ -51,7 +51,7 @@ export function EnrollForm({ program, programName }: Props) {
         </div>
         <h3 className="text-xl font-semibold">Seat request received</h3>
         <p className="mt-2 text-sm text-muted-foreground">
-          Our team will WhatsApp / email you within 24 hours with payment details and your batch start date for the
+          Our team will WhatsApp / email you within 24 hours with your batch schedule and onboarding credentials for the
           {" "}<span className="font-medium text-foreground">{programName}</span>.
         </p>
       </div>
@@ -80,10 +80,10 @@ export function EnrollForm({ program, programName }: Props) {
       </div>
       <Button type="submit" size="lg" className="w-full font-semibold" disabled={submitting}>
         {submitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-        Reserve seat for ₹199 (1hr Intro Batch)
+        Apply for Enrollment
       </Button>
       <p className="text-xs text-muted-foreground text-center">
-        ₹199 reserves your seat in the 1-hour live intro batch. Full program pricing will be announced soon.
+        Cohort seats are reviewed on a rolling basis. Our admissions team will confirm your batch schedule within 24 hours.
       </p>
     </form>
   );

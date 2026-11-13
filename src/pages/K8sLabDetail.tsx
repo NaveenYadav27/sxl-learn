@@ -78,14 +78,15 @@ export default function K8sLabDetail() {
   const lab = slug ? getLab(slug) : undefined;
   const [mode, setMode] = useState<Mode>("Engineer");
 
-  if (!lab) return <Navigate to="/k8s" replace />;
-
   const visibleQuestions = useMemo(() => {
+    if (!lab) return null;
     const q = lab.questions;
     if (mode === "Beginner") return { beginner: q.beginner, intermediate: [], advanced: [], scenario: [], viva: q.viva };
     if (mode === "Enterprise") return q;
     return { ...q, advanced: q.advanced };
   }, [lab, mode]);
+
+  if (!lab || !visibleQuestions) return <Navigate to="/k8s" replace />;
 
   return (
     <AppLayout

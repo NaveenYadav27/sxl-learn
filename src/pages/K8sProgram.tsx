@@ -74,7 +74,7 @@ const K8sProgram = () => (
         <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 items-start">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-shadowx-obsidian/60 backdrop-blur px-3 py-1 text-xs font-medium mb-5 border border-shadowx-azure/40 text-shadowx-azure">
-              <Container className="h-3 w-3" /> Kubernetes & Docker · 1hr Intro Batch @ ₹199 · Live
+              <Container className="h-3 w-3" /> Kubernetes & Docker · Cloud Native DevOps Cohort · Hands-on Labs
             </div>
             <h1 className="font-display text-4xl md:text-6xl font-bold leading-[1.05]">
               Kubernetes & Docker <span className="text-shadowx-gradient">Containerization</span> Foundation
@@ -85,7 +85,7 @@ const K8sProgram = () => (
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <Link to="/module/k8s-containerization-fundamentals">
                 <Button size="lg" className="gap-2 font-semibold bg-shadowx-gold text-black hover:bg-shadowx-gold/90">
-                  Start free 2-hour preview <ArrowRight className="h-4 w-4" />
+                  Start hands-on preview <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
               <Link to="/k8s/resources">
@@ -95,7 +95,7 @@ const K8sProgram = () => (
               </Link>
               <a href="#enroll">
                 <Button size="lg" variant="outline" className="gap-2 font-semibold">
-                  Reserve seat for ₹199
+                  Apply for Cohort
                 </Button>
               </a>
             </div>
@@ -191,21 +191,24 @@ const K8sProgram = () => (
       </div>
     </section>
 
-    {/* Pricing */}
+    {/* Admissions */}
     <section className="container py-16 text-center">
-      <h2 className="text-2xl md:text-3xl font-bold">Pricing</h2>
+      <h2 className="text-2xl md:text-3xl font-bold">Admissions & Cohort Schedule</h2>
+      <p className="mt-2 text-muted-foreground max-w-xl mx-auto">
+        Learn Docker containerization, Kubernetes orchestration, storage, and networking with live instructor mentoring.
+      </p>
       <Card className="mt-8 max-w-md mx-auto border-primary/30 shadow-elevated">
         <CardContent className="p-8">
-          <div className="text-xs font-mono uppercase tracking-widest text-shadowx-azure">1hr Intro Batch</div>
-          <div className="mt-2 flex items-baseline justify-center gap-2">
-            <span className="font-display text-5xl font-bold text-shadowx-gradient">₹199</span>
+          <div className="text-xs font-mono uppercase tracking-widest text-shadowx-azure">Next Available Cohort</div>
+          <div className="mt-2">
+            <span className="font-display text-2xl font-bold text-foreground">Upcoming Live Batch</span>
           </div>
-          <div className="mt-1 text-sm text-muted-foreground">1 hour live · Docker + Kubernetes taster · seats limited</div>
+          <div className="mt-2 text-sm text-muted-foreground">5 Modules · 16h Live + Labs · Capstone Containerized App</div>
           <div className="mt-4 text-xs text-muted-foreground border-t border-border pt-3">
-            Full multi-day program pricing will be announced soon.
+            Applications are reviewed on a rolling basis. Onboarding credentials delivered upon enrollment acceptance.
           </div>
           <a href="#enroll" className="block mt-6">
-            <Button size="lg" className="w-full font-semibold">Reserve seat for ₹199</Button>
+            <Button size="lg" className="w-full font-semibold">Apply for Cohort</Button>
           </a>
         </CardContent>
       </Card>

@@ -80,6 +80,13 @@ import ResourcesList from "./ops/modules/cloud/ResourcesList.tsx";
 import CostsList from "./ops/modules/cloud/CostsList.tsx";
 import PentestIncidentsList from "./ops/modules/pen200/IncidentsList.tsx";
 import PentestIncidentDetail from "./ops/modules/pen200/IncidentDetail.tsx";
+import { AcademyOverview } from "./academy/pages/AcademyOverview.tsx";
+import { AcademyLesson } from "./academy/pages/AcademyLesson.tsx";
+import { AcademyLabs } from "./academy/pages/AcademyLabs.tsx";
+import { AcademyDictionary } from "./academy/pages/AcademyDictionary.tsx";
+import { AcademyMentor } from "./academy/pages/AcademyMentor.tsx";
+import { AcademyMitre } from "./academy/pages/AcademyMitre.tsx";
+import { AcademyProgress } from "./academy/pages/AcademyProgress.tsx";
 
 const queryClient = new QueryClient();
 
@@ -133,6 +140,13 @@ const App = () => (
             <Route path="/demo" element={<Demo />} />
             <Route path="/ops" element={<OpsLayout />}>
               <Route index element={<OpsDashboard />} />
+              <Route path="academy" element={<AcademyOverview />} />
+              <Route path="academy/lesson/:id" element={<AcademyLesson />} />
+              <Route path="academy/labs" element={<AcademyLabs />} />
+              <Route path="academy/dictionary" element={<AcademyDictionary />} />
+              <Route path="academy/mentor" element={<AcademyMentor />} />
+              <Route path="academy/mitre" element={<AcademyMitre />} />
+              <Route path="academy/progress" element={<AcademyProgress />} />
               <Route path="incidents" element={<IncidentsList />} />
               <Route path="incidents/:number" element={<IncidentDetail />} />
               <Route path="problems" element={<ProblemsList />} />

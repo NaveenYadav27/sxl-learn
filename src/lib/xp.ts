@@ -49,7 +49,7 @@ export async function getXpStats(userId: string): Promise<XpStats> {
   // Walk back from today; allow grace if last activity was yesterday
   let streak = 0;
   const today = new Date();
-  let cursor = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+  const cursor = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
   if (!days.has(dayKey(cursor))) {
     // try yesterday as anchor
     cursor.setUTCDate(cursor.getUTCDate() - 1);

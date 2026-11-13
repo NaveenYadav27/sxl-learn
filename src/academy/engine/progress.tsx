@@ -75,10 +75,21 @@ export function computeMastery(lessons: Lesson[], state: AcademyState): { skills
   return { skills, readiness };
 }
 
-function load(key: string): AcademyState {
+function load(key: string, isUser = false): AcademyState {
   try {
     const raw = localStorage.getItem(key);
-    if (!raw) return emptyState();
+    if (!raw) {
+      if (isUser) {
+        const guestRaw = localStorage.getItem(`${STORAGE_PREFIX}:guest`);
+        if (guestRaw) {
+          const parsedGuest = JSON.parse(guestRaw) as AcademyState;
+          if (parsedGuest?.version === 1 && Object.keys(parsedGuest.lessons || {}).length > 0) {
+            return { ...emptyState(), ...parsedGuest };
+          }
+        }
+      }
+      return emptyState();
+    }
     const parsed = JSON.parse(raw) as AcademyState;
     if (parsed?.version !== 1) return emptyState();
     // forward-fill fields added after the first release
@@ -114,10 +125,11 @@ export const AcademyCtxExport = AcademyCtx;
 
 export function AcademyProgressProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
+  const isUser = Boolean(user?.id);
   const key = `${STORAGE_PREFIX}:${user?.id ?? "guest"}`;
-  const [state, setState] = useState<AcademyState>(() => load(key));
+  const [state, setState] = useState<AcademyState>(() => load(key, isUser));
 
-  useEffect(() => { setState(load(key)); }, [key]);
+  useEffect(() => { setState(load(key, isUser)); }, [key, isUser]);
   useEffect(() => { try { localStorage.setItem(key, JSON.stringify(state)); } catch { /* storage full or blocked */ } }, [key, state]);
 
   const patchLesson = useCallback((id: string, fn: (p: LessonProgress) => LessonProgress) => {

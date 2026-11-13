@@ -20,6 +20,8 @@ import {
   Container,
   Layers,
   ExternalLink,
+  Shield,
+  Terminal,
   type LucideIcon,
 } from "lucide-react";
 
@@ -41,6 +43,17 @@ export const NAV_GROUPS: NavGroup[] = [
     label: "Operate",
     items: [
       { label: "Dashboard", to: "/ops", icon: LayoutDashboard, enabled: true },
+    ],
+  },
+  {
+    label: "SOC Academy",
+    items: [
+      { label: "Curriculum", to: "/ops/academy", icon: Shield, enabled: true, badge: "10-HR" },
+      { label: "Labs Simulator", to: "/ops/academy/labs", icon: Terminal, enabled: true },
+      { label: "SOC Dictionary", to: "/ops/academy/dictionary", icon: BookOpen, enabled: true },
+      { label: "AI SOC Mentor", to: "/ops/academy/mentor", icon: Bot, enabled: true },
+      { label: "MITRE ATT&CK", to: "/ops/academy/mitre", icon: Target, enabled: true },
+      { label: "Readiness Report", to: "/ops/academy/progress", icon: BarChart3, enabled: true },
     ],
   },
   {

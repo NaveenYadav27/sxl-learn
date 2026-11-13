@@ -46,12 +46,7 @@ export default function ProgressPage() {
   const [earnedBadges, setEarnedBadges] = useState<any[]>([]);
   const [totals, setTotals] = useState({ labs: 0, completed: 0, score: 0, minutes: 0 });
 
-  useEffect(() => {
-    toast.success("Lab reset · csa-soc-tour", {
-      description: "Progress cleared to 0 / 5 steps · score reset to 0. Reopen the lab for a fresh attempt.",
-      duration: 6000,
-    });
-  }, []);
+
 
   useEffect(() => {
     if (!user) return;

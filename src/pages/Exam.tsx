@@ -106,7 +106,11 @@ export default function Exam() {
   function toggleFlag(qid: string) {
     setFlagged((prev) => {
       const n = new Set(prev);
-      n.has(qid) ? n.delete(qid) : n.add(qid);
+      if (n.has(qid)) {
+        n.delete(qid);
+      } else {
+        n.add(qid);
+      }
       return n;
     });
   }

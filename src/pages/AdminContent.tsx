@@ -83,9 +83,6 @@ const AdminContent = () => {
     if (isAdmin) refresh();
   }, [isAdmin]);
 
-  if (authLoading) return null;
-  if (!isAdmin) return <Navigate to="/dashboard" replace />;
-
   async function togglePublish(lab: Lab) {
     setBusyId(lab.id);
     const { error } = await supabase
@@ -130,6 +127,9 @@ const AdminContent = () => {
     const totalSteps = Array.from(stepCounts.values()).reduce((s, n) => s + n, 0);
     return { totalLabs, published, totalQuestions, totalSteps };
   }, [labs, stepCounts, questionCounts]);
+
+  if (authLoading) return null;
+  if (!isAdmin) return <Navigate to="/dashboard" replace />;
 
   return (
     <AppLayout

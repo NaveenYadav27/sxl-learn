@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ExternalLink, RefreshCw, ShieldAlert } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ExternalLink, RefreshCw, ShieldAlert, Terminal, Info } from "lucide-react";
 import { PageHeader } from "@/ops/components/PageHeader";
 import { SectionCard } from "@/ops/components/SectionCard";
 
@@ -21,11 +22,17 @@ export default function SplunkLive() {
   return (
     <div className="flex h-full flex-col">
       <PageHeader
-        title="Splunk ES — Live"
-        description="Embedded view of siem.shadowxlab.com. Sign in once in Splunk; the session persists in the iframe."
-        breadcrumb={<span>Security / Splunk ES / Live</span>}
+        title="Splunk ES — Dedicated Gateway"
+        description="Connects to the external dedicated Splunk instance. For offline or browser practice, use our built-in educational SOC Academy simulator."
+        breadcrumb={<span>Security / Splunk ES / Live Gateway</span>}
         actions={
           <div className="flex items-center gap-2">
+            <Link
+              to="/ops/academy/labs"
+              className="inline-flex items-center gap-1.5 rounded-sm border border-[hsl(var(--ops-accent)/0.6)] bg-[hsl(var(--ops-accent)/0.15)] px-2.5 py-1 text-[12px] text-[hsl(var(--ops-accent))] hover:bg-[hsl(var(--ops-accent)/0.25)]"
+            >
+              <Terminal className="h-3.5 w-3.5" /> In-Browser Simulator
+            </Link>
             <button
               onClick={() => { setBlocked(false); setIframeKey((k) => k + 1); }}
               className="inline-flex items-center gap-1.5 rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] px-2.5 py-1 text-[12px] hover:border-[hsl(var(--ops-accent)/0.5)]"
@@ -36,13 +43,28 @@ export default function SplunkLive() {
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-sm border border-[hsl(var(--ops-accent)/0.5)] bg-[hsl(var(--ops-accent)/0.15)] px-2.5 py-1 text-[12px] text-[hsl(var(--ops-accent))] hover:bg-[hsl(var(--ops-accent)/0.25)]"
+              className="inline-flex items-center gap-1.5 rounded-sm border border-[hsl(var(--ops-border))] bg-[hsl(var(--ops-panel-2))] px-2.5 py-1 text-[12px] hover:border-[hsl(var(--ops-accent)/0.5)]"
             >
               <ExternalLink className="h-3.5 w-3.5" /> Open in new tab
             </a>
           </div>
         }
       />
+
+      {/* Educational notice banner */}
+      <div className="mx-4 mt-3 rounded border border-primary/30 bg-primary/5 p-3 text-xs flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2 text-foreground/90">
+          <Info className="h-4 w-4 text-primary shrink-0" />
+          <span>
+            <strong>Educational Environment Notice:</strong> Real external SIEM connectivity requires active lab cohort credentials. For guided scenario lessons and deterministic grading, use the built-in SOC Academy simulator.
+          </span>
+        </div>
+        <Link to="/ops/academy" className="shrink-0">
+          <button className="px-2.5 py-1 rounded bg-primary text-primary-foreground text-[11px] font-semibold hover:bg-primary/90">
+            Open SOC Academy
+          </button>
+        </Link>
+      </div>
 
       <div className="grid gap-3 p-4 lg:grid-cols-4">
         {QUICK_LINKS.map((q) => {

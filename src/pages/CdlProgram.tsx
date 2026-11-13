@@ -55,7 +55,7 @@ const CdlProgram = () => (
         <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 items-start">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-shadowx-obsidian/60 backdrop-blur px-3 py-1 text-xs font-medium mb-5 border border-shadowx-azure/40 text-shadowx-azure">
-              <Cloud className="h-3 w-3" /> Google Cloud Digital Leader · 1hr Intro Batch @ ₹199 · Live
+              <Cloud className="h-3 w-3" /> Google Cloud Digital Leader · Live Cohort Training
             </div>
             <h1 className="font-display text-4xl md:text-6xl font-bold leading-[1.05]">
               Google <span className="text-shadowx-gradient">Cloud Digital Leader</span> Certification
@@ -66,11 +66,11 @@ const CdlProgram = () => (
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <a href="#enroll">
                 <Button size="lg" className="gap-2 font-semibold">
-                  Reserve seat for ₹199 <ArrowRight className="h-4 w-4" />
+                  Apply for Cohort <ArrowRight className="h-4 w-4" />
                 </Button>
               </a>
               <div className="text-sm text-muted-foreground">
-                <span className="text-shadowx-gold font-semibold">1hr Intro Batch · ₹199</span> · full program pricing TBA
+                <span className="text-shadowx-azure font-semibold">Live Interactive Cohort</span> · Real Google Cloud Architecture Scenarios
               </div>
             </div>
             <div className="mt-8 grid grid-cols-3 gap-4 max-w-md">
@@ -162,21 +162,24 @@ const CdlProgram = () => (
       </div>
     </section>
 
-    {/* Pricing */}
+    {/* Admissions */}
     <section className="container py-16 text-center">
-      <h2 className="text-2xl md:text-3xl font-bold">Pricing</h2>
+      <h2 className="text-2xl md:text-3xl font-bold">Admissions & Cohort Schedule</h2>
+      <p className="mt-2 text-muted-foreground max-w-xl mx-auto">
+        Interactive Google Cloud digital transformation and architectural guidance training.
+      </p>
       <Card className="mt-8 max-w-md mx-auto border-primary/30 shadow-elevated">
         <CardContent className="p-8">
-          <div className="text-xs font-mono uppercase tracking-widest text-shadowx-azure">1hr Intro Batch</div>
-          <div className="mt-2 flex items-baseline justify-center gap-2">
-            <span className="font-display text-5xl font-bold text-shadowx-gradient">₹199</span>
+          <div className="text-xs font-mono uppercase tracking-widest text-shadowx-azure">Next Available Cohort</div>
+          <div className="mt-2">
+            <span className="font-display text-2xl font-bold text-foreground">Upcoming Live Batch</span>
           </div>
-          <div className="mt-1 text-sm text-muted-foreground">1 hour live · Google Cloud tool tour · seats limited</div>
+          <div className="mt-2 text-sm text-muted-foreground">6 Modules · 13h Live + Console Tours · Practice Exam</div>
           <div className="mt-4 text-xs text-muted-foreground border-t border-border pt-3">
-            Full multi-day program pricing will be announced soon.
+            Applications are reviewed on a rolling basis. Onboarding credentials delivered upon enrollment acceptance.
           </div>
           <a href="#enroll" className="block mt-6">
-            <Button size="lg" className="w-full font-semibold">Reserve seat for ₹199</Button>
+            <Button size="lg" className="w-full font-semibold">Apply for Cohort</Button>
           </a>
         </CardContent>
       </Card>
