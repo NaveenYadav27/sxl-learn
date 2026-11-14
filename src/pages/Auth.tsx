@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Navigate, useNavigate, useSearchParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,77 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { Logo } from "@/components/Logo";
 
+interface JourneyConfig {
+  headline: string;
+  gradientText: string;
+  description: string;
+  badge: string;
+  journeyName: string;
+}
+
+const JOURNEYS: Record<string, JourneyConfig> = {
+  default: {
+    headline: "Master Cybersecurity Foundations",
+    gradientText: "like a pro.",
+    description:
+      "Enterprise learning environments engineered for Blue Team SOC Analysts, Penetration Testers, and Security Engineers. Real hands-on labs, deterministic simulations, and AI-guided mentorship.",
+    badge: "© ShadowX Lab · Cybersecurity Foundations",
+    journeyName: "Cybersecurity Foundations",
+  },
+  "sc-900": {
+    headline: "Practise Microsoft security",
+    gradientText: "like a pro.",
+    description:
+      "22 hands-on labs across Entra, Defender XDR, Purview and Sentinel — guided by an AI tutor that nudges you to the right answer.",
+    badge: "© ShadowX Lab · SC-900 simulator",
+    journeyName: "SC-900",
+  },
+  soc: {
+    headline: "Master SOC Analysis & SIEM",
+    gradientText: "like a pro.",
+    description:
+      "Enterprise SIEM investigations, alert triage, incident response, and SPL hunting inside high-fidelity environments.",
+    badge: "© ShadowX Lab · SOC Academy",
+    journeyName: "SOC Analyst",
+  },
+  itsm: {
+    headline: "Master Enterprise ITSM & ServiceNow",
+    gradientText: "like a pro.",
+    description: "Hands-on workflows across Incident, Problem, Change, and CMDB management.",
+    badge: "© ShadowX Lab · CIS-ITSM",
+    journeyName: "ITSM",
+  },
+  pen200: {
+    headline: "Master Offensive Security & OSCP+",
+    gradientText: "like a pro.",
+    description:
+      "Deterministic attack labs, vulnerability exploitation, privilege escalation, and offensive tradecraft.",
+    badge: "© ShadowX Lab · PEN-200",
+    journeyName: "PEN-200",
+  },
+  csa: {
+    headline: "Certified SOC Analyst & Defense Track",
+    gradientText: "like a pro.",
+    description: "Hybrid EC-Council CSA and Microsoft SC-200 track with deterministic investigation labs.",
+    badge: "© ShadowX Lab · CSA",
+    journeyName: "CSA",
+  },
+  k8s: {
+    headline: "Master Kubernetes & Cloud Infrastructure",
+    gradientText: "like a pro.",
+    description: "Container orchestration, workload deployments, cloud debugging, and cluster troubleshooting.",
+    badge: "© ShadowX Lab · K8S Foundation",
+    journeyName: "Kubernetes Foundation",
+  },
+  ccna: {
+    headline: "Master Cisco Networking & CCNA",
+    gradientText: "like a pro.",
+    description: "Routing, switching, network security, IP connectivity, and Packet Tracer simulations.",
+    badge: "© ShadowX Lab · CCNA",
+    journeyName: "CCNA",
+  },
+};
+
 export default function Auth() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
@@ -22,6 +93,15 @@ export default function Auth() {
   const [displayName, setDisplayName] = useState("");
   const [busy, setBusy] = useState(false);
   const [agreed, setAgreed] = useState(false);
+
+  const targetKey = useMemo(() => {
+    const raw = (params.get("course") || params.get("program") || params.get("target") || "").toLowerCase().trim();
+    if (raw === "sc900") return "sc-900";
+    if (raw === "pen-200") return "pen200";
+    return raw;
+  }, [params]);
+
+  const journey = JOURNEYS[targetKey] || JOURNEYS.default;
 
   useEffect(() => {
     if (params.get("mode") === "signup") setMode("signup");
@@ -91,21 +171,26 @@ export default function Auth() {
     <div className="min-h-screen flex bg-background">
       {/* Left: branded panel */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-hero text-foreground p-12 flex-col justify-between relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none opacity-30"
-             style={{ backgroundImage: "radial-gradient(circle at 30% 30%, hsl(var(--shadow-azure) / 0.4), transparent 50%), radial-gradient(circle at 70% 70%, hsl(var(--shadow-ember) / 0.35), transparent 50%)" }} />
+        <div
+          className="absolute inset-0 pointer-events-none opacity-30"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle at 30% 30%, hsl(var(--shadow-azure) / 0.4), transparent 50%), radial-gradient(circle at 70% 70%, hsl(var(--shadow-ember) / 0.35), transparent 50%)",
+          }}
+        />
         <Link to="/" className="relative z-10">
           <Logo size="md" showWordmark showTagline />
         </Link>
         <div className="relative z-10">
           <h2 className="font-display text-4xl font-bold leading-tight">
-            Practise Microsoft security <span className="text-shadowx-gradient">like a pro.</span>
+            {journey.headline} <span className="text-shadowx-gradient">{journey.gradientText}</span>
           </h2>
           <p className="mt-4 text-foreground/75 max-w-md">
-            22 hands-on labs across Entra, Defender XDR, Purview and Sentinel — guided by an AI tutor that nudges you to the right answer.
+            {journey.description}
           </p>
         </div>
         <div className="relative z-10 text-xs text-shadowx-gold/70 uppercase tracking-[0.2em]">
-          © ShadowX Lab · SC-900 simulator
+          {journey.badge}
         </div>
       </div>
 
@@ -117,7 +202,11 @@ export default function Auth() {
               <Logo size="md" showWordmark={false} />
             </div>
             <CardTitle className="font-display text-2xl tracking-wide">Welcome to ShadowX Lab</CardTitle>
-            <CardDescription>Sign in to continue your SC-900 journey</CardDescription>
+            <CardDescription>
+              {mode === "signup"
+                ? `Create your account to start your ${journey.journeyName} journey`
+                : `Sign in to continue your ${journey.journeyName} journey`}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs value={mode} onValueChange={(v) => setMode(v as "signin" | "signup")}>
