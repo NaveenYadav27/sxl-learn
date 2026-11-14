@@ -46,5 +46,8 @@ export function useProgramAccess() {
     hasPen200: has("pen200"),
     hasCsa: has("csa"),
     hasK8s: has("k8s"),
+    hasCdl: has("cdl"),
+    hasCcna: has("ccna"),
+    hasSplunkes: has("splunkes"),
   };
 }

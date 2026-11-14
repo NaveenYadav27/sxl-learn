@@ -15,7 +15,7 @@ import { toast } from "@/hooks/use-toast";
 import { Loader2, UserPlus, Trash2, KeyRound, Mail } from "lucide-react";
 import { programLabels, type ProgramCode } from "@/lib/programMap";
 
-const PROGRAMS: ProgramCode[] = ["soc", "itsm", "pen200", "csa", "k8s"];
+const PROGRAMS: ProgramCode[] = ["soc", "itsm", "pen200", "csa", "k8s", "cdl", "ccna", "splunkes"];
 
 type Enrollment = {
   id: string;

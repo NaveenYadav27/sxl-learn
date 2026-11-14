@@ -88,9 +88,9 @@ export default function Auth() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const [mode, setMode] = useState<"signin" | "signup">(params.get("mode") === "signup" ? "signup" : "signin");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => params.get("email") || "");
   const [password, setPassword] = useState("");
-  const [displayName, setDisplayName] = useState("");
+  const [displayName, setDisplayName] = useState(() => params.get("name") || "");
   const [busy, setBusy] = useState(false);
   const [agreed, setAgreed] = useState(false);
 
@@ -105,6 +105,8 @@ export default function Auth() {
 
   useEffect(() => {
     if (params.get("mode") === "signup") setMode("signup");
+    if (params.get("email")) setEmail(params.get("email") || "");
+    if (params.get("name")) setDisplayName(params.get("name") || "");
   }, [params]);
 
   if (loading) return null;
@@ -149,6 +151,20 @@ export default function Auth() {
         .from("profiles")
         .update({ terms_accepted_at: new Date().toISOString() })
         .eq("id", data.user.id);
+
+      // If registered from a specific cohort program link, create linked enrollment
+      const enrolledProgram = (params.get("program") || "").toLowerCase();
+      const validPrograms = ["soc", "itsm", "pen200", "csa", "k8s", "cdl", "ccna", "splunkes"];
+      if (validPrograms.includes(enrolledProgram)) {
+        await supabase.from("enrollments").insert({
+          user_id: data.user.id,
+          email,
+          full_name: displayName || email.split("@")[0],
+          program: enrolledProgram as any,
+          status: "new",
+          notes: "Registered via cohort link",
+        });
+      }
     }
     setBusy(false);
     toast.success("Account created — you're in!");

@@ -16,7 +16,7 @@ import { toast } from "@/hooks/use-toast";
 import { Loader2, Plus, Trash2, UserPlus, X } from "lucide-react";
 import { programLabels, type ProgramCode } from "@/lib/programMap";
 
-const PROGRAMS: ProgramCode[] = ["soc", "itsm", "pen200", "csa", "k8s"];
+const PROGRAMS: ProgramCode[] = ["soc", "itsm", "pen200", "csa", "k8s", "cdl", "ccna", "splunkes"];
 
 type Batch = {
   id: string;
@@ -29,7 +29,7 @@ type Batch = {
   is_active: boolean;
 };
 
-type Profile = { id: string; display_name: string | null };
+type Profile = { id: string; display_name: string | null; email?: string | null };
 type Enrollment = { id: string; user_id: string | null; batch_id: string };
 
 const AdminBatches = () => {
@@ -60,7 +60,7 @@ const AdminBatches = () => {
     const [{ data: b }, { data: roles }, { data: profs }, { data: be }] = await Promise.all([
       supabase.from("batches").select("*").order("start_date", { ascending: false }),
       supabase.from("user_roles").select("user_id").eq("role", "instructor"),
-      supabase.from("profiles").select("id, display_name"),
+      supabase.from("profiles").select("id, display_name, email"),
       supabase.from("batch_enrollments").select("id, user_id, batch_id"),
     ]);
     const profMap: Record<string, Profile> = {};
@@ -122,26 +122,53 @@ const AdminBatches = () => {
   async function assignLearner() {
     if (!assignBatch || !assignEmail.trim()) return;
     setAssigning(true);
-    // look up by email via profiles join — we don't have email on profiles, so we use enrollments
-    const { data: enr } = await supabase
-      .from("enrollments")
-      .select("user_id")
-      .ilike("email", assignEmail.trim())
-      .not("user_id", "is", null)
+    const cleanEmail = assignEmail.trim().toLowerCase();
+
+    // 1. Look up profile directly by email
+    const { data: prof } = await supabase
+      .from("profiles")
+      .select("id")
+      .ilike("email", cleanEmail)
       .limit(1);
-    const uid = enr?.[0]?.user_id;
+
+    let uid = prof?.[0]?.id;
+
+    // 2. Fallback: check enrollments with linked user_id
+    if (!uid) {
+      const { data: enr } = await supabase
+        .from("enrollments")
+        .select("user_id")
+        .ilike("email", cleanEmail)
+        .not("user_id", "is", null)
+        .limit(1);
+      uid = enr?.[0]?.user_id;
+    }
+
     if (!uid) {
       setAssigning(false);
-      toast({ title: "User not found", description: "They must sign up first.", variant: "destructive" });
+      toast({
+        title: "User not found",
+        description: "Learner must create an account first with this email.",
+        variant: "destructive",
+      });
       return;
     }
+
+    // Check if already in batch
+    const alreadyAssigned = enrollments.some((e) => e.batch_id === assignBatch.id && e.user_id === uid);
+    if (alreadyAssigned) {
+      setAssigning(false);
+      toast({ title: "Already enrolled", description: "This learner is already assigned to this batch." });
+      return;
+    }
+
     const { error } = await supabase.from("batch_enrollments").insert({ batch_id: assignBatch.id, user_id: uid });
     setAssigning(false);
     if (error) {
       toast({ title: "Failed", description: error.message, variant: "destructive" });
       return;
     }
-    toast({ title: "Learner added to batch" });
+    toast({ title: "Learner assigned to batch" });
     setAssignEmail("");
     refresh();
   }
@@ -301,7 +328,7 @@ const AdminBatches = () => {
                       <div key={e.id} className="px-3 py-2 flex items-center justify-between text-sm">
                         <div>
                           <div className="font-medium">{e.user_id ? profilesById[e.user_id]?.display_name || "(unnamed)" : "—"}</div>
-                          <div className="text-[10px] font-mono text-muted-foreground">{e.user_id}</div>
+                          <div className="text-xs text-muted-foreground">{profilesById[e.user_id]?.email || e.user_id}</div>
                         </div>
                         <Button size="sm" variant="ghost" onClick={() => removeFromBatch(e.id)}>
                           <X className="h-3.5 w-3.5" />
